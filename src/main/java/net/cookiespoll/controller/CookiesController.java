@@ -16,6 +16,8 @@ public class CookiesController {
     public String addCookie(
             @Valid @ModelAttribute AddCookieDtoRequest addCookieDtoRequest,
             HttpServletResponse response) {
+        String fileType = addCookieDtoRequest.getFile().getContentType();
+        System.out.println(fileType);
 
         return "file has been uploaded";
 
