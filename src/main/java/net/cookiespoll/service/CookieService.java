@@ -1,0 +1,22 @@
+package net.cookiespoll.service;
+
+import net.cookiespoll.dao.CookieDao;
+import net.cookiespoll.dto.AddCookieDtoRequest;
+import net.cookiespoll.model.Cookie;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+
+@Service
+public class CookieService {
+
+    @Autowired
+    private CookieDao cookieDao;
+
+
+    public Cookie addCookie (AddCookieDtoRequest addCookieDtoRequest) throws IOException {
+       return cookieDao.insert(new Cookie(addCookieDtoRequest.getName(), addCookieDtoRequest.getDescription(),
+                addCookieDtoRequest.getFile().getBytes()));
+    }
+}

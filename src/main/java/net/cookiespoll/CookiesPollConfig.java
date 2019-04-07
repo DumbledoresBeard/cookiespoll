@@ -1,5 +1,8 @@
 package net.cookiespoll;
 
+import net.cookiespoll.dao.CookieDao;
+import net.cookiespoll.daoimpl.CookieDaoImpl;
+import net.cookiespoll.service.CookieService;
 import org.springframework.context.annotation.Bean;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -34,4 +37,10 @@ public class CookiesPollConfig {
         sessionFactory.setDataSource(getDataSource());
         return sessionFactory.getObject();
     }
+
+    @Bean
+    public CookieDao cookieDao () { return new CookieDaoImpl(); }
+
+    @Bean
+    public CookieService cookieService () {return new CookieService();}
 }
