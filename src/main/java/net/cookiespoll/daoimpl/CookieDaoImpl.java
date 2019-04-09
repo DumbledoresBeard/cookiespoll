@@ -1,16 +1,19 @@
 package net.cookiespoll.daoimpl;
 
 import net.cookiespoll.dao.CookieDao;
-import net.cookiespoll.mappers.CookieMapper;
+import net.cookiespoll.mapper.CookieMapper;
 import net.cookiespoll.model.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 public class CookieDaoImpl implements CookieDao {
 
     @Autowired
     private CookieMapper cookieMapper;
 
+
     @Override
+    @Transactional
     public Cookie insert(Cookie cookie) {
         cookieMapper.insert(cookie);
         return cookie;

@@ -1,0 +1,19 @@
+-------------------------------------------------------------------------------
+Test set: net.cookiespoll.dao.TestCookieDaoImpl
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.895 s <<< FAILURE! - in net.cookiespoll.dao.TestCookieDaoImpl
+testCookieDaoInsert(net.cookiespoll.dao.TestCookieDaoImpl)  Time elapsed: 0.046 s  <<< ERROR!
+org.mockito.exceptions.misusing.WrongTypeOfReturnValue: 
+
+Cookie cannot be returned by insert()
+insert() should return Integer
+***
+If you're unsure why you're getting above error read on.
+Due to the nature of the syntax above problem might occur because:
+1. This exception *might* occur in wrongly written multi-threaded tests.
+   Please refer to Mockito FAQ on limitations of concurrency testing.
+2. A spy is stubbed using when(spy.foo()).then() syntax. It is safer to stub spies - 
+   - with doReturn|Throw() family of methods. More in javadocs for Mockito.spy() method.
+
+	at net.cookiespoll.dao.TestCookieDaoImpl.testCookieDaoInsert(TestCookieDaoImpl.java:39)
+

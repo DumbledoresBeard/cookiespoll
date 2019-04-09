@@ -3,6 +3,8 @@ package net.cookiespoll.model;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class Cookie {
     private int id;
@@ -53,5 +55,23 @@ public class Cookie {
 
     public void setFileData(byte[] fileData) {
         this.fileData = fileData;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Cookie)) return false;
+        Cookie cookie = (Cookie) o;
+        return getId() == cookie.getId() &&
+                Objects.equals(getName(), cookie.getName()) &&
+                Objects.equals(getDescription(), cookie.getDescription()) &&
+                Arrays.equals(getFileData(), cookie.getFileData());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(getId(), getName(), getDescription());
+        result = 31 * result + Arrays.hashCode(getFileData());
+        return result;
     }
 }

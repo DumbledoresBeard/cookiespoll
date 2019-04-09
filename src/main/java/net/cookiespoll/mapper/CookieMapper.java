@@ -1,4 +1,4 @@
-package net.cookiespoll.mappers;
+package net.cookiespoll.mapper;
 
 import net.cookiespoll.model.Cookie;
 import org.apache.ibatis.annotations.Insert;

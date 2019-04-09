@@ -15,6 +15,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import javax.sql.DataSource;
 
 @Configuration
+@MapperScan("net.cookiespoll.mapper")
 public class CookiesPollConfig {
 
     @Bean
