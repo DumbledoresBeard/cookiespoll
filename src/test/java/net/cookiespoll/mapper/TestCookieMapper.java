@@ -5,11 +5,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -30,6 +30,7 @@ public class TestCookieMapper {
     public void testCookieMapperInsert() {
         when(cookieMapper.insert(cookie)).thenReturn(1);
         Assert.assertEquals(cookieMapper.insert(cookie), new Integer(1));
+        verify(cookieMapper).insert(cookie);
 
     }
 }

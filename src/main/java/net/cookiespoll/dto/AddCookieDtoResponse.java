@@ -1,16 +1,15 @@
 package net.cookiespoll.dto;
 
-import org.springframework.web.multipart.MultipartFile;
-
 public class AddCookieDtoResponse {
     private String name;
     private String description;
-    private MultipartFile file;
+    private byte[] fileData;
 
-    public AddCookieDtoResponse(String name, String description, MultipartFile file) {
+
+    public AddCookieDtoResponse(String name, String description, byte[] fileData) {
         this.name = name;
         this.description = description;
-        this.file = file;
+        this.fileData = fileData;
     }
 
     public String getName() {
@@ -29,11 +28,11 @@ public class AddCookieDtoResponse {
         this.description = description;
     }
 
-    public MultipartFile getFile() {
-        return file;
+    public byte[] getFileData() {
+        return fileData;
     }
 
-    public void setFile(MultipartFile file) {
-        this.file = file;
+    public void setFileData(byte[] fileData) {
+        this.fileData = fileData;
     }
 }

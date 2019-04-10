@@ -15,7 +15,8 @@ public class CookieDaoImpl implements CookieDao {
     @Override
     @Transactional
     public Cookie insert(Cookie cookie) {
-        cookieMapper.insert(cookie);
+        int id = cookieMapper.insert(cookie);
+        cookie.setId(id);
         return cookie;
     }
 

@@ -9,10 +9,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -26,7 +24,6 @@ public class TestCookieDaoImpl {
     CookieDaoImpl cookieDaoImpl;
 
     Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2]);
-    Cookie returnCookie = new Cookie("cookie", "tasty cookie", new byte[2]);
 
     @Before
     public void setUp() throws Exception {
@@ -35,10 +32,10 @@ public class TestCookieDaoImpl {
 
     @Test
     public void testCookieDaoInsert() {
-        when(cookieDaoImpl.insert(cookie)).thenReturn(cookie);
-
-        Assert.assertEquals (cookie, returnCookie);
-        verify(cookieDaoImpl).insert(cookie);
+        when(cookieMapper.insert(cookie)).thenReturn(1);
+        Cookie resultCookie = cookieDaoImpl.insert(cookie);
+        Assert.assertEquals (1, resultCookie.getId());
+        verify(cookieMapper).insert(cookie);
 
     }
 

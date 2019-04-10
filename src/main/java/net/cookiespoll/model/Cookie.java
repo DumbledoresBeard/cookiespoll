@@ -1,8 +1,5 @@
 package net.cookiespoll.model;
 
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
 import java.util.Arrays;
 import java.util.Objects;
 
