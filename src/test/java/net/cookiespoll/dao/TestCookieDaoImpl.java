@@ -34,7 +34,12 @@ public class TestCookieDaoImpl {
     public void testCookieDaoInsert() {
         when(cookieMapper.insert(cookie)).thenReturn(1);
         Cookie resultCookie = cookieDaoImpl.insert(cookie);
+
         Assert.assertEquals (1, resultCookie.getId());
+        Assert.assertEquals(cookie.getName(), resultCookie.getName());
+        Assert.assertEquals(cookie.getDescription(), resultCookie.getDescription());
+        Assert.assertEquals(cookie.getFileData(), resultCookie.getFileData());
+
         verify(cookieMapper).insert(cookie);
 
     }

@@ -29,7 +29,7 @@ public class TestCookieService {
     CookieService cookieService;
 
     Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2]);
-    MockMultipartFile mockMultipartFile = new MockMultipartFile("testcookie.txt", new byte[2]);
+    MockMultipartFile mockMultipartFile = new MockMultipartFile("testcookie.jpg", new byte[2]);
     AddCookieDtoRequest addCookieDtoRequest = new AddCookieDtoRequest("cookie", "tasty cookie", mockMultipartFile);
 
     @Before
@@ -41,6 +41,7 @@ public class TestCookieService {
     public void testCookieDaoInsert() throws IOException {
         when(cookieDao.insert(cookie)).thenReturn(cookie);
         Cookie resultCookie = cookieService.addCookie(addCookieDtoRequest);
+
         verify(cookieDao).insert(cookie);
 
     }
