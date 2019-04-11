@@ -54,5 +54,5 @@ public class CookiesPollConfig {
     public CookieDao cookieDao () { return new CookieDaoImpl(); }
 
     @Bean
-    public CookieService cookieService () {return new CookieService();}
+    public CookieService cookieService () {return new CookieService(cookieDao());}
 }

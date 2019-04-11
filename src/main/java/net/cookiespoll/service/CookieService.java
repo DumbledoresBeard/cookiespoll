@@ -11,9 +11,13 @@ import java.io.IOException;
 @Service
 public class CookieService {
 
-    @Autowired
+
     private CookieDao cookieDao;
 
+    @Autowired
+    public CookieService(CookieDao cookieDao) {
+        this.cookieDao = cookieDao;
+    }
 
     public Cookie addCookie (AddCookieDtoRequest addCookieDtoRequest) throws IOException {
        return cookieDao.insert(new Cookie(addCookieDtoRequest.getName(), addCookieDtoRequest.getDescription(),
