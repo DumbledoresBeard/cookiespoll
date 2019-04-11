@@ -23,7 +23,7 @@ public class TestCookieDaoImpl {
     @InjectMocks
     CookieDaoImpl cookieDaoImpl;
 
-    Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2]);
+    Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], false);
 
     @Before
     public void setUp() throws Exception {
@@ -39,6 +39,7 @@ public class TestCookieDaoImpl {
         Assert.assertEquals(cookie.getName(), resultCookie.getName());
         Assert.assertEquals(cookie.getDescription(), resultCookie.getDescription());
         Assert.assertEquals(cookie.getFileData(), resultCookie.getFileData());
+        Assert.assertEquals(cookie.getIsApproved(), resultCookie.getIsApproved());
 
         verify(cookieMapper).insert(cookie);
 

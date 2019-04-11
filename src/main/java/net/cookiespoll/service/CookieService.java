@@ -20,7 +20,8 @@ public class CookieService {
     }
 
     public Cookie addCookie (AddCookieDtoRequest addCookieDtoRequest) throws IOException {
+        boolean isApproved = false;
        return cookieDao.insert(new Cookie(addCookieDtoRequest.getName(), addCookieDtoRequest.getDescription(),
-                addCookieDtoRequest.getFile().getBytes()));
+                addCookieDtoRequest.getFile().getBytes(), isApproved));
     }
 }

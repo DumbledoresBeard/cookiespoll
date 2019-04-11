@@ -6,5 +6,6 @@ CREATE TABLE cookie (
 id serial PRIMARY KEY,
 name VARCHAR (30) UNIQUE NOT NULL,
 description VARCHAR (150),
-file_data BYTEA
+file_data BYTEA,
+is_approved boolean
 )

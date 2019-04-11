@@ -29,7 +29,7 @@ public class TestCookieService {
     CookieService cookieService;
 
     Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2]);
-    Cookie cookieWithId = new Cookie(1, "cookie", "tasty cookie", new byte[2]);
+    Cookie cookieWithId = new Cookie(1, "cookie", "tasty cookie", new byte[2],false);
     MockMultipartFile mockMultipartFile = new MockMultipartFile("testcookie.jpg", new byte[2]);
     AddCookieDtoRequest addCookieDtoRequest = new AddCookieDtoRequest("cookie", "tasty cookie", mockMultipartFile);
 
@@ -48,6 +48,7 @@ public class TestCookieService {
         Assert.assertEquals(addCookieDtoRequest.getName(), resultCookie.getName());
         Assert.assertEquals(addCookieDtoRequest.getDescription(), resultCookie.getDescription());
         Assert.assertEquals(addCookieDtoRequest.getFile().getBytes(), resultCookie.getFileData());
+        Assert.assertEquals(false, resultCookie.getIsApproved());
 
         verify(cookieDao).insert(cookie);
 

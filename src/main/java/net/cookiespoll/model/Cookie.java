@@ -8,12 +8,21 @@ public class Cookie {
     private String name;
     private String description;
     private byte[] fileData;
+    private boolean isApproved;
 
-    public Cookie(int id, String name, String description, byte[] fileData) {
+    public Cookie(int id, String name, String description, byte[] fileData, boolean isApproved) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.fileData = fileData;
+        this.isApproved = isApproved;
+    }
+
+    public Cookie(String name, String description, byte[] fileData, boolean isApproved) {
+        this.name = name;
+        this.description = description;
+        this.fileData = fileData;
+        this.isApproved = isApproved;
     }
 
     public Cookie(String name, String description, byte[] fileData) {
@@ -54,12 +63,21 @@ public class Cookie {
         this.fileData = fileData;
     }
 
+    public boolean getIsApproved() {
+        return isApproved;
+    }
+
+    public void setIsApproved(boolean approved) {
+        isApproved = approved;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Cookie)) return false;
         Cookie cookie = (Cookie) o;
         return getId() == cookie.getId() &&
+                isApproved == cookie.isApproved &&
                 Objects.equals(getName(), cookie.getName()) &&
                 Objects.equals(getDescription(), cookie.getDescription()) &&
                 Arrays.equals(getFileData(), cookie.getFileData());
@@ -67,7 +85,7 @@ public class Cookie {
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(getId(), getName(), getDescription());
+        int result = Objects.hash(getId(), getName(), getDescription(), isApproved);
         result = 31 * result + Arrays.hashCode(getFileData());
         return result;
     }
