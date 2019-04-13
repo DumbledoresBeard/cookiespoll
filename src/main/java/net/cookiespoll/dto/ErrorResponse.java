@@ -2,7 +2,7 @@ package net.cookiespoll.dto;
 
 import java.util.List;
 
-public class ErrorResponse {
+public class ErrorResponse extends Throwable {
 
     private List<ErrorDetails> errors;
 

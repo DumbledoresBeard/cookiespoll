@@ -3,6 +3,7 @@ package net.cookiespoll;
 import net.cookiespoll.dao.CookieDao;
 import net.cookiespoll.daoimpl.CookieDaoImpl;
 import net.cookiespoll.service.CookieService;
+import net.cookiespoll.validation.FileValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.apache.commons.dbcp.BasicDataSource;
@@ -55,4 +56,9 @@ public class CookiesPollConfig {
 
     @Bean
     public CookieService cookieService () {return new CookieService(cookieDao());}
+
+    @Bean
+    public FileValidator fileValidator () {return new FileValidator();}
+
+
 }

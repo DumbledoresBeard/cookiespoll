@@ -1,6 +1,6 @@
 package net.cookiespoll.dto;
 
-import net.cookiespoll.validation.FileConstraint;
+
 import org.springframework.web.multipart.MultipartFile;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Max;

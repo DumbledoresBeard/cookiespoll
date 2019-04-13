@@ -1,3 +1,4 @@
+/*
 package net.cookiespoll.validation;
 
 import javax.validation.Constraint;
@@ -15,3 +16,4 @@ public @interface FileConstraint {
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
+*/
