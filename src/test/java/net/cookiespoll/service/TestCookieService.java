@@ -5,7 +5,7 @@ import net.cookiespoll.mapper.CookieMapper;
 import net.cookiespoll.model.Cookie;
 import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.apache.tomcat.util.http.fileupload.FileItemHeaders;
-import org.junit.Assert;
+/*import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,4 +54,4 @@ public class TestCookieService {
 
     }
 
-}
+}*/
