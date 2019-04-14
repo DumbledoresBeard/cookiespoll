@@ -1,8 +1,8 @@
-package net.cookiespoll.dto;
+package net.cookiespoll.exception;
 
 import java.util.List;
 
-public class ErrorResponse extends Throwable {
+public class ErrorResponse {
 
     private List<ErrorDetails> errors;
 

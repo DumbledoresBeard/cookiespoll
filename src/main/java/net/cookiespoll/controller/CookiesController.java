@@ -32,11 +32,8 @@ public class CookiesController {
     @ResponseBody
     public String addCookie(@RequestHeader HttpHeaders headers,
                             @RequestPart("file") MultipartFile multipartFile, @Valid @RequestPart("data")AddCookieDtoRequest addCookieDtoRequest,
-                            BindingResult result, HttpServletResponse response) throws IOException, ErrorResponse {
-        fileValidator.validate(multipartFile, result);
-        if (result.hasErrors()) {
-            throw new FileAddingException().getException(result);
-        }
+                            HttpServletResponse response) throws IOException, FileAddingException {
+        fileValidator.validate(multipartFile);
         Cookie cookie = null;
 //        if(!addCookieDtoRequest.getFile().isEmpty()) {
 //           cookie = cookieService.addCookie(addCookieDtoRequest);
