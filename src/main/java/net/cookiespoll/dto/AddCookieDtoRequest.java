@@ -17,7 +17,7 @@ public class AddCookieDtoRequest {
     private String name;
 
     @NotNull(message = "Cookie description cannot be null")
-    @Size(max = 150, message = "Cookie description must be less then 150 characters")
+    @Size(min = 1, max = 150, message = "Cookie description must be less then 150 characters and cannot be empty")
     private String description;
 
    /* @NotNull(message = "Cookie photo cannot be null")

@@ -19,7 +19,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorResponse handleException(MethodArgumentNotValidException ex) {
+    public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
 
         List<FieldError> errors = ex.getBindingResult().getFieldErrors();
 
@@ -42,7 +42,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(FileAddingException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorResponse handleFileException (FileAddingException ex) {
+    public ErrorResponse handleFileAddingException (FileAddingException ex) {
         List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
         ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
         error.setFieldName(FILEFIELD);

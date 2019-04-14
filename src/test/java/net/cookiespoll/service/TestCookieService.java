@@ -3,9 +3,10 @@ import net.cookiespoll.daoimpl.CookieDaoImpl;
 import net.cookiespoll.dto.AddCookieDtoRequest;
 import net.cookiespoll.mapper.CookieMapper;
 import net.cookiespoll.model.Cookie;
+import net.cookiespoll.model.CookieAddingStatus;
 import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.apache.tomcat.util.http.fileupload.FileItemHeaders;
-/*import org.junit.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,10 +29,10 @@ public class TestCookieService {
     @InjectMocks
     CookieService cookieService;
 
-    Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2]);
-    Cookie cookieWithId = new Cookie(1, "cookie", "tasty cookie", new byte[2],false);
+    Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING);
+    Cookie cookieWithId = new Cookie(1, "cookie", "tasty cookie", new byte[2],CookieAddingStatus.WAITING);
     MockMultipartFile mockMultipartFile = new MockMultipartFile("testcookie.jpg", new byte[2]);
-    AddCookieDtoRequest addCookieDtoRequest = new AddCookieDtoRequest("cookie", "tasty cookie", mockMultipartFile);
+    AddCookieDtoRequest addCookieDtoRequest = new AddCookieDtoRequest("cookie", "tasty cookie");
 
     @Before
     public void setUp() throws Exception {
@@ -42,16 +43,16 @@ public class TestCookieService {
     public void testCookieDaoInsert() throws IOException {
 
         when(cookieDao.insert(cookie)).thenReturn(cookieWithId);
-        Cookie resultCookie = cookieService.addCookie(addCookieDtoRequest);
+        Cookie resultCookie = cookieService.addCookie(addCookieDtoRequest, mockMultipartFile);
 
         Assert.assertEquals("1", resultCookie.getId());
         Assert.assertEquals(addCookieDtoRequest.getName(), resultCookie.getName());
         Assert.assertEquals(addCookieDtoRequest.getDescription(), resultCookie.getDescription());
-        Assert.assertEquals(addCookieDtoRequest.getFile().getBytes(), resultCookie.getFileData());
-        Assert.assertEquals(false, resultCookie.getIsApproved());
+        Assert.assertEquals(mockMultipartFile.getBytes(), resultCookie.getFileData());
+        Assert.assertEquals(cookie.getCookieAddingStatus(), resultCookie.getCookieAddingStatus());
 
         verify(cookieDao).insert(cookie);
 
     }
 
-}*/
+}

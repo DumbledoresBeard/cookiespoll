@@ -8,27 +8,21 @@ public class Cookie {
     private String name;
     private String description;
     private byte[] fileData;
-    private boolean isApproved;
+    private CookieAddingStatus cookieAddingStatus;
 
-    public Cookie(int id, String name, String description, byte[] fileData, boolean isApproved) {
+    public Cookie(int id, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.fileData = fileData;
-        this.isApproved = isApproved;
+        this.cookieAddingStatus = cookieAddingStatus;
     }
 
-    public Cookie(String name, String description, byte[] fileData, boolean isApproved) {
+    public Cookie(String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus) {
         this.name = name;
         this.description = description;
         this.fileData = fileData;
-        this.isApproved = isApproved;
-    }
-
-    public Cookie(String name, String description, byte[] fileData) {
-        this.name = name;
-        this.description = description;
-        this.fileData = fileData;
+        this.cookieAddingStatus = cookieAddingStatus;
     }
 
     public int getId() {
@@ -63,12 +57,12 @@ public class Cookie {
         this.fileData = fileData;
     }
 
-    public boolean getIsApproved() {
-        return isApproved;
+    public CookieAddingStatus getCookieAddingStatus() {
+        return cookieAddingStatus;
     }
 
-    public void setIsApproved(boolean approved) {
-        isApproved = approved;
+    public void setCookieAddingStatus(CookieAddingStatus cookieAddingStatus) {
+        this.cookieAddingStatus = cookieAddingStatus;
     }
 
     @Override
@@ -77,15 +71,15 @@ public class Cookie {
         if (!(o instanceof Cookie)) return false;
         Cookie cookie = (Cookie) o;
         return getId() == cookie.getId() &&
-                isApproved == cookie.isApproved &&
                 Objects.equals(getName(), cookie.getName()) &&
                 Objects.equals(getDescription(), cookie.getDescription()) &&
-                Arrays.equals(getFileData(), cookie.getFileData());
+                Arrays.equals(getFileData(), cookie.getFileData()) &&
+                getCookieAddingStatus() == cookie.getCookieAddingStatus();
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(getId(), getName(), getDescription(), isApproved);
+        int result = Objects.hash(getId(), getName(), getDescription(), getCookieAddingStatus());
         result = 31 * result + Arrays.hashCode(getFileData());
         return result;
     }

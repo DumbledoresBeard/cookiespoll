@@ -1,6 +1,7 @@
 package net.cookiespoll.mapper;
 
 import net.cookiespoll.model.Cookie;
+import net.cookiespoll.model.CookieAddingStatus;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +19,7 @@ public class TestCookieMapper {
     @Mock
     CookieMapper cookieMapper;
 
-    Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], false);
+    Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING);
 
     @Before
     public void setUp() throws Exception {

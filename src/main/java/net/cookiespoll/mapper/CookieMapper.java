@@ -9,8 +9,8 @@ import org.apache.ibatis.annotations.Param;
 
 public interface CookieMapper {
 
-    @Insert("INSERT INTO cookie (name, description, file_data, is_approved) VALUES "
-            + "( #{cookie.name}, #{cookie.description}, #{cookie.fileData}, #{cookie.isApproved} )")
+    @Insert("INSERT INTO cookie (name, description, file_data, cookie_adding_status) VALUES "
+            + "( #{cookie.name}, #{cookie.description}, #{cookie.fileData}, #{cookie.cookieAddingStatus} )")
     @Options(useGeneratedKeys = true, keyProperty = "expense.id")
     Integer insert(@Param("cookie") Cookie cookie);
 }

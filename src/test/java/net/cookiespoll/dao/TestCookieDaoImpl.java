@@ -3,6 +3,7 @@ package net.cookiespoll.dao;
 import net.cookiespoll.daoimpl.CookieDaoImpl;
 import net.cookiespoll.mapper.CookieMapper;
 import net.cookiespoll.model.Cookie;
+import net.cookiespoll.model.CookieAddingStatus;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +24,7 @@ public class TestCookieDaoImpl {
     @InjectMocks
     CookieDaoImpl cookieDaoImpl;
 
-    Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], false);
+    Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING);
 
     @Before
     public void setUp() throws Exception {
@@ -39,7 +40,7 @@ public class TestCookieDaoImpl {
         Assert.assertEquals(cookie.getName(), resultCookie.getName());
         Assert.assertEquals(cookie.getDescription(), resultCookie.getDescription());
         Assert.assertEquals(cookie.getFileData(), resultCookie.getFileData());
-        Assert.assertEquals(cookie.getIsApproved(), resultCookie.getIsApproved());
+        Assert.assertEquals(cookie.getCookieAddingStatus(), resultCookie.getCookieAddingStatus());
 
         verify(cookieMapper).insert(cookie);
 
