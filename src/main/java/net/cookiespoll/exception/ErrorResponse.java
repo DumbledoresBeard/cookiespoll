@@ -6,6 +6,8 @@ public class ErrorResponse {
 
     private List<ErrorDetails> errors;
 
+    public ErrorResponse() {
+    }
 
     public List<ErrorDetails> getErrors() {
         return errors;
@@ -18,6 +20,9 @@ public class ErrorResponse {
     public static class ErrorDetails {
         private String fieldName;
         private String message;
+
+        public ErrorDetails() {
+        }
 
         public String getFieldName() {
             return fieldName;
