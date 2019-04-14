@@ -42,7 +42,7 @@ public class CookiesController {
 
         cookie = cookieService.addCookie(addCookieDtoRequest, multipartFile);
 
-        return new AddCookieDtoResponse(cookie.getName(), cookie.getDescription(), cookie.getFileData());
+        return new AddCookieDtoResponse(cookie.getName(), cookie.getDescription(), cookie.getFileData(), cookie.getCookieAddingStatus());
 
     }
 }

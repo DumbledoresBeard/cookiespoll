@@ -1,10 +1,13 @@
 package net.cookiespoll.controller;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.cookiespoll.daoimpl.CookieDaoImpl;
 import net.cookiespoll.dto.AddCookieDtoRequest;
+import net.cookiespoll.dto.AddCookieDtoResponse;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.service.CookieService;
 import net.cookiespoll.validation.FileValidator;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,10 +42,10 @@ public class TestCookieController {
     private CookieService cookieService = mock(CookieService.class);
     private FileValidator fileValidator = new FileValidator();
     private CookiesController cookiesController = new CookiesController(cookieService, fileValidator);
-    private Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING);
-    private MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "testcookie", "image/jpg", new byte[2]);
-    private AddCookieDtoRequest addCookieDtoRequest = new AddCookieDtoRequest("cookie", "tasty cookie");
-    private MockMultipartFile jsonFile = new MockMultipartFile("data", "", "application/json", "{\"name\":\"name\", \"description\": \"description\"}".getBytes());
+    private byte [] byteArray = "Photo".getBytes();
+    private Cookie cookie = new Cookie("cookie", "tasty cookie", byteArray, CookieAddingStatus.WAITING);
+    private MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "testcookie", "image/jpg", byteArray);
+    private MockMultipartFile addCookieDtoRequest = new MockMultipartFile("data", "", "application/json", "{\"name\":\"cookie\", \"description\": \"tasty cookie\"}".getBytes());
 
     @Before
     public void initController() {
@@ -50,17 +53,25 @@ public class TestCookieController {
     }
 
     @Test
-    public void addCookieValidRequest() throws Exception {
+    public void testAddCookieValidRequest() throws Exception {
         when(cookieService.addCookie((any(AddCookieDtoRequest.class)), any(MockMultipartFile.class))).thenReturn(cookie);
 
         String response = mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
                 .file(mockMultipartFile)
-                .file(jsonFile)
+                .file(addCookieDtoRequest)
         ).andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
         verify(cookieService).addCookie((any(AddCookieDtoRequest.class)), any(MockMultipartFile.class));
+
+        AddCookieDtoResponse addCookieDtoResponse = new ObjectMapper().readValue(response, AddCookieDtoResponse.class);
+
+        Assert.assertEquals(cookie.getName(), addCookieDtoResponse.getName());
+        Assert.assertEquals(cookie.getDescription(), addCookieDtoResponse.getDescription());
+        Assert.assertArrayEquals(cookie.getFileData(), addCookieDtoResponse.getFileData());
+        Assert.assertEquals(cookie.getCookieAddingStatus(), addCookieDtoResponse.getCookieAddingStatus());
+
     }
 }
 
