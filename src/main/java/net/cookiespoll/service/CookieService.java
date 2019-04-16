@@ -21,7 +21,8 @@ public class CookieService {
     }
 
     public Cookie addCookie (AddCookieDtoRequest addCookieDtoRequest, MultipartFile multipartFile) throws IOException {
-       return cookieDao.insert(new Cookie(addCookieDtoRequest.getName(), addCookieDtoRequest.getDescription(),
-                multipartFile.getBytes(), CookieAddingStatus.WAITING));
+       int rating = 0;
+        return cookieDao.insert(new Cookie(addCookieDtoRequest.getName(), addCookieDtoRequest.getDescription(),
+                multipartFile.getBytes(), CookieAddingStatus.WAITING, rating));
     }
 }

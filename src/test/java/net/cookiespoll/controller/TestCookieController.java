@@ -1,11 +1,8 @@
 package net.cookiespoll.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
-import net.cookiespoll.daoimpl.CookieDaoImpl;
 import net.cookiespoll.dto.AddCookieDtoRequest;
 import net.cookiespoll.dto.AddCookieDtoResponse;
 import net.cookiespoll.exception.ControllerExceptionHandler;
-import net.cookiespoll.exception.ErrorResponse;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.service.CookieService;
@@ -15,33 +12,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.support.StaticApplicationContext;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
-import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
-
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -63,13 +40,23 @@ public class TestCookieController {
             "image/jpg", byteArray);
     private MockMultipartFile addCookieDtoRequest = new MockMultipartFile("data", "", "application/json",
             ("{\"name\":\"cookie\", \"description\": \"tasty cookie\"}").getBytes());
-    private MockMultipartFile addCookieNullName = new MockMultipartFile("data", "", "application/json",
+    private MockMultipartFile cookieNullName = new MockMultipartFile("data", "", "application/json",
             "{\"name\": null, \"description\": \"tasty cookie\"}".getBytes());
-
+    private MockMultipartFile cookieTooShortName = new MockMultipartFile("data", "", "application/json",
+            "{\"name\": \"c\", \"description\": \"tasty cookie\"}".getBytes());
+    private MockMultipartFile cookieTooLongName = new MockMultipartFile("data", "", "application/json",
+            "{\"name\": \"tastycookietastycookietastycook\", \"description\": \"tasty cookie\"}".getBytes());
+    private MockMultipartFile cookieWithNullDescription = new MockMultipartFile("data", "", "application/json",
+            "{\"name\": \"cookie\", \"description\": null}".getBytes());
+    private MockMultipartFile cookieEmptyDescription = new MockMultipartFile("data", "", "application/json",
+            "{\"name\": \"cookie\", \"description\": \"\"}".getBytes());
+    private MockMultipartFile cookieWithTooLongDescription = new MockMultipartFile("data", "", "application/json",
+            ("{\"name\": \"cookie\", \"description\": \"tastycookietastycookietastycookietastycookietastycookietastycookietastycook" +
+                    "ietastycookietastycookietastycookietastycookietastycookietastycookietastycoo\"}").getBytes());
 
     @Before
     public void init() {
-        mockMvc = MockMvcBuilders.standaloneSetup(cookiesController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(cookiesController).setControllerAdvice(new ControllerExceptionHandler()).build();
     }
 
     @Test
@@ -97,25 +84,68 @@ public class TestCookieController {
     @Test
     public void testAddCookieWithNullName() throws Exception {
 
+      mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
+                .file(mockMultipartFile)
+                .file(cookieNullName)
+        ).andExpect(status().is(400))
+              .andExpect(content().string("{\"errors\":[{\"fieldName\":\"name\"," +
+                      "\"message\":\"Cookie name cannot be null\"}]}"));
+
+    }
+
+    @Test
+    public void testAddCookieWithTooShortName() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
                 .file(mockMultipartFile)
-                .file(addCookieNullName)
+                .file(cookieTooShortName)
         ).andExpect(status().is(400))
-                .andExpect(content().string("{\"errors\":[{\"fieldName\":\"name\",\"message\":\"Cookie name cannot be null\"}]}"));
-
-
-       /* ErrorResponse errorResponse = new ObjectMapper().readValue(response, ErrorResponse.class);
-
-        List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
-        ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
-        error.setFieldName("name");
-        error.setMessage("Cookie name cannot be null");
-        errorDetails.add(error);
-        ErrorResponse expectedErrorResponse = new ErrorResponse();
-        errorResponse.setErrors(errorDetails);
-
-        Assert.assertEquals(expectedErrorResponse.getErrors().get(0).getFieldName(), errorResponse.getErrors().get(0).getFieldName());
-        Assert.assertEquals(expectedErrorResponse.getErrors().get(0).getMessage(), errorResponse.getErrors().get(0).getMessage());*/
+                .andExpect(content().string("{\"errors\":[{\"fieldName\":\"name\"," +
+                        "\"message\":\"Cookie name must be between 4 and 30 characters\"}]}"));
     }
+
+    @Test
+    public void testAddCookieWithTooLongName() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
+                .file(mockMultipartFile)
+                .file(cookieTooShortName)
+        ).andExpect(status().is(400))
+                .andExpect(content().string("{\"errors\":[{\"fieldName\":\"name\"," +
+                        "\"message\":\"Cookie name must be between 4 and 30 characters\"}]}"));
+    }
+
+
+    @Test
+    public void testAddCookieWithNullDescription() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
+                .file(mockMultipartFile)
+                .file(cookieWithNullDescription)
+        ).andExpect(status().is(400))
+                .andExpect(content().string("{\"errors\":[{\"fieldName\":\"description\"," +
+                        "\"message\":\"Cookie description cannot be null\"}]}"));
+
+    }
+
+
+    @Test
+    public void testAddCookieEmptyDescription () throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
+                .file(mockMultipartFile)
+                .file(cookieEmptyDescription)
+        ).andExpect(status().is(400))
+                .andExpect(content().string("{\"errors\":[{\"fieldName\":\"description\"," +
+                        "\"message\":\"Cookie description must be less then 150 characters and cannot be empty\"}]}"));
+    }
+
+    @Test
+    public void testAddCookieWithTooLongDescription () throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
+                .file(mockMultipartFile)
+                .file(cookieWithTooLongDescription)
+        ).andExpect(status().is(400))
+                .andExpect(content().string("{\"errors\":[{\"fieldName\":\"description\"," +
+                        "\"message\":\"Cookie description must be less then 150 characters and cannot be empty\"}]}"));
+    }
+
+
 }
 

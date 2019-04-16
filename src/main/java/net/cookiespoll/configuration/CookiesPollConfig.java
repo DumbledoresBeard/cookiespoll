@@ -52,12 +52,6 @@ public class CookiesPollConfig {
     }
 
     @Bean
-    public CookieDao cookieDao () { return new CookieDaoImpl(); }
-
-    @Bean
-    public CookieService cookieService () {return new CookieService(cookieDao());}
-
-    @Bean
     public FileValidator fileValidator () {return new FileValidator();}
 
 

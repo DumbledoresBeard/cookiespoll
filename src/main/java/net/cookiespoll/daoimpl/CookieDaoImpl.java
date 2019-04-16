@@ -4,11 +4,18 @@ import net.cookiespoll.dao.CookieDao;
 import net.cookiespoll.mapper.CookieMapper;
 import net.cookiespoll.model.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+@Component
 public class CookieDaoImpl implements CookieDao {
-    @Autowired
+
     private CookieMapper cookieMapper;
+
+    @Autowired
+    public CookieDaoImpl(CookieMapper cookieMapper) {
+        this.cookieMapper = cookieMapper;
+    }
 
     @Override
     @Transactional

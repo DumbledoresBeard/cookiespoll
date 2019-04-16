@@ -7,5 +7,6 @@ id serial PRIMARY KEY,
 name VARCHAR (30) UNIQUE NOT NULL,
 description VARCHAR (150),
 file_data BYTEA,
-cookie_adding_status VARCHAR (20)
+cookie_adding_status VARCHAR (20),
+rating int
 )

@@ -1,11 +1,8 @@
 package net.cookiespoll.service;
 import net.cookiespoll.daoimpl.CookieDaoImpl;
 import net.cookiespoll.dto.AddCookieDtoRequest;
-import net.cookiespoll.mapper.CookieMapper;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
-import org.apache.tomcat.util.http.fileupload.FileItem;
-import org.apache.tomcat.util.http.fileupload.FileItemHeaders;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.*;
@@ -30,7 +26,8 @@ public class TestCookieService {
     CookieService cookieService;
 
     Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING);
-    Cookie cookieWithId = new Cookie(1, "cookie", "tasty cookie", new byte[2],CookieAddingStatus.WAITING);
+    Cookie cookieWithId = new Cookie(1, "cookie", "tasty cookie", new byte[2],CookieAddingStatus.WAITING,
+            0);
     MockMultipartFile mockMultipartFile = new MockMultipartFile("testcookie.jpg", new byte[2]);
     AddCookieDtoRequest addCookieDtoRequest = new AddCookieDtoRequest("cookie", "tasty cookie");
 
@@ -50,6 +47,7 @@ public class TestCookieService {
         Assert.assertEquals(addCookieDtoRequest.getDescription(), resultCookie.getDescription());
         Assert.assertArrayEquals(mockMultipartFile.getBytes(), resultCookie.getFileData());
         Assert.assertEquals(cookie.getCookieAddingStatus(), resultCookie.getCookieAddingStatus());
+        Assert.assertEquals(0, resultCookie.getRating());
 
         verify(cookieDao).insert(cookie);
 

@@ -33,6 +33,7 @@
         <junit.version>4.12</junit.version>
         <mockito.version>2.23.4</mockito.version>
         <slf4j.version>1.7.25</slf4j.version>
+        <logback.classic.version>1.2.3</logback.classic.version>
     </properties>
 
     <build>
@@ -152,6 +153,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.classic.version}</version>
         </dependency>
     </dependencies>
 

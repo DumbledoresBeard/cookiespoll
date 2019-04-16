@@ -2,6 +2,7 @@ package net.cookiespoll.dao;
 
 import net.cookiespoll.model.Cookie;
 
+
 public interface CookieDao {
 
     public Cookie insert (Cookie cookie);
