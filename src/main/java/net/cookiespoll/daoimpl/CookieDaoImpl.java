@@ -7,10 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 public class CookieDaoImpl implements CookieDao {
-
     @Autowired
     private CookieMapper cookieMapper;
-
 
     @Override
     @Transactional
@@ -22,7 +20,7 @@ public class CookieDaoImpl implements CookieDao {
 
     @Override
     public Cookie getCookieById(int id) {
-        return null;
+        /*To Do*/ return new Cookie();
     }
 
     @Override

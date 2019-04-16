@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/cookiespoll
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver

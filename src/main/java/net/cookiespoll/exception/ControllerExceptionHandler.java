@@ -14,7 +14,7 @@ import java.util.List;
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
-    private final String FILEFIELD = "File";
+    private final String FILE_FIELD = "File";
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -39,13 +39,13 @@ public class ControllerExceptionHandler {
 
     }
 
-    @ExceptionHandler(FileAddingException.class)
+    @ExceptionHandler(FileValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorResponse handleFileAddingException (FileAddingException ex) {
+    public ErrorResponse handleFileAddingException (FileValidationException ex) {
         List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
         ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
-        error.setFieldName(FILEFIELD);
+        error.setFieldName(FILE_FIELD);
         error.setMessage(ex.getMessage());
         errorDetails.add(error);
         ErrorResponse errorResponse = new ErrorResponse();

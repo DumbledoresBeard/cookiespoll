@@ -20,6 +20,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.mock.web.MockMultipartFile;
@@ -47,8 +49,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration
-@WebAppConfiguration
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@AutoConfigureMockMvc
 public class TestCookieController {
 
     private MockMvc mockMvc;
@@ -66,7 +68,7 @@ public class TestCookieController {
 
 
     @Before
-    public void initController() {
+    public void init() {
         mockMvc = MockMvcBuilders.standaloneSetup(cookiesController).build();
     }
 
@@ -95,16 +97,14 @@ public class TestCookieController {
     @Test
     public void testAddCookieWithNullName() throws Exception {
 
-        String response = mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
                 .file(mockMultipartFile)
                 .file(addCookieNullName)
         ).andExpect(status().is(400))
-                .andReturn()
-                .getResolvedException()
-                .toString();
+                .andExpect(content().string("{\"errors\":[{\"fieldName\":\"name\",\"message\":\"Cookie name cannot be null\"}]}"));
 
 
-        ErrorResponse errorResponse = new ObjectMapper().readValue(response, ErrorResponse.class);
+       /* ErrorResponse errorResponse = new ObjectMapper().readValue(response, ErrorResponse.class);
 
         List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
         ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
@@ -115,7 +115,7 @@ public class TestCookieController {
         errorResponse.setErrors(errorDetails);
 
         Assert.assertEquals(expectedErrorResponse.getErrors().get(0).getFieldName(), errorResponse.getErrors().get(0).getFieldName());
-        Assert.assertEquals(expectedErrorResponse.getErrors().get(0).getMessage(), errorResponse.getErrors().get(0).getMessage());
+        Assert.assertEquals(expectedErrorResponse.getErrors().get(0).getMessage(), errorResponse.getErrors().get(0).getMessage());*/
     }
 }
 

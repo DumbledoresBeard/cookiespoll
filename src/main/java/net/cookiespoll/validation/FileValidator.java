@@ -1,26 +1,26 @@
 package net.cookiespoll.validation;
 
-import net.cookiespoll.exception.FileAddingException;
+import net.cookiespoll.exception.FileValidationException;
 import org.springframework.web.multipart.MultipartFile;
 
 
 public class FileValidator {
 
-    public final String JPGIMAGE = "image/jpg";
-    public final String JPEGIMAGE = "image/jpeg";
-    public final String PNGIMAGE = "image/png";
+    public final String JPG_IMAGE = "image/jpg";
+    public final String JPEG_IMAGE = "image/jpeg";
+    public final String PNG_IMAGE = "image/png";
 
 
-    public void validate(MultipartFile multipartFile) throws FileAddingException {
+    public void validate(MultipartFile multipartFile) throws FileValidationException {
         if (multipartFile == null) {
-            throw new FileAddingException("File is null, please, upload a file");
+            throw new FileValidationException("File is null, please, upload a file");
         }
         if (multipartFile.isEmpty()) {
-            throw new FileAddingException("File is empty, please, upload jpg, jpeg or png file");
+            throw new FileValidationException("File is empty, please, upload jpg, jpeg or png file");
         }
-        if (!(multipartFile.getContentType().equals(JPGIMAGE) || multipartFile.getContentType().equals(JPEGIMAGE)
-                || multipartFile.getContentType().equals(PNGIMAGE))) {
-           throw new FileAddingException("File type is not supported, valid file types: jpg, jpeg or png");
+        if (!(multipartFile.getContentType().equals(JPG_IMAGE) || multipartFile.getContentType().equals(JPEG_IMAGE)
+                || multipartFile.getContentType().equals(PNG_IMAGE))) {
+           throw new FileValidationException("File type is not supported, valid file types: jpg, jpeg or png");
         }
     }
 }

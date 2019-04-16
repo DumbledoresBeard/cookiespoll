@@ -10,6 +10,9 @@ public class Cookie {
     private byte[] fileData;
     private CookieAddingStatus cookieAddingStatus;
 
+    public Cookie() {
+    }
+
     public Cookie(int id, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus) {
         this.id = id;
         this.name = name;

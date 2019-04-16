@@ -13,7 +13,6 @@ import java.io.IOException;
 @Service
 public class CookieService {
 
-
     private CookieDao cookieDao;
 
     @Autowired

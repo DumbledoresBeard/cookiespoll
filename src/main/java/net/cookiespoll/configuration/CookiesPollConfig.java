@@ -1,4 +1,4 @@
-package net.cookiespoll;
+package net.cookiespoll.configuration;
 
 import net.cookiespoll.dao.CookieDao;
 import net.cookiespoll.daoimpl.CookieDaoImpl;

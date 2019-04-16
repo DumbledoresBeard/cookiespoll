@@ -45,10 +45,10 @@ public class TestCookieService {
         when(cookieDao.insert(cookie)).thenReturn(cookieWithId);
         Cookie resultCookie = cookieService.addCookie(addCookieDtoRequest, mockMultipartFile);
 
-        Assert.assertEquals("1", resultCookie.getId());
+        Assert.assertEquals(1, resultCookie.getId());
         Assert.assertEquals(addCookieDtoRequest.getName(), resultCookie.getName());
         Assert.assertEquals(addCookieDtoRequest.getDescription(), resultCookie.getDescription());
-        Assert.assertEquals(mockMultipartFile.getBytes(), resultCookie.getFileData());
+        Assert.assertArrayEquals(mockMultipartFile.getBytes(), resultCookie.getFileData());
         Assert.assertEquals(cookie.getCookieAddingStatus(), resultCookie.getCookieAddingStatus());
 
         verify(cookieDao).insert(cookie);
