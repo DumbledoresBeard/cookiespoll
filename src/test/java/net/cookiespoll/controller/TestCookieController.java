@@ -21,8 +21,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -53,6 +51,11 @@ public class TestCookieController {
     private MockMultipartFile cookieWithTooLongDescription = new MockMultipartFile("data", "", "application/json",
             ("{\"name\": \"cookie\", \"description\": \"tastycookietastycookietastycookietastycookietastycookietastycookietastycook" +
                     "ietastycookietastycookietastycookietastycookietastycookietastycookietastycoo\"}").getBytes());
+    private MockMultipartFile cookieNullFile = null;
+    private MockMultipartFile cookieInvalidFileType = new MockMultipartFile("file", "testcookie",
+            "text/plain", byteArray);
+    private MockMultipartFile cookieEmptyFile = new MockMultipartFile("file", "testcookie",
+            "text/plain", new byte[0]);
 
     @Before
     public void init() {
@@ -145,6 +148,38 @@ public class TestCookieController {
                 .andExpect(content().string("{\"errors\":[{\"fieldName\":\"description\"," +
                         "\"message\":\"Cookie description must be less then 150 characters and cannot be empty\"}]}"));
     }
+
+
+    @Test
+    public void testAddCookieNullFile() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
+                .file(cookieNullFile)
+                .file(addCookieDtoRequest)
+        ).andExpect(status().is(400))
+                .andExpect(content().string("{\"errors\":[{\"fieldName\":\"file\"," +
+                        "\"message\":\"File is null, please, upload a file\"}]}"));
+    }
+
+    @Test
+    public void testAddCookieEmptyFile() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
+                .file(cookieEmptyFile)
+                .file(addCookieDtoRequest)
+        ).andExpect(status().is(400))
+                .andExpect(content().string("{\"errors\":[{\"fieldName\":\"file\"," +
+                        "\"message\":\"File is empty, please, upload jpg, jpeg or png file\"}]}"));
+    }
+
+    @Test
+    public void testAddCookieInvalidFileType () throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
+                .file(cookieInvalidFileType)
+                .file(addCookieDtoRequest)
+        ).andExpect(status().is(400))
+                .andExpect(content().string("{\"errors\":[{\"fieldName\":\"file\"," +
+                        "\"message\":\"File type is not supported, valid file types: jpg, jpeg or png\"}]}"));
+    }
+
 
 
 }
