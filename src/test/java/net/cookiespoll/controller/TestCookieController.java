@@ -17,9 +17,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -56,6 +58,8 @@ public class TestCookieController {
             "text/plain", byteArray);
     private MockMultipartFile cookieEmptyFile = new MockMultipartFile("file", "testcookie",
             "text/plain", new byte[0]);
+    private MockMultipartFile cookieExceededMaxFileSize = new MockMultipartFile("file", "testcookie",
+            "image/jpg", new byte[1024 * 1024 * 6]);
 
     @Before
     public void init() {
@@ -180,7 +184,16 @@ public class TestCookieController {
                         "\"message\":\"File type is not supported, valid file types: jpg, jpeg or png\"}]}"));
     }
 
+    @Test
+    public void tetsAddCookieExceededMaxFileSize () throws Exception {
 
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
+                .file(cookieExceededMaxFileSize)
+                .file(addCookieDtoRequest)
+        ).andExpect(status().is(500));
+    /*            .andExpect((ResultMatcher) jsonPath("$.message", is("Maximum upload size exceeded; nested exception is java.lang.IllegalStateException: org.apache.tomcat.util.http.fileupload.FileUploadBase$SizeLimitExceededException: the request was rejected because its size (8055342) exceeds the configured maximum (5242880)")));*/
+
+    }
 
 }
 
