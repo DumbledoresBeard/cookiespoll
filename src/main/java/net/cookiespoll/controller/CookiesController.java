@@ -40,7 +40,7 @@ public class CookiesController {
     @ResponseBody
     public AddCookieDtoResponse addCookie(
                             @RequestPart("file") MultipartFile multipartFile, @Valid @RequestPart("data")
-                                                      AddCookieDtoRequest addCookieDtoRequest
+                            AddCookieDtoRequest addCookieDtoRequest
                             ) throws IOException, FileValidationException {
         LOGGER.info("Start processing AddCookieDtoRequest {}", addCookieDtoRequest, multipartFile);
         fileValidator.validate(multipartFile);
@@ -50,7 +50,7 @@ public class CookiesController {
         LOGGER.info("Done");
 
         return new AddCookieDtoResponse(cookie.getName(), cookie.getDescription(), cookie.getFileData(),
-                cookie.getCookieAddingStatus());
+                                        cookie.getCookieAddingStatus());
 
     }
 }

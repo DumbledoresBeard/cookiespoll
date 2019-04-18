@@ -1,5 +1,6 @@
 package net.cookiespoll.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.cookiespoll.configuration.CookiesPollConfig;
 import net.cookiespoll.dto.AddCookieDtoRequest;
 import net.cookiespoll.dto.AddCookieDtoResponse;
 import net.cookiespoll.exception.ControllerExceptionHandler;
@@ -12,22 +13,27 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest
 @AutoConfigureMockMvc
+@ContextConfiguration(initializers=ConfigFileApplicationContextInitializer.class)
+/*@ActiveProfiles("test")*/
 public class TestCookieController {
 
     private MockMvc mockMvc;
@@ -38,32 +44,35 @@ public class TestCookieController {
     private Cookie cookie = new Cookie("cookie", "tasty cookie", byteArray, CookieAddingStatus.WAITING);
     private MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "testcookie",
             "image/jpg", byteArray);
-    private MockMultipartFile addCookieDtoRequest = new MockMultipartFile("data", "", "application/json",
-            ("{\"name\":\"cookie\", \"description\": \"tasty cookie\"}").getBytes());
-    private MockMultipartFile cookieNullName = new MockMultipartFile("data", "", "application/json",
-            "{\"name\": null, \"description\": \"tasty cookie\"}".getBytes());
-    private MockMultipartFile cookieTooShortName = new MockMultipartFile("data", "", "application/json",
-            "{\"name\": \"c\", \"description\": \"tasty cookie\"}".getBytes());
-    private MockMultipartFile cookieTooLongName = new MockMultipartFile("data", "", "application/json",
-            "{\"name\": \"tastycookietastycookietastycook\", \"description\": \"tasty cookie\"}".getBytes());
-    private MockMultipartFile cookieWithNullDescription = new MockMultipartFile("data", "", "application/json",
-            "{\"name\": \"cookie\", \"description\": null}".getBytes());
-    private MockMultipartFile cookieEmptyDescription = new MockMultipartFile("data", "", "application/json",
-            "{\"name\": \"cookie\", \"description\": \"\"}".getBytes());
-    private MockMultipartFile cookieWithTooLongDescription = new MockMultipartFile("data", "", "application/json",
-            ("{\"name\": \"cookie\", \"description\": \"tastycookietastycookietastycookietastycookietastycookietastycookietastycook" +
-                    "ietastycookietastycookietastycookietastycookietastycookietastycookietastycoo\"}").getBytes());
+    private MockMultipartFile addCookieDtoRequest = new MockMultipartFile("data", "",
+            "application/json", ("{\"name\":\"cookie\", \"description\": \"tasty cookie\"}").getBytes());
+    private MockMultipartFile cookieNullName = new MockMultipartFile("data", "",
+            "application/json", "{\"name\": null, \"description\": \"tasty cookie\"}".getBytes());
+    private MockMultipartFile cookieTooShortName = new MockMultipartFile("data", "",
+            "application/json", "{\"name\": \"c\", \"description\": \"tasty cookie\"}".getBytes());
+    private MockMultipartFile cookieTooLongName = new MockMultipartFile("data", "",
+            "application/json", ("{\"name\": \"tastycookietastycookietastycook\", \"description\": " +
+            "\"tasty cookie\"}").getBytes());
+    private MockMultipartFile cookieWithNullDescription = new MockMultipartFile("data", "",
+            "application/json", "{\"name\": \"cookie\", \"description\": null}".getBytes());
+    private MockMultipartFile cookieEmptyDescription = new MockMultipartFile("data", "",
+            "application/json", "{\"name\": \"cookie\", \"description\": \"\"}".getBytes());
+    private MockMultipartFile cookieWithTooLongDescription = new MockMultipartFile("data", "",
+            "application/json", ("{\"name\": \"cookie\", \"description\": " +
+            "\"tastycookietastycookietastycookietastycookietastycookietastycookietastycook" +
+            "ietastycookietastycookietastycookietastycookietastycookietastycookietastycoo\"}").getBytes());
     private MockMultipartFile cookieNullFile = null;
     private MockMultipartFile cookieInvalidFileType = new MockMultipartFile("file", "testcookie",
             "text/plain", byteArray);
     private MockMultipartFile cookieEmptyFile = new MockMultipartFile("file", "testcookie",
             "text/plain", new byte[0]);
     private MockMultipartFile cookieExceededMaxFileSize = new MockMultipartFile("file", "testcookie",
-            "image/jpg", new byte[1024 * 1024 * 6]);
+            "image/jpg", new byte[1024 * 1024 * 7]);
 
     @Before
     public void init() {
-        mockMvc = MockMvcBuilders.standaloneSetup(cookiesController).setControllerAdvice(new ControllerExceptionHandler()).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(cookiesController).setControllerAdvice
+                  (new ControllerExceptionHandler()).build();
     }
 
     @Test
@@ -185,7 +194,7 @@ public class TestCookieController {
     }
 
     @Test
-    public void tetsAddCookieExceededMaxFileSize () throws Exception {
+    public void testAddCookieExceededMaxFileSize () throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
                 .file(cookieExceededMaxFileSize)

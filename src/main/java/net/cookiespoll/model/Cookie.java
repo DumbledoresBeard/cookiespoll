@@ -14,7 +14,8 @@ public class Cookie {
     public Cookie() {
     }
 
-    public Cookie(int id, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus, int rating) {
+    public Cookie(int id, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus,
+                  int rating) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -23,7 +24,8 @@ public class Cookie {
         this.rating = rating;
     }
 
-    public Cookie(String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus, int rating) {
+    public Cookie(String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus,
+                  int rating) {
         this.name = name;
         this.description = description;
         this.fileData = fileData;

@@ -18,7 +18,8 @@ public class SwaggerConfig {
 
     @Bean
     public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2).useDefaultResponseMessages(false)
+        return new Docket(DocumentationType.SWAGGER_2)
+                .useDefaultResponseMessages(false)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("net.cookiespoll.controller"))
                 .paths(PathSelectors.regex("/.*")).build().apiInfo(apiEndPointsInfo());

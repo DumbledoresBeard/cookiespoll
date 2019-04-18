@@ -27,7 +27,7 @@ public class CookieService {
     public Cookie addCookie (AddCookieDtoRequest addCookieDtoRequest, MultipartFile multipartFile) throws IOException {
        int rating = 0;
        LOGGER.info("Set rating={} and cookieAddingStatus={} to cookie ", rating, CookieAddingStatus.WAITING);
-        return cookieDao.insert(new Cookie(addCookieDtoRequest.getName(), addCookieDtoRequest.getDescription(),
-                multipartFile.getBytes(), CookieAddingStatus.WAITING, rating));
+       return cookieDao.insert(new Cookie(addCookieDtoRequest.getName(), addCookieDtoRequest.getDescription(),
+                                multipartFile.getBytes(), CookieAddingStatus.WAITING, rating));
     }
 }

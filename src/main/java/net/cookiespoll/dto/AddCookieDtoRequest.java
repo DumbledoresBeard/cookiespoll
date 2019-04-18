@@ -14,8 +14,7 @@ public class AddCookieDtoRequest {
     @Size(min = 1, max = 150, message = "Cookie description must be less then 150 characters and cannot be empty")
     private String description;
 
-    public AddCookieDtoRequest() {
-    }
+    public AddCookieDtoRequest() {}
 
     public AddCookieDtoRequest(String name, String description) {
         this.name = name;

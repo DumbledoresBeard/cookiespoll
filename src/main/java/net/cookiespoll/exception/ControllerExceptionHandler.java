@@ -49,6 +49,7 @@ public class ControllerExceptionHandler {
     @ResponseBody
     public ErrorResponse handleFileAddingException (HttpServletRequest req, FileValidationException ex) {
         LOGGER.error("Request: " + req.getRequestURL() + " raised exception " + ex);
+
         List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
         ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
         error.setFieldName(FILE_FIELD);
