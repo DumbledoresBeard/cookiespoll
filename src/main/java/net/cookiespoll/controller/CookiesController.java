@@ -4,6 +4,8 @@ import io.swagger.annotations.*;
 import net.cookiespoll.dto.*;
 import net.cookiespoll.exception.FileValidationException;
 import net.cookiespoll.model.Cookie;
+import net.cookiespoll.model.User;
+import net.cookiespoll.model.UserRole;
 import net.cookiespoll.service.CookieService;
 import net.cookiespoll.validation.FileValidator;
 import org.slf4j.Logger;
@@ -52,5 +54,15 @@ public class CookiesController {
         return new AddCookieDtoResponse(cookie.getName(), cookie.getDescription(), cookie.getFileData(),
                                         cookie.getCookieAddingStatus());
 
+    }
+
+    @RequestMapping(value = "/addcookie",
+            method = RequestMethod.GET)
+    @ResponseBody
+    public String getCookiesInWaitingStatus (@RequestParam int id) {
+        if(!cookieService.getUserRole(id).equals(UserRole.ADMIN))
+        { return  "Not admin user cannot see list of cookies which are ready for adding"; }
+
+        return "ok";
     }
 }

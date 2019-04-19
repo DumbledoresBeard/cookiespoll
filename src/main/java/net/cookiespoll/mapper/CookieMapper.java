@@ -13,6 +13,6 @@ public interface CookieMapper {
     @Insert("INSERT INTO cookie (name, description, file_data, cookie_adding_status, rating) VALUES "
             + "( #{cookie.name}, #{cookie.description}, #{cookie.fileData}, #{cookie.cookieAddingStatus}," +
             " #{cookie.rating})")
-    @Options(useGeneratedKeys = true, keyProperty = "expense.id")
+    @Options(useGeneratedKeys = true, keyProperty = "cookie.id")
     Integer insert(@Param("cookie") Cookie cookie);
 }
