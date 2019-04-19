@@ -2,7 +2,6 @@ package net.cookiespoll.mapper;
 
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +29,7 @@ public class TestCookieMapper {
     @Test
     public void testCookieMapperInsert() {
         when(cookieMapper.insert(cookie)).thenReturn(1);
-        Assert.assertEquals(cookieMapper.insert(cookie), new Integer(1));
+        assert cookieMapper.insert(cookie) == 1;
         verify(cookieMapper).insert(cookie);
 
     }
