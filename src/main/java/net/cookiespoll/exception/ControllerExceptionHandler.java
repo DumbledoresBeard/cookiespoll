@@ -1,6 +1,5 @@
 package net.cookiespoll.exception;
 
-import net.cookiespoll.controller.CookiesController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -19,13 +18,14 @@ import java.util.List;
 public class ControllerExceptionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
-    private final String FILE_FIELD = "file";
+    private final static String FILE_FIELD = "file";
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorResponse handleMethodArgumentNotValidException(HttpServletRequest req, MethodArgumentNotValidException ex) {
         LOGGER.error("Request: " + req.getRequestURL() + " raised exception " + ex);
+
         List<FieldError> errors = ex.getBindingResult().getFieldErrors();
 
         List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();

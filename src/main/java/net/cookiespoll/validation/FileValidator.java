@@ -6,9 +6,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class FileValidator {
 
-    public final String JPG_IMAGE = "image/jpg";
-    public final String JPEG_IMAGE = "image/jpeg";
-    public final String PNG_IMAGE = "image/png";
+    public final static String JPG_IMAGE = "image/jpg";
+    public final static String JPEG_IMAGE = "image/jpeg";
+    public final static String PNG_IMAGE = "image/png";
 
 
     public void validate(MultipartFile multipartFile) throws FileValidationException {

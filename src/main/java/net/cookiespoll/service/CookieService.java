@@ -2,7 +2,6 @@ package net.cookiespoll.service;
 
 import net.cookiespoll.dao.CookieDao;
 import net.cookiespoll.dto.AddCookieDtoRequest;
-import net.cookiespoll.exception.ControllerExceptionHandler;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import org.slf4j.Logger;
@@ -26,7 +25,9 @@ public class CookieService {
 
     public Cookie addCookie (AddCookieDtoRequest addCookieDtoRequest, MultipartFile multipartFile) throws IOException {
        int rating = 0;
+
        LOGGER.info("Set rating={} and cookieAddingStatus={} to cookie ", rating, CookieAddingStatus.WAITING);
+
        return cookieDao.insert(new Cookie(addCookieDtoRequest.getName(), addCookieDtoRequest.getDescription(),
                                 multipartFile.getBytes(), CookieAddingStatus.WAITING, rating));
     }

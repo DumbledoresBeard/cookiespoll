@@ -39,8 +39,8 @@ public class CookiesController {
             method = RequestMethod.POST)
     @ResponseBody
     public AddCookieDtoResponse addCookie(
-                            @RequestPart("file") MultipartFile multipartFile, @Valid @RequestPart("data")
-                            AddCookieDtoRequest addCookieDtoRequest
+                            @RequestPart("file") MultipartFile multipartFile,
+                            @Valid @RequestPart("data") AddCookieDtoRequest addCookieDtoRequest
                             ) throws IOException, FileValidationException {
         LOGGER.info("Start processing AddCookieDtoRequest {}", addCookieDtoRequest, multipartFile);
         fileValidator.validate(multipartFile);

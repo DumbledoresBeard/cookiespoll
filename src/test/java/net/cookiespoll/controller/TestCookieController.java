@@ -1,6 +1,5 @@
 package net.cookiespoll.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.cookiespoll.configuration.CookiesPollConfig;
 import net.cookiespoll.dto.AddCookieDtoRequest;
 import net.cookiespoll.dto.AddCookieDtoResponse;
 import net.cookiespoll.exception.ControllerExceptionHandler;
@@ -13,14 +12,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -30,10 +24,9 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@ContextConfiguration(initializers=ConfigFileApplicationContextInitializer.class)
-/*@ActiveProfiles("test")*/
+
 public class TestCookieController {
 
     private MockMvc mockMvc;
@@ -123,7 +116,7 @@ public class TestCookieController {
     public void testAddCookieWithTooLongName() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
                 .file(mockMultipartFile)
-                .file(cookieTooShortName)
+                .file(cookieTooLongName)
         ).andExpect(status().is(400))
                 .andExpect(content().string("{\"errors\":[{\"fieldName\":\"name\"," +
                         "\"message\":\"Cookie name must be between 4 and 30 characters\"}]}"));
