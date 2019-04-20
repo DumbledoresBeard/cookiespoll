@@ -11,7 +11,7 @@ cookie_adding_status VARCHAR (20),
 rating int
 )
 
-CREATE TABLE user (
+CREATE TABLE users (
 id serial PRIMARY KEY,
 login VARCHAR (30) UNIQUE NOT NULL,
 password VARCHAR (150),

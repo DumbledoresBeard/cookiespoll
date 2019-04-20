@@ -20,7 +20,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -61,6 +65,13 @@ public class TestCookieController {
             "text/plain", new byte[0]);
     private MockMultipartFile cookieExceededMaxFileSize = new MockMultipartFile("file", "testcookie",
             "image/jpg", new byte[1024 * 1024 * 7]);
+    private List<Cookie> cookies = new ArrayList<>();
+    private Cookie cookieWith1Id = new Cookie(1, "cookie", "tasty cookie", new byte[2],
+            CookieAddingStatus.WAITING, 0);
+    private Cookie cookieWith2Id = new Cookie(2,"cookie", "tasty cookie", new byte[2],
+            CookieAddingStatus.WAITING, 0);
+    private CookieAddingStatus cookieAddingStatus = CookieAddingStatus.WAITING;
+    private int id = 1;
 
     @Before
     public void init() {
@@ -195,6 +206,38 @@ public class TestCookieController {
         ).andExpect(status().is(500));
     /*            .andExpect((ResultMatcher) jsonPath("$.message", is("Maximum upload size exceeded; nested exception is java.lang.IllegalStateException: org.apache.tomcat.util.http.fileupload.FileUploadBase$SizeLimitExceededException: the request was rejected because its size (8055342) exceeds the configured maximum (5242880)")));*/
 
+    }
+
+    @Test
+    public void getCookiesInWaitingStatus () throws Exception {
+        cookies.add(cookieWith1Id);
+        cookies.add(cookieWith2Id);
+        when(cookieService.getCookieListByAddingStatus(cookieAddingStatus)).thenReturn(cookies);
+
+        String response = mockMvc.perform(MockMvcRequestBuilders.get("/addcookie")
+                .param("id", String.valueOf(id))
+        ).andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        verify(cookieService).getCookieListByAddingStatus(cookieAddingStatus);
+
+        List<Cookie> resultCookieList = new ObjectMapper().readValue(response, ArrayList.class);
+
+        Assert.assertEquals(resultCookieList.get(0).getId(), cookieWith1Id.getId());
+        Assert.assertEquals(resultCookieList.get(0).getName(), cookieWith1Id.getName());
+        Assert.assertEquals(resultCookieList.get(0).getDescription(), cookieWith1Id.getDescription());
+        Assert.assertArrayEquals(resultCookieList.get(0).getFileData(), cookieWith1Id.getFileData());
+        Assert.assertEquals(resultCookieList.get(0).getCookieAddingStatus(), cookieWith1Id.getCookieAddingStatus());
+        Assert.assertEquals(resultCookieList.get(0).getRating(), cookieWith1Id.getRating());
+
+        Assert.assertEquals(resultCookieList.get(1).getId(), cookieWith2Id.getId());
+        Assert.assertEquals(resultCookieList.get(1).getName(), cookieWith2Id.getName());
+        Assert.assertEquals(resultCookieList.get(1).getDescription(), cookieWith2Id.getDescription());
+        Assert.assertArrayEquals(resultCookieList.get(1).getFileData(), cookieWith2Id.getFileData());
+        Assert.assertEquals(resultCookieList.get(1).getCookieAddingStatus(), cookieWith2Id.getCookieAddingStatus());
+        Assert.assertEquals(resultCookieList.get(1).getRating(), cookieWith2Id.getRating());
     }
 
 }

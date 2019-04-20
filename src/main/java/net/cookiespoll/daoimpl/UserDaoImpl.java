@@ -5,8 +5,10 @@ import net.cookiespoll.mapper.CookieMapper;
 import net.cookiespoll.mapper.UserMapper;
 import net.cookiespoll.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+@Component
 public class UserDaoImpl implements UserDao {
 
     private UserMapper userMapper;

@@ -4,6 +4,7 @@ import io.swagger.annotations.*;
 import net.cookiespoll.dto.*;
 import net.cookiespoll.exception.FileValidationException;
 import net.cookiespoll.model.Cookie;
+import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.model.User;
 import net.cookiespoll.model.UserRole;
 import net.cookiespoll.service.CookieService;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @Api(description = "Operations related to cookie adding")
@@ -59,10 +62,18 @@ public class CookiesController {
     @RequestMapping(value = "/addcookie",
             method = RequestMethod.GET)
     @ResponseBody
-    public String getCookiesInWaitingStatus (@RequestParam int id) {
-        if(!cookieService.getUserRole(id).equals(UserRole.ADMIN))
-        { return  "Not admin user cannot see list of cookies which are ready for adding"; }
+    public List<Cookie> getCookiesInWaitingStatus (@RequestParam int id) {
+       /* TODO if(!cookieService.getUserRole(id).equals(UserRole.ADMIN))
+        { return new ArrayList<Cookie>() ; }*/
 
+        return cookieService.getCookieListByAddingStatus(CookieAddingStatus.WAITING);
+    }
+
+    @RequestMapping(value = "/addcookie",
+            method = RequestMethod.PATCH)
+    @ResponseBody
+    public String setCookieAddingStatus (@RequestParam SetCookieAddingStatusDtoRequest setCookieAddingStatusDtoRequest) {
+        cookieService.setCookieAddingStatus(setCookieAddingStatusDtoRequest);
         return "ok";
     }
 }

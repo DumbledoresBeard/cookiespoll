@@ -3,6 +3,7 @@ package net.cookiespoll.service;
 import net.cookiespoll.dao.CookieDao;
 import net.cookiespoll.dao.UserDao;
 import net.cookiespoll.dto.AddCookieDtoRequest;
+import net.cookiespoll.dto.SetCookieAddingStatusDtoRequest;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.model.User;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class CookieService {
@@ -40,5 +42,17 @@ public class CookieService {
     public UserRole getUserRole (int id) {
        User user = userDao.getUserById(id);
        return user.getRole();
+    }
+
+    public List<Cookie> getCookieListByAddingStatus (CookieAddingStatus cookieAddingStatus) {
+        return cookieDao.getCookieListByCookieAddingStatus(cookieAddingStatus);
+    }
+
+    public void setCookieAddingStatus (SetCookieAddingStatusDtoRequest setCookieAddingStatusDtoRequest) {
+        cookieDao.updateCookie(new Cookie(setCookieAddingStatusDtoRequest.getId(),
+                setCookieAddingStatusDtoRequest.getName(), setCookieAddingStatusDtoRequest.getDescription(),
+                setCookieAddingStatusDtoRequest.getFileData(), setCookieAddingStatusDtoRequest.getCookieAddingStatus(),
+                setCookieAddingStatusDtoRequest.getRating()));
+
     }
 }
