@@ -1,9 +1,10 @@
 package net.cookiespoll.validation;
 
 import net.cookiespoll.exception.FileValidationException;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-
+@Component
 public class FileValidator {
 
     public final static String JPG_IMAGE = "image/jpg";

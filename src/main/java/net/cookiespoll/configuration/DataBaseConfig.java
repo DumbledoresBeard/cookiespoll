@@ -1,6 +1,5 @@
 package net.cookiespoll.configuration;
 
-import net.cookiespoll.validation.FileValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -39,9 +38,6 @@ public class DataBaseConfig {
         sessionFactory.setDataSource(dataSource);
         return sessionFactory.getObject();
     }
-
-    @Bean
-    public FileValidator fileValidator () {return new FileValidator();}
 
 
 }
