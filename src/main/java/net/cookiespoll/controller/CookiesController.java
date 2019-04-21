@@ -5,8 +5,6 @@ import net.cookiespoll.dto.*;
 import net.cookiespoll.exception.FileValidationException;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
-import net.cookiespoll.model.User;
-import net.cookiespoll.model.UserRole;
 import net.cookiespoll.service.CookieService;
 import net.cookiespoll.validation.FileValidator;
 import org.slf4j.Logger;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -74,6 +71,6 @@ public class CookiesController {
     @ResponseBody
     public String setCookieAddingStatus (@RequestParam SetCookieAddingStatusDtoRequest setCookieAddingStatusDtoRequest) {
         cookieService.setCookieAddingStatus(setCookieAddingStatusDtoRequest);
-        return "ok";
+        return "Cookie was successfully updated";
     }
 }
