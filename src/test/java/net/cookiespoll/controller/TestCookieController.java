@@ -40,7 +40,6 @@ public class TestCookieController {
             "image/jpg", byteArray);
     private MockMultipartFile addCookieDtoRequest = new MockMultipartFile("data", "",
             "application/json", ("{\"name\":\"cookie\", \"description\": \"tasty cookie\"}").getBytes());
-    private MockMultipartFile cookieNullFile = null;
 
     @Before
     public void init() {
@@ -155,16 +154,6 @@ public class TestCookieController {
                         "\"message\":\"Cookie description must be less then 150 characters and cannot be empty\"}]}"));
     }
 
-    @Ignore
-    @Test
-    public void testAddCookieNullFile() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
-                .file(cookieNullFile)
-                .file(addCookieDtoRequest)
-        ).andExpect(status().is(400))
-                .andExpect(content().string("{\"errors\":[{\"fieldName\":\"file\"," +
-                        "\"message\":\"File is null, please, upload a file\"}]}"));
-    }
 
     @Test
     public void testAddCookieEmptyFile() throws Exception {
