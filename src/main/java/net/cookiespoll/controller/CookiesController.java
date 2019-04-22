@@ -51,7 +51,7 @@ public class CookiesController {
 
         LOGGER.info("Done");
 
-        return new AddCookieDtoResponse(cookie.getName(), cookie.getDescription(), cookie.getFileData(),
+        return new AddCookieDtoResponse(cookie.getId(),cookie.getName(), cookie.getDescription(), cookie.getFileData(),
                                         cookie.getCookieAddingStatus());
 
     }
@@ -69,8 +69,14 @@ public class CookiesController {
     @RequestMapping(value = "/addcookie",
             method = RequestMethod.PATCH)
     @ResponseBody
-    public String setCookieAddingStatus (@RequestParam SetCookieAddingStatusDtoRequest setCookieAddingStatusDtoRequest) {
+    public SetCookieAddingStatusDtoResponse setCookieAddingStatus (@RequestBody SetCookieAddingStatusDtoRequest setCookieAddingStatusDtoRequest) {
+        /* TODO if(!cookieService.getUserRole(id).equals(UserRole.ADMIN))
+        { return new ArrayList<Cookie>() ; }*/
+
         cookieService.setCookieAddingStatus(setCookieAddingStatusDtoRequest);
-        return "Cookie was successfully updated";
+        return new SetCookieAddingStatusDtoResponse(setCookieAddingStatusDtoRequest.getId(),
+                setCookieAddingStatusDtoRequest.getName(), setCookieAddingStatusDtoRequest.getDescription(),
+                setCookieAddingStatusDtoRequest.getFileData(), setCookieAddingStatusDtoRequest.getCookieAddingStatus(),
+                setCookieAddingStatusDtoRequest.getRating());
     }
 }

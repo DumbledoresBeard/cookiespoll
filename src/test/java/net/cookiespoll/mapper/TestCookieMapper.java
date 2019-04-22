@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -32,5 +33,11 @@ public class TestCookieMapper {
         assert cookieMapper.insert(cookie) == 1;
         verify(cookieMapper).insert(cookie);
 
+    }
+
+    @Test
+    public void testCookieMapperUpdate () {
+        doNothing().when(cookieMapper).update(cookie);
+        verify(cookieMapper).update(cookie);
     }
 }

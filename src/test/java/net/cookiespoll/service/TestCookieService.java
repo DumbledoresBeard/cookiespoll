@@ -2,6 +2,7 @@ package net.cookiespoll.service;
 import net.cookiespoll.daoimpl.CookieDaoImpl;
 import net.cookiespoll.daoimpl.UserDaoImpl;
 import net.cookiespoll.dto.AddCookieDtoRequest;
+import net.cookiespoll.dto.SetCookieAddingStatusDtoRequest;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.model.User;
@@ -20,6 +21,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -33,18 +35,11 @@ public class TestCookieService {
     CookieService cookieService;
 
     private Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING);
+    private MockMultipartFile mockMultipartFile = new MockMultipartFile("testcookie.jpg", new byte[2]);
     private Cookie cookieWithId = new Cookie(1, "cookie", "tasty cookie", new byte[2],
             CookieAddingStatus.WAITING, 0);
-    private Cookie cookieWith2Id = new Cookie(2,"cookie", "tasty cookie", new byte[2],
-            CookieAddingStatus.WAITING, 0);
-    private MockMultipartFile mockMultipartFile = new MockMultipartFile("testcookie.jpg", new byte[2]);
     private AddCookieDtoRequest addCookieDtoRequest = new AddCookieDtoRequest("cookie", "tasty cookie");
-    private int id = 1;
-    private User userAdmin = new User (1, "login", "password", "name", "lastname",
-                    UserRole.ADMIN);
-    private UserRole admin = UserRole.ADMIN;
-    private CookieAddingStatus cookieAddingStatus = CookieAddingStatus.WAITING;
-    private List<Cookie> cookies = new ArrayList<>();
+
 
     @Before
     public void setUp() throws Exception {
@@ -70,6 +65,11 @@ public class TestCookieService {
 
     @Test
     public void testGetUserRole() {
+        int id = 1;
+        User userAdmin = new User (1, "login", "password", "name", "lastname",
+                UserRole.ADMIN);
+        UserRole admin = UserRole.ADMIN;
+
         when(userDao.getUserById(id)).thenReturn(userAdmin);
 
         UserRole resultUserRole = cookieService.getUserRole(id);
@@ -82,6 +82,10 @@ public class TestCookieService {
 
     @Test
     public void testGetCookieListByAddingStatus () {
+        CookieAddingStatus cookieAddingStatus = CookieAddingStatus.WAITING;
+        List<Cookie> cookies = new ArrayList<>();
+        Cookie cookieWith2Id = new Cookie(2,"cookie", "tasty cookie", new byte[2],
+                CookieAddingStatus.WAITING, 0);
         cookies.add(cookieWithId);
         cookies.add(cookieWith2Id);
         when(cookieDao.getCookieListByCookieAddingStatus(cookieAddingStatus)).thenReturn(cookies);
@@ -103,6 +107,19 @@ public class TestCookieService {
         Assert.assertEquals(resultCookieList.get(1).getRating(), cookieWith2Id.getRating());
 
         verify(cookieDao).getCookieListByCookieAddingStatus(cookieAddingStatus);
+
+    }
+
+    @Test
+    public void testSetCookieAddingStatus () {
+        SetCookieAddingStatusDtoRequest setCookieAddingStatusDtoRequest = new SetCookieAddingStatusDtoRequest(
+                1, "cookie", "tasty cookie", new byte[2],
+                CookieAddingStatus.WAITING, 0);
+
+        doNothing().when(cookieDao).updateCookie(cookieWithId);
+
+        cookieService.setCookieAddingStatus(setCookieAddingStatusDtoRequest);
+
 
     }
 

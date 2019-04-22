@@ -1,7 +1,10 @@
 package net.cookiespoll.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import net.cookiespoll.dto.AddCookieDtoRequest;
 import net.cookiespoll.dto.AddCookieDtoResponse;
+import net.cookiespoll.dto.SetCookieAddingStatusDtoRequest;
+import net.cookiespoll.dto.SetCookieAddingStatusDtoResponse;
 import net.cookiespoll.exception.ControllerExceptionHandler;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
@@ -15,6 +18,7 @@ import org.junit.runner.RunWith;
 
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -211,30 +215,50 @@ public class TestCookieController {
         cookies.add(cookieWith2Id);
         when(cookieService.getCookieListByAddingStatus(cookieAddingStatus)).thenReturn(cookies);
 
-        String response = mockMvc.perform(MockMvcRequestBuilders.get("/addcookie")
+        mockMvc.perform(MockMvcRequestBuilders.get("/addcookie")
                 .param("id", String.valueOf(id))
+        ).andExpect(status().isOk())
+               .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":" +
+                        "\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0}," +
+                        "{\"id\":2,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\"," +
+                        "\"cookieAddingStatus\":\"WAITING\",\"rating\":0}]"));
+
+    }
+
+    @Test
+    public void testSetCookieAddingStatus () throws Exception {
+        SetCookieAddingStatusDtoRequest setCookieAddingStatusDtoRequest = new SetCookieAddingStatusDtoRequest(
+                1, "cookie", "tasty cookie", new byte[2],
+                CookieAddingStatus.APPROVED, 0);
+        Gson gson = new Gson();
+        String request = gson.toJson(setCookieAddingStatusDtoRequest);
+        SetCookieAddingStatusDtoResponse setCookieAddingStatusDtoResponse = new SetCookieAddingStatusDtoResponse(
+                1, "cookie", "tasty cookie", new byte[2],
+                CookieAddingStatus.APPROVED, 0);
+
+        doNothing().when(cookieService).setCookieAddingStatus(any(SetCookieAddingStatusDtoRequest.class));
+
+        String response = mockMvc.perform(MockMvcRequestBuilders.patch("/addcookie")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request)
         ).andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
 
-        verify(cookieService).getCookieListByAddingStatus(cookieAddingStatus);
+        verify(cookieService).setCookieAddingStatus(any(SetCookieAddingStatusDtoRequest.class));
 
-        List<Cookie> resultCookieList = new ObjectMapper().readValue(response, ArrayList.class);
+        SetCookieAddingStatusDtoResponse resultResponse = new ObjectMapper().readValue(response,
+                                                            SetCookieAddingStatusDtoResponse.class);
 
-        Assert.assertEquals(resultCookieList.get(0).getId(), cookieWith1Id.getId());
-        Assert.assertEquals(resultCookieList.get(0).getName(), cookieWith1Id.getName());
-        Assert.assertEquals(resultCookieList.get(0).getDescription(), cookieWith1Id.getDescription());
-        Assert.assertArrayEquals(resultCookieList.get(0).getFileData(), cookieWith1Id.getFileData());
-        Assert.assertEquals(resultCookieList.get(0).getCookieAddingStatus(), cookieWith1Id.getCookieAddingStatus());
-        Assert.assertEquals(resultCookieList.get(0).getRating(), cookieWith1Id.getRating());
+        assert setCookieAddingStatusDtoRequest.getId() == resultResponse.getId();
+        Assert.assertEquals(setCookieAddingStatusDtoResponse.getName(), resultResponse.getName());
+        Assert.assertEquals(setCookieAddingStatusDtoResponse.getDescription(), resultResponse.getDescription());
+        Assert.assertArrayEquals(setCookieAddingStatusDtoResponse.getFileData(), resultResponse.getFileData());
+        Assert.assertEquals(setCookieAddingStatusDtoResponse.getCookieAddingStatus(), resultResponse.
+                                                                                        getCookieAddingStatus());
+        Assert.assertEquals(setCookieAddingStatusDtoResponse.getRating(), resultResponse.getRating());
 
-        Assert.assertEquals(resultCookieList.get(1).getId(), cookieWith2Id.getId());
-        Assert.assertEquals(resultCookieList.get(1).getName(), cookieWith2Id.getName());
-        Assert.assertEquals(resultCookieList.get(1).getDescription(), cookieWith2Id.getDescription());
-        Assert.assertArrayEquals(resultCookieList.get(1).getFileData(), cookieWith2Id.getFileData());
-        Assert.assertEquals(resultCookieList.get(1).getCookieAddingStatus(), cookieWith2Id.getCookieAddingStatus());
-        Assert.assertEquals(resultCookieList.get(1).getRating(), cookieWith2Id.getRating());
     }
 
 }

@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -24,7 +25,7 @@ public class TestCookieDaoImpl {
     @InjectMocks
     CookieDaoImpl cookieDaoImpl;
 
-    Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING);
+    private Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING);
 
     @Before
     public void setUp() throws Exception {
@@ -44,6 +45,13 @@ public class TestCookieDaoImpl {
 
         verify(cookieMapper).insert(cookie);
 
+    }
+
+    @Test
+    public void testCookieDaoUpdate () {
+        doNothing().when(cookieMapper).update(cookie);
+        cookieDaoImpl.updateCookie(cookie);
+        verify(cookieMapper).update(cookie);
     }
 
 

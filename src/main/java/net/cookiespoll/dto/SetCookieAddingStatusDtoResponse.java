@@ -2,7 +2,7 @@ package net.cookiespoll.dto;
 
 import net.cookiespoll.model.CookieAddingStatus;
 
-public class SetCookieAddingStatusDtoRequest {
+public class SetCookieAddingStatusDtoResponse {
     private int id;
     private String name;
     private String description;
@@ -10,10 +10,10 @@ public class SetCookieAddingStatusDtoRequest {
     private CookieAddingStatus cookieAddingStatus;
     private int rating;
 
-    public SetCookieAddingStatusDtoRequest() {}
+    public SetCookieAddingStatusDtoResponse() {}
 
-    public SetCookieAddingStatusDtoRequest(int id, String name, String description, byte[] fileData,
-                                           CookieAddingStatus cookieAddingStatus, int rating) {
+    public SetCookieAddingStatusDtoResponse(int id, String name, String description, byte[] fileData,
+                                            CookieAddingStatus cookieAddingStatus, int rating) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -21,7 +21,6 @@ public class SetCookieAddingStatusDtoRequest {
         this.cookieAddingStatus = cookieAddingStatus;
         this.rating = rating;
     }
-
 
     public int getId() {
         return id;
@@ -70,4 +69,6 @@ public class SetCookieAddingStatusDtoRequest {
     public void setRating(int rating) {
         this.rating = rating;
     }
+
+
 }

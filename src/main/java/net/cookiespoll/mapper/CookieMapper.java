@@ -30,7 +30,7 @@ public interface CookieMapper {
     })
     List<Cookie> getByCookieAddingStatus(CookieAddingStatus cookieAddingStatus);
 
-    @Update("UPDATE cookie SET name = #{name}, description = #{description}, file_data = #{fileData}" +
+    @Update("UPDATE cookie SET name = #{name}, description = #{description}, file_data = #{fileData}," +
             "cookie_adding_status = #{cookieAddingStatus}, rating = #{rating}" +
             " WHERE id = #{id} ")
     void update(Cookie cookie);
