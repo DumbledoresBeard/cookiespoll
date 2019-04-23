@@ -1,13 +1,10 @@
 package net.cookiespoll.service;
 
 import net.cookiespoll.dao.CookieDao;
-import net.cookiespoll.dao.UserDao;
-import net.cookiespoll.dto.AddCookieDtoRequest;
-import net.cookiespoll.dto.SetCookieAddingStatusDtoRequest;
+import net.cookiespoll.dto.AddCookieRequest;
+import net.cookiespoll.dto.UpdateCookieRequest;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
-import net.cookiespoll.model.User;
-import net.cookiespoll.model.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,37 +19,31 @@ public class CookieService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CookieService.class);
 
     private CookieDao cookieDao;
-    private UserDao userDao;
 
     @Autowired
-    public CookieService(CookieDao cookieDao, UserDao userDao) {
+    public CookieService(CookieDao cookieDao) {
         this.cookieDao = cookieDao;
-        this.userDao = userDao;
     }
 
-    public Cookie addCookie (AddCookieDtoRequest addCookieDtoRequest, MultipartFile multipartFile) throws IOException {
+    public Cookie addCookie (AddCookieRequest addCookieRequest, MultipartFile multipartFile) throws IOException {
        int rating = 0;
 
        LOGGER.info("Set rating={} and cookieAddingStatus={} to cookie ", rating, CookieAddingStatus.WAITING);
 
-       return cookieDao.insert(new Cookie(addCookieDtoRequest.getName(), addCookieDtoRequest.getDescription(),
+       return cookieDao.insert(new Cookie(addCookieRequest.getName(), addCookieRequest.getDescription(),
                                 multipartFile.getBytes(), CookieAddingStatus.WAITING, rating));
     }
 
-    public UserRole getUserRole (int id) {
-       User user = userDao.getUserById(id);
-       return user.getRole();
-    }
 
     public List<Cookie> getCookieListByAddingStatus (CookieAddingStatus cookieAddingStatus) {
-        return cookieDao.getCookieListByCookieAddingStatus(cookieAddingStatus);
+        return cookieDao.getByStatus(cookieAddingStatus);
     }
 
-    public void setCookieAddingStatus (SetCookieAddingStatusDtoRequest setCookieAddingStatusDtoRequest) {
-        cookieDao.updateCookie(new Cookie(setCookieAddingStatusDtoRequest.getId(),
-                setCookieAddingStatusDtoRequest.getName(), setCookieAddingStatusDtoRequest.getDescription(),
-                setCookieAddingStatusDtoRequest.getFileData(), setCookieAddingStatusDtoRequest.getCookieAddingStatus(),
-                setCookieAddingStatusDtoRequest.getRating()));
+    public Cookie updateCookie (UpdateCookieRequest updateCookieRequest) {
+       return cookieDao.update(new Cookie(updateCookieRequest.getId(),
+                updateCookieRequest.getName(), updateCookieRequest.getDescription(),
+                updateCookieRequest.getFileData(), updateCookieRequest.getApprovalStatus(),
+                updateCookieRequest.getRating()));
 
     }
 }

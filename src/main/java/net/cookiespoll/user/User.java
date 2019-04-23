@@ -1,4 +1,4 @@
-package net.cookiespoll.model;
+package net.cookiespoll.user;
 
 
 public class User {
@@ -7,11 +7,11 @@ public class User {
     private String password;
     private String firstName;
     private String lastName;
-    private UserRole role;
+    private Role role;
 
     public User() { }
 
-    public User(int id, String login, String password, String firstName, String lastName, UserRole role) {
+    public User(int id, String login, String password, String firstName, String lastName, Role role) {
         this.id = id;
         this.login = login;
         this.password = password;
@@ -20,7 +20,7 @@ public class User {
         this.role = role;
     }
 
-    public User(String login, String password, String firstName, String lastName, UserRole role) {
+    public User(String login, String password, String firstName, String lastName, Role role) {
         this.login = login;
         this.password = password;
         this.firstName = firstName;
@@ -68,11 +68,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public UserRole getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(UserRole role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 }

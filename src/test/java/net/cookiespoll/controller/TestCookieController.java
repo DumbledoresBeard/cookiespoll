@@ -1,10 +1,10 @@
 package net.cookiespoll.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import net.cookiespoll.dto.AddCookieDtoRequest;
-import net.cookiespoll.dto.AddCookieDtoResponse;
-import net.cookiespoll.dto.SetCookieAddingStatusDtoRequest;
-import net.cookiespoll.dto.SetCookieAddingStatusDtoResponse;
+import net.cookiespoll.dto.AddCookieRequest;
+import net.cookiespoll.dto.AddCookieResponse;
+import net.cookiespoll.dto.UpdateCookieRequest;
+import net.cookiespoll.dto.UpdateCookieResponse;
 import net.cookiespoll.exception.ControllerExceptionHandler;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
@@ -56,23 +56,23 @@ public class TestCookieController {
 
     @Test
     public void testAddCookieValidRequest() throws Exception {
-        when(cookieService.addCookie((any(AddCookieDtoRequest.class)), any(MockMultipartFile.class))).thenReturn(cookie);
+        when(cookieService.addCookie((any(AddCookieRequest.class)), any(MockMultipartFile.class))).thenReturn(cookie);
 
-        String response = mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
+        String response = mockMvc.perform(MockMvcRequestBuilders.multipart("/cookie")
                 .file(mockMultipartFile)
                 .file(addCookieDtoRequest)
         ).andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        verify(cookieService).addCookie((any(AddCookieDtoRequest.class)), any(MockMultipartFile.class));
+        verify(cookieService).addCookie((any(AddCookieRequest.class)), any(MockMultipartFile.class));
 
-        AddCookieDtoResponse addCookieDtoResponse = new ObjectMapper().readValue(response, AddCookieDtoResponse.class);
+        AddCookieResponse addCookieResponse = new ObjectMapper().readValue(response, AddCookieResponse.class);
 
-        Assert.assertEquals(cookie.getName(), addCookieDtoResponse.getName());
-        Assert.assertEquals(cookie.getDescription(), addCookieDtoResponse.getDescription());
-        Assert.assertArrayEquals(cookie.getFileData(), addCookieDtoResponse.getFileData());
-        Assert.assertEquals(cookie.getCookieAddingStatus(), addCookieDtoResponse.getCookieAddingStatus());
+        Assert.assertEquals(cookie.getName(), addCookieResponse.getName());
+        Assert.assertEquals(cookie.getDescription(), addCookieResponse.getDescription());
+        Assert.assertArrayEquals(cookie.getFileData(), addCookieResponse.getFileData());
+        Assert.assertEquals(cookie.getCookieAddingStatus(), addCookieResponse.getCookieAddingStatus());
 
     }
 
@@ -81,7 +81,7 @@ public class TestCookieController {
         MockMultipartFile cookieNullName = new MockMultipartFile("data", "",
                 "application/json", "{\"name\": null, \"description\": \"tasty cookie\"}".getBytes());
 
-      mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
+      mockMvc.perform(MockMvcRequestBuilders.multipart("/cookie")
                 .file(mockMultipartFile)
                 .file(cookieNullName)
         ).andExpect(status().is(400))
@@ -95,7 +95,7 @@ public class TestCookieController {
         MockMultipartFile cookieTooShortName = new MockMultipartFile("data", "",
                 "application/json", "{\"name\": \"c\", \"description\": \"tasty cookie\"}".getBytes());
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/cookie")
                 .file(mockMultipartFile)
                 .file(cookieTooShortName)
         ).andExpect(status().is(400))
@@ -109,7 +109,7 @@ public class TestCookieController {
                 "application/json", ("{\"name\": \"tastycookietastycookietastycook\", \"description\": " +
                 "\"tasty cookie\"}").getBytes());
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/cookie")
                 .file(mockMultipartFile)
                 .file(cookieTooLongName)
         ).andExpect(status().is(400))
@@ -123,7 +123,7 @@ public class TestCookieController {
         MockMultipartFile cookieWithNullDescription = new MockMultipartFile("data", "",
                 "application/json", "{\"name\": \"cookie\", \"description\": null}".getBytes());
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/cookie")
                 .file(mockMultipartFile)
                 .file(cookieWithNullDescription)
         ).andExpect(status().is(400))
@@ -138,7 +138,7 @@ public class TestCookieController {
         MockMultipartFile cookieEmptyDescription = new MockMultipartFile("data", "",
                 "application/json", "{\"name\": \"cookie\", \"description\": \"\"}".getBytes());
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/cookie")
                 .file(mockMultipartFile)
                 .file(cookieEmptyDescription)
         ).andExpect(status().is(400))
@@ -153,7 +153,7 @@ public class TestCookieController {
                 "\"tastycookietastycookietastycookietastycookietastycookietastycookietastycook" +
                 "ietastycookietastycookietastycookietastycookietastycookietastycookietastycoo\"}").getBytes());
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/cookie")
                 .file(mockMultipartFile)
                 .file(cookieWithTooLongDescription)
         ).andExpect(status().is(400))
@@ -167,7 +167,7 @@ public class TestCookieController {
         MockMultipartFile cookieEmptyFile = new MockMultipartFile("file", "testcookie",
                 "text/plain", new byte[0]);
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/cookie")
                 .file(cookieEmptyFile)
                 .file(addCookieDtoRequest)
         ).andExpect(status().is(400))
@@ -180,7 +180,7 @@ public class TestCookieController {
         MockMultipartFile cookieInvalidFileType = new MockMultipartFile("file", "testcookie",
                 "text/plain", byteArray);
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/cookie")
                 .file(cookieInvalidFileType)
                 .file(addCookieDtoRequest)
         ).andExpect(status().is(400))
@@ -194,7 +194,7 @@ public class TestCookieController {
         MockMultipartFile cookieExceededMaxFileSize = new MockMultipartFile("file", "testcookie",
                 "image/jpg", new byte[1024 * 1024 * 7]);
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/addcookie")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/cookie")
                 .file(cookieExceededMaxFileSize)
                 .file(addCookieDtoRequest)
         ).andExpect(status().is(500));
@@ -215,7 +215,7 @@ public class TestCookieController {
         cookies.add(cookieWith2Id);
         when(cookieService.getCookieListByAddingStatus(cookieAddingStatus)).thenReturn(cookies);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/addcookie")
+        mockMvc.perform(MockMvcRequestBuilders.get("/cookie/waiting")
                 .param("id", String.valueOf(id))
         ).andExpect(status().isOk())
                .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":" +
@@ -226,19 +226,19 @@ public class TestCookieController {
     }
 
     @Test
-    public void testSetCookieAddingStatus () throws Exception {
-        SetCookieAddingStatusDtoRequest setCookieAddingStatusDtoRequest = new SetCookieAddingStatusDtoRequest(
-                1, "cookie", "tasty cookie", new byte[2],
+    public void testUpdateCookie () throws Exception {
+        UpdateCookieRequest updateCookieRequest = new UpdateCookieRequest(
+                1, "cookie", "tasty cookie", byteArray,
                 CookieAddingStatus.APPROVED, 0);
         Gson gson = new Gson();
-        String request = gson.toJson(setCookieAddingStatusDtoRequest);
-        SetCookieAddingStatusDtoResponse setCookieAddingStatusDtoResponse = new SetCookieAddingStatusDtoResponse(
-                1, "cookie", "tasty cookie", new byte[2],
+        String request = gson.toJson(updateCookieRequest);
+        UpdateCookieResponse updateCookieResponse = new UpdateCookieResponse(
+                1, "cookie", "tasty cookie", byteArray,
                 CookieAddingStatus.APPROVED, 0);
 
-        doNothing().when(cookieService).setCookieAddingStatus(any(SetCookieAddingStatusDtoRequest.class));
+        when(cookieService.updateCookie(any(UpdateCookieRequest.class))).thenReturn(cookie);
 
-        String response = mockMvc.perform(MockMvcRequestBuilders.patch("/addcookie")
+        String response = mockMvc.perform(MockMvcRequestBuilders.patch("/cookie")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(request)
         ).andExpect(status().isOk())
@@ -246,18 +246,18 @@ public class TestCookieController {
                 .getResponse()
                 .getContentAsString();
 
-        verify(cookieService).setCookieAddingStatus(any(SetCookieAddingStatusDtoRequest.class));
+        verify(cookieService).updateCookie(any(UpdateCookieRequest.class));
 
-        SetCookieAddingStatusDtoResponse resultResponse = new ObjectMapper().readValue(response,
-                                                            SetCookieAddingStatusDtoResponse.class);
+        UpdateCookieResponse resultResponse = new ObjectMapper().readValue(response,
+                                                            UpdateCookieResponse.class);
 
-        assert setCookieAddingStatusDtoRequest.getId() == resultResponse.getId();
-        Assert.assertEquals(setCookieAddingStatusDtoResponse.getName(), resultResponse.getName());
-        Assert.assertEquals(setCookieAddingStatusDtoResponse.getDescription(), resultResponse.getDescription());
-        Assert.assertArrayEquals(setCookieAddingStatusDtoResponse.getFileData(), resultResponse.getFileData());
-        Assert.assertEquals(setCookieAddingStatusDtoResponse.getCookieAddingStatus(), resultResponse.
+        assert updateCookieRequest.getId() == resultResponse.getId();
+        Assert.assertEquals(updateCookieResponse.getName(), resultResponse.getName());
+        Assert.assertEquals(updateCookieResponse.getDescription(), resultResponse.getDescription());
+        Assert.assertArrayEquals(updateCookieResponse.getFileData(), resultResponse.getFileData());
+        Assert.assertEquals(updateCookieResponse.getCookieAddingStatus(), resultResponse.
                                                                                         getCookieAddingStatus());
-        Assert.assertEquals(setCookieAddingStatusDtoResponse.getRating(), resultResponse.getRating());
+        Assert.assertEquals(updateCookieResponse.getRating(), resultResponse.getRating());
 
     }
 

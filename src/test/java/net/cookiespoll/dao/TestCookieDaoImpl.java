@@ -50,7 +50,7 @@ public class TestCookieDaoImpl {
     @Test
     public void testCookieDaoUpdate () {
         doNothing().when(cookieMapper).update(cookie);
-        cookieDaoImpl.updateCookie(cookie);
+        Cookie updatedCookie = cookieDaoImpl.update(cookie);
         verify(cookieMapper).update(cookie);
     }
 

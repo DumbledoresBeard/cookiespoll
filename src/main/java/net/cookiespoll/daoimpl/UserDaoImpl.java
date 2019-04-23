@@ -1,9 +1,8 @@
 package net.cookiespoll.daoimpl;
 
 import net.cookiespoll.dao.UserDao;
-import net.cookiespoll.mapper.CookieMapper;
 import net.cookiespoll.mapper.UserMapper;
-import net.cookiespoll.model.User;
+import net.cookiespoll.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,17 +25,19 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     @Transactional
-    public User getUserById(int id) {
+    public User getById(int id) {
         User user = userMapper.getUserById(id);
         return user;
     }
 
     @Override
-    public void updateUser(User user) {
+    public User update(User user) {
+        /*TODO*/
+        return new User();
     }
 
     @Override
-    public void deleteUser(User user) {
+    public void delete(User user) {
 
     }
 }

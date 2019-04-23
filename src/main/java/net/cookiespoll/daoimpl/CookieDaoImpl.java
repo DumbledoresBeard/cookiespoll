@@ -32,24 +32,25 @@ public class CookieDaoImpl implements CookieDao {
     }
 
     @Override
-    public Cookie getCookieById(int id) {
+    public Cookie getById(int id) {
         /*To Do*/ return new Cookie();
     }
 
     @Override
-    public List<Cookie> getCookieListByCookieAddingStatus(CookieAddingStatus cookieAddingStatus) {
+    public List<Cookie> getByStatus(CookieAddingStatus cookieAddingStatus) {
         LOGGER.info("Extract list of cookie with cookieAddingStatus {} ", cookieAddingStatus);
         return cookieMapper.getByCookieAddingStatus(cookieAddingStatus);
     }
 
     @Override
-    public void updateCookie(Cookie cookie) {
+    public Cookie update(Cookie cookie) {
         LOGGER.info("Update cookie {} ", cookie);
         cookieMapper.update(cookie);
+        return cookie;
     }
 
     @Override
-    public void deleteCookie(Cookie cookie) {
+    public void delete (Cookie cookie) {
 
     }
 }

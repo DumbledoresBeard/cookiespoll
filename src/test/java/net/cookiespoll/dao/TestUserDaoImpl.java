@@ -2,8 +2,8 @@ package net.cookiespoll.dao;
 
 import net.cookiespoll.daoimpl.UserDaoImpl;
 import net.cookiespoll.mapper.UserMapper;
-import net.cookiespoll.model.User;
-import net.cookiespoll.model.UserRole;
+import net.cookiespoll.user.User;
+import net.cookiespoll.user.Role;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class TestUserDaoImpl {
 
     int id = 1;
     User userAdmin = new User(1, "login", "password", "name", "lastname",
-            UserRole.ADMIN);
+            Role.ADMIN);
 
     @Before
     public void setUp() throws Exception {
@@ -36,7 +36,7 @@ public class TestUserDaoImpl {
     @Test
     public void testUserDaoGetUserById () {
         when(userMapper.getUserById(id)).thenReturn(userAdmin);
-        User resultUser = userDaoImpl.getUserById(id);
+        User resultUser = userDaoImpl.getById(id);
 
         Assert.assertEquals(userAdmin.getId(), resultUser.getId());
         Assert.assertEquals(userAdmin.getLogin(), resultUser.getLogin());

@@ -10,11 +10,11 @@ public interface CookieDao {
 
     public Cookie insert (Cookie cookie);
 
-    public Cookie getCookieById (int id);
+    public Cookie getById(int id);
 
-    public List<Cookie> getCookieListByCookieAddingStatus(CookieAddingStatus cookieAddingStatus);
+    public List<Cookie> getByStatus(CookieAddingStatus cookieAddingStatus);
 
-    public void updateCookie (Cookie cookie);
+    public Cookie update(Cookie cookie);
 
-    public void deleteCookie (Cookie cookie);
+    public void delete (Cookie cookie);
 }

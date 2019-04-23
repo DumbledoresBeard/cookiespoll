@@ -31,52 +31,52 @@ public class CookiesController {
         this.fileValidator = fileValidator;
     }
 
-    @ApiOperation(value = "Add new cookie to store in database", response = AddCookieDtoResponse.class)
+    @ApiOperation(value = "Add new cookie to store in database", response = AddCookieResponse.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Cookie was successfully added"),
             @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
             @ApiResponse(code = 500, message = "Internal server error"),
     })
-    @RequestMapping(value = "/addcookie",
+    @RequestMapping(value = "/cookie",
             method = RequestMethod.POST)
     @ResponseBody
-    public AddCookieDtoResponse addCookie(
+    public AddCookieResponse addCookie(
                             @RequestPart("file") MultipartFile multipartFile,
-                            @Valid @RequestPart("data") AddCookieDtoRequest addCookieDtoRequest
+                            @Valid @RequestPart("data") AddCookieRequest addCookieRequest
                             ) throws IOException, FileValidationException {
-        LOGGER.info("Start processing AddCookieDtoRequest {}", addCookieDtoRequest, multipartFile);
+        LOGGER.info("Start processing AddCookieRequest {}", addCookieRequest, multipartFile);
         fileValidator.validate(multipartFile);
 
-        Cookie cookie = cookieService.addCookie(addCookieDtoRequest, multipartFile);
+        Cookie cookie = cookieService.addCookie(addCookieRequest, multipartFile);
 
         LOGGER.info("Done");
 
-        return new AddCookieDtoResponse(cookie.getId(),cookie.getName(), cookie.getDescription(), cookie.getFileData(),
+        return new AddCookieResponse(cookie.getId(),cookie.getName(), cookie.getDescription(), cookie.getFileData(),
                                         cookie.getCookieAddingStatus());
 
     }
 
-    @RequestMapping(value = "/addcookie",
+    @RequestMapping(value = "/cookie/waiting",
             method = RequestMethod.GET)
     @ResponseBody
     public List<Cookie> getCookiesInWaitingStatus (@RequestParam int id) {
-       /* TODO if(!cookieService.getUserRole(id).equals(UserRole.ADMIN))
+       /* TODO if(!cookieService.getUserRole(id).equals(Role.ADMIN))
         { return new ArrayList<Cookie>() ; }*/
 
         return cookieService.getCookieListByAddingStatus(CookieAddingStatus.WAITING);
     }
 
-    @RequestMapping(value = "/addcookie",
+    @RequestMapping(value = "/cookie",
             method = RequestMethod.PATCH)
     @ResponseBody
-    public SetCookieAddingStatusDtoResponse setCookieAddingStatus (@RequestBody SetCookieAddingStatusDtoRequest setCookieAddingStatusDtoRequest) {
-        /* TODO if(!cookieService.getUserRole(id).equals(UserRole.ADMIN))
+    public UpdateCookieResponse updateCookie (@RequestBody UpdateCookieRequest updateCookieRequest) {
+        /* TODO if(!cookieService.getUserRole(id).equals(Role.ADMIN))
         { return new ArrayList<Cookie>() ; }*/
 
-        cookieService.setCookieAddingStatus(setCookieAddingStatusDtoRequest);
-        return new SetCookieAddingStatusDtoResponse(setCookieAddingStatusDtoRequest.getId(),
-                setCookieAddingStatusDtoRequest.getName(), setCookieAddingStatusDtoRequest.getDescription(),
-                setCookieAddingStatusDtoRequest.getFileData(), setCookieAddingStatusDtoRequest.getCookieAddingStatus(),
-                setCookieAddingStatusDtoRequest.getRating());
+        cookieService.updateCookie(updateCookieRequest);
+        return new UpdateCookieResponse(updateCookieRequest.getId(),
+                updateCookieRequest.getName(), updateCookieRequest.getDescription(),
+                updateCookieRequest.getFileData(), updateCookieRequest.getApprovalStatus(),
+                updateCookieRequest.getRating());
     }
 }

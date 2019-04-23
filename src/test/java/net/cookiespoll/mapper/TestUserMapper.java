@@ -1,7 +1,7 @@
 package net.cookiespoll.mapper;
 
-import net.cookiespoll.model.User;
-import net.cookiespoll.model.UserRole;
+import net.cookiespoll.user.Role;
+import net.cookiespoll.user.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +19,7 @@ public class TestUserMapper {
     UserMapper userMapper;
 
     User userAdmin = new User (1, "login", "password", "name", "lastname",
-            UserRole.ADMIN);
+            Role.ADMIN);
     int id = 1;
 
     @Before

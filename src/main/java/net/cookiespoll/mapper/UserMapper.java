@@ -1,7 +1,7 @@
 package net.cookiespoll.mapper;
 
-import net.cookiespoll.model.User;
-import net.cookiespoll.model.UserRole;
+import net.cookiespoll.user.User;
+import net.cookiespoll.user.Role;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +22,7 @@ public interface UserMapper {
             @Result(property = "password", column = "password", javaType = String.class),
             @Result(property = "firstName", column = "first_name", javaType = String.class),
             @Result(property = "lastName", column = "last_name", javaType = String.class),
-            @Result(property = "role", column = "role", javaType = UserRole.class)
+            @Result(property = "role", column = "role", javaType = Role.class)
     })
 
     User getUserById(int id);
