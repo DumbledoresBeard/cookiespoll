@@ -10,12 +10,12 @@ import net.cookiespoll.validation.FileValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.List;
 
 @Controller
 @Api(description = "Operations related to cookie adding")
@@ -37,7 +37,7 @@ public class CookiesController {
             @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
             @ApiResponse(code = 500, message = "Internal server error"),
     })
-    @RequestMapping(value = "/cookie",
+    @RequestMapping(value = "/cookies",
             method = RequestMethod.POST)
     @ResponseBody
     public AddCookieResponse addCookie(
@@ -56,17 +56,26 @@ public class CookiesController {
 
     }
 
-    @RequestMapping(value = "/cookie/waiting",
+    @RequestMapping(value = "/cookies/lists",
             method = RequestMethod.GET)
     @ResponseBody
-    public List<Cookie> getCookiesInWaitingStatus (@RequestParam int id) {
+    public ResponseEntity getCookiesByParameter (@RequestParam (value="userId") Integer userId,
+                                                 @RequestParam (value="id", required=false) Integer id,
+                                                 @RequestParam (value="name", required = false) String name,
+                                                 @RequestParam (value="description", required =false) String description,
+                                                 @RequestParam (value="status", required =false) CookieAddingStatus
+                                                           cookieAddingStatus,
+                                                 @RequestParam (value="rating", required =false) int rating) {
        /* TODO if(!cookieService.getUserRole(id).equals(Role.ADMIN))
         { return new ArrayList<Cookie>() ; }*/
 
-        return cookieService.getCookieListByAddingStatus(CookieAddingStatus.WAITING);
+
+            return ResponseEntity.ok(cookieService.getCookiesByParam(id, name, description,
+                    cookieAddingStatus, rating, userId));
+
     }
 
-    @RequestMapping(value = "/cookie",
+    @RequestMapping(value = "/cookies",
             method = RequestMethod.PATCH)
     @ResponseBody
     public UpdateCookieResponse updateCookie (@RequestBody UpdateCookieRequest updateCookieRequest) {

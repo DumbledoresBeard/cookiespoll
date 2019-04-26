@@ -12,7 +12,8 @@ public interface CookieDao {
 
     public Cookie getById(int id);
 
-    public List<Cookie> getByStatus(CookieAddingStatus cookieAddingStatus);
+    public List<Cookie> getByParam(Integer id, String name, String description,
+                                   CookieAddingStatus cookieAddingStatus, Integer rating, Integer userId);
 
     public Cookie update(Cookie cookie);
 

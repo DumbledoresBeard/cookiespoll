@@ -35,8 +35,9 @@ public class CookieService {
     }
 
 
-    public List<Cookie> getCookieListByAddingStatus (CookieAddingStatus cookieAddingStatus) {
-        return cookieDao.getByStatus(cookieAddingStatus);
+    public List<Cookie> getCookiesByParam(Integer id, String name, String description,
+                                          CookieAddingStatus cookieAddingStatus, Integer rating, Integer userId) {
+        return cookieDao.getByParam(id, name, description, cookieAddingStatus, rating, userId);
     }
 
     public Cookie updateCookie (UpdateCookieRequest updateCookieRequest) {
