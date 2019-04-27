@@ -1,12 +1,10 @@
 package net.cookiespoll.mapper;
 
-import io.swagger.models.auth.In;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -22,25 +20,6 @@ public interface CookieMapper {
     @Select({"<script>",
             "SELECT id, name, description, file_data, cookie_adding_status, rating FROM cookie",
             "<where>" +
-//                    "<if test='id != null and name != null and description != null and  " +
-//                    "cookieAddingStatus != null and rating != null and userId != null'>id=#{id} AND name=#{name} " +
-//                    "AND description=#{description} AND cookie_adding_status=#{cookieAddingStatus} " +
-//                    "AND rating=#{rating} AND user_id=#{userId}",
-//                    "</if>",
-//                    "<if test='id != null and name != null and description != null and  " +
-//                    "cookieAddingStatus != null and rating != null '>id=#{id} AND name=#{name} " +
-//                    "AND description=#{description} AND cookie_adding_status=#{cookieAddingStatus} " +
-//                    "AND rating=#{rating}",
-//                    "</if>",
-//                    "<if test='id != null and name != null and description != null and  " +
-//                    "cookieAddingStatus != null'>id=#{id} AND name=#{name} " +
-//                    "AND description=#{description} AND cookie_adding_status=#{cookieAddingStatus}",
-//                    "</if>",
-//                    "<if test='id != null and name != null and description != null'>id=#{id} " +
-//                    "AND name=#{name} AND description=#{description}",
-//                    "</if>",
-//                    "<if test='id != null and name != null'>id=#{id} AND name=#{name}",
-//                    "</if>",
                     "<if test='id != null'>id=#{id}",
                     "</if>",
                     "<if test='name != null'> AND name like #{name}",
@@ -65,7 +44,7 @@ public interface CookieMapper {
     })
     List<Cookie> getByParam(@Param("id") Integer id, @Param("name") String name, @Param("description")
                             String description, @Param("cookieAddingStatus") CookieAddingStatus cookieAddingStatus,
-                            @Param("rating") int rating, @Param("userId") Integer userId);
+                            @Param("rating") Integer rating, @Param("userId") Integer userId);
 
 
     @Update("UPDATE cookie SET name = #{name}, description = #{description}, file_data = #{fileData}," +

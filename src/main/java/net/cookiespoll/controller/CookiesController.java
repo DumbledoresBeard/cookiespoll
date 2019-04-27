@@ -59,13 +59,13 @@ public class CookiesController {
     @RequestMapping(value = "/cookies/lists",
             method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity getCookiesByParameter (@RequestParam (value="userId") Integer userId,
+    public ResponseEntity getCookiesByParameter (@RequestParam (value="userId", required=false) Integer userId,
                                                  @RequestParam (value="id", required=false) Integer id,
                                                  @RequestParam (value="name", required = false) String name,
                                                  @RequestParam (value="description", required =false) String description,
                                                  @RequestParam (value="status", required =false) CookieAddingStatus
                                                            cookieAddingStatus,
-                                                 @RequestParam (value="rating", required =false) int rating) {
+                                                 @RequestParam (value="rating", required =false) Integer rating) {
        /* TODO if(!cookieService.getUserRole(id).equals(Role.ADMIN))
         { return new ArrayList<Cookie>() ; }*/
 
