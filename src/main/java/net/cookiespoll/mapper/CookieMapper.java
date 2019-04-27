@@ -11,9 +11,9 @@ import java.util.List;
 @Component
 public interface CookieMapper {
 
-    @Insert("INSERT INTO cookie (name, description, file_data, cookie_adding_status, rating) VALUES "
+    @Insert("INSERT INTO cookie (name, description, file_data, cookie_adding_status, rating, user_id) VALUES "
             + "( #{cookie.name}, #{cookie.description}, #{cookie.fileData}, #{cookie.cookieAddingStatus}," +
-            " #{cookie.rating})")
+            " #{cookie.rating}, #{cookie.userId})")
     @Options(useGeneratedKeys = true, keyProperty = "cookie.id")
     Integer insert(@Param("cookie") Cookie cookie);
 
@@ -28,9 +28,9 @@ public interface CookieMapper {
                     "</if>",
                     "<if test='cookieAddingStatus != null'> AND cookie_adding_status like #{cookieAddingStatus}",
                     "</if>",
-                    "<if test='rating != null'> AND rating like #{rating}",
+                    "<if test='rating != null'> AND rating=#{rating}",
                     "</if>",
-                    "<if test='userId != null '> AND user_id like #{userId}",
+                    "<if test='userId != null '> AND user_id=#{userId}",
                     "</if>",
                     "</where>" +
                     "</script>"})
@@ -48,7 +48,7 @@ public interface CookieMapper {
 
 
     @Update("UPDATE cookie SET name = #{name}, description = #{description}, file_data = #{fileData}," +
-            "cookie_adding_status = #{cookieAddingStatus}, rating = #{rating}" +
+            "cookie_adding_status = #{cookieAddingStatus}, rating = #{rating}, user_id = #{userId}" +
             " WHERE id = #{id} ")
     void update(Cookie cookie);
 

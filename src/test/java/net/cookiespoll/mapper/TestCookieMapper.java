@@ -19,7 +19,8 @@ public class TestCookieMapper {
     @Mock
     CookieMapper cookieMapper;
 
-    Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING);
+    Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING,
+                                0, 1);
 
     @Before
     public void setUp() throws Exception {

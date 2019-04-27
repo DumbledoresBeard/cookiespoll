@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @Api(description = "Operations related to cookie adding")
@@ -46,8 +47,8 @@ public class CookiesController {
                             ) throws IOException, FileValidationException {
         LOGGER.info("Start processing AddCookieRequest {}", addCookieRequest, multipartFile);
         fileValidator.validate(multipartFile);
-
-        Cookie cookie = cookieService.addCookie(addCookieRequest, multipartFile);
+        int userId = 1; // temporary decision until getting userId from session will be implemented
+        Cookie cookie = cookieService.addCookie(addCookieRequest, multipartFile, userId);
 
         LOGGER.info("Done");
 
@@ -59,19 +60,19 @@ public class CookiesController {
     @RequestMapping(value = "/cookies/lists",
             method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity getCookiesByParameter (@RequestParam (value="userId", required=false) Integer userId,
-                                                 @RequestParam (value="id", required=false) Integer id,
-                                                 @RequestParam (value="name", required = false) String name,
-                                                 @RequestParam (value="description", required =false) String description,
-                                                 @RequestParam (value="status", required =false) CookieAddingStatus
+    public List<Cookie> getCookiesByParameter (@RequestParam (value="userId", required=false) Integer userId,
+                                               @RequestParam (value="id", required=false) Integer id,
+                                               @RequestParam (value="name", required = false) String name,
+                                               @RequestParam (value="description", required =false) String description,
+                                               @RequestParam (value="status", required =false) CookieAddingStatus
                                                            cookieAddingStatus,
-                                                 @RequestParam (value="rating", required =false) Integer rating) {
+                                               @RequestParam (value="rating", required =false) Integer rating) {
        /* TODO if(!cookieService.getUserRole(id).equals(Role.ADMIN))
         { return new ArrayList<Cookie>() ; }*/
 
 
-            return ResponseEntity.ok(cookieService.getCookiesByParam(id, name, description,
-                    cookieAddingStatus, rating, userId));
+            return cookieService.getCookiesByParam(id, name, description,
+                    cookieAddingStatus, rating, userId);
 
     }
 
@@ -82,11 +83,14 @@ public class CookiesController {
         /* TODO if(!cookieService.getUserRole(id).equals(Role.ADMIN))
         { return new ArrayList<Cookie>() ; }*/
 
-        cookieService.updateCookie(updateCookieRequest);
+        Cookie cookie = cookieService.updateCookie(updateCookieRequest);
+        if (cookie.getCookieAddingStatus().equals(CookieAddingStatus.APPROVED)) {
+            /*here will be a method which will add cookie id to table with user id*/
+        }
         return new UpdateCookieResponse(updateCookieRequest.getId(),
                 updateCookieRequest.getName(), updateCookieRequest.getDescription(),
                 updateCookieRequest.getFileData(), updateCookieRequest.getApprovalStatus(),
-                updateCookieRequest.getRating());
+                updateCookieRequest.getRating(), updateCookieRequest.getUserId());
     }
 
     @RequestMapping(value = "/cookies/poll",

@@ -10,34 +10,30 @@ public class Cookie {
     private byte[] fileData;
     private CookieAddingStatus cookieAddingStatus;
     private int rating;
+    private int userId;
 
     public Cookie() {
     }
 
-    public Cookie(int id, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus,
-                  int rating) {
+    public Cookie(String name, String description, byte[] fileData,
+                  CookieAddingStatus cookieAddingStatus, int rating, int userId) {
+        this.name = name;
+        this.description = description;
+        this.fileData = fileData;
+        this.cookieAddingStatus = cookieAddingStatus;
+        this.rating = rating;
+        this.userId = userId;
+    }
+
+    public Cookie(int id, String name, String description, byte[] fileData,
+                  CookieAddingStatus cookieAddingStatus, int rating, int userId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.fileData = fileData;
         this.cookieAddingStatus = cookieAddingStatus;
         this.rating = rating;
-    }
-
-    public Cookie(String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus,
-                  int rating) {
-        this.name = name;
-        this.description = description;
-        this.fileData = fileData;
-        this.cookieAddingStatus = cookieAddingStatus;
-        this.rating = rating;
-    }
-
-    public Cookie(String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus) {
-        this.name = name;
-        this.description = description;
-        this.fileData = fileData;
-        this.cookieAddingStatus = cookieAddingStatus;
+        this.userId = userId;
     }
 
     public int getId() {
@@ -88,6 +84,14 @@ public class Cookie {
         this.rating = rating;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -95,6 +99,7 @@ public class Cookie {
         Cookie cookie = (Cookie) o;
         return getId() == cookie.getId() &&
                 getRating() == cookie.getRating() &&
+                getUserId() == cookie.getUserId() &&
                 Objects.equals(getName(), cookie.getName()) &&
                 Objects.equals(getDescription(), cookie.getDescription()) &&
                 Arrays.equals(getFileData(), cookie.getFileData()) &&
@@ -103,7 +108,8 @@ public class Cookie {
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(getId(), getName(), getDescription(), getCookieAddingStatus(), getRating());
+        int result = Objects.hash(getId(), getName(), getDescription(), getCookieAddingStatus(),
+                getRating(), getUserId());
         result = 31 * result + Arrays.hashCode(getFileData());
         return result;
     }

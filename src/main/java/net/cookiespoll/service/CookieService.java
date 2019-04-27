@@ -25,13 +25,14 @@ public class CookieService {
         this.cookieDao = cookieDao;
     }
 
-    public Cookie addCookie (AddCookieRequest addCookieRequest, MultipartFile multipartFile) throws IOException {
+    public Cookie addCookie (AddCookieRequest addCookieRequest, MultipartFile multipartFile, int userId)
+            throws IOException {
        int rating = 0;
 
        LOGGER.info("Set rating={} and cookieAddingStatus={} to cookie ", rating, CookieAddingStatus.WAITING);
 
        return cookieDao.insert(new Cookie(addCookieRequest.getName(), addCookieRequest.getDescription(),
-                                multipartFile.getBytes(), CookieAddingStatus.WAITING, rating));
+                                multipartFile.getBytes(), CookieAddingStatus.WAITING, rating, userId));
     }
 
 
@@ -44,7 +45,7 @@ public class CookieService {
        return cookieDao.update(new Cookie(updateCookieRequest.getId(),
                 updateCookieRequest.getName(), updateCookieRequest.getDescription(),
                 updateCookieRequest.getFileData(), updateCookieRequest.getApprovalStatus(),
-                updateCookieRequest.getRating()));
+                updateCookieRequest.getRating(), updateCookieRequest.getUserId()));
 
     }
 
