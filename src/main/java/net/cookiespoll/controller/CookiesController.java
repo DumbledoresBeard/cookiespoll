@@ -88,4 +88,11 @@ public class CookiesController {
                 updateCookieRequest.getFileData(), updateCookieRequest.getApprovalStatus(),
                 updateCookieRequest.getRating());
     }
+
+    @RequestMapping(value = "/cookies/poll",
+                    method = RequestMethod.POST)
+    @ResponseBody
+    public String rateCookie (@RequestBody Cookie cookie) {
+        return "ok";
+    }
 }

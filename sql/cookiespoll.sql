@@ -22,3 +22,11 @@ rating int,
 user_id int,
 FOREiGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 )
+
+CREATE TABLE cookie_user_rating (
+user_id int,
+cookie_id int,
+rating int,
+FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+FOREIGN KEY (cookie_id) REFERENCES cookie(id) ON DELETE CASCADE
+)
