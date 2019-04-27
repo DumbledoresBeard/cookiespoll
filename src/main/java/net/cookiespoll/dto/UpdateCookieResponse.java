@@ -9,17 +9,19 @@ public class UpdateCookieResponse {
     private byte[] fileData;
     private CookieAddingStatus cookieAddingStatus;
     private int rating;
+    private int userId;
 
     public UpdateCookieResponse() {}
 
     public UpdateCookieResponse(int id, String name, String description, byte[] fileData,
-                                CookieAddingStatus cookieAddingStatus, int rating) {
+                                CookieAddingStatus cookieAddingStatus, int rating, int userId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.fileData = fileData;
         this.cookieAddingStatus = cookieAddingStatus;
         this.rating = rating;
+        this.userId = userId;
     }
 
     public int getId() {
@@ -70,5 +72,11 @@ public class UpdateCookieResponse {
         this.rating = rating;
     }
 
+    public int getUserId() {
+        return userId;
+    }
 
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 }

@@ -1,4 +1,4 @@
-/*package net.cookiespoll.controller;
+package net.cookiespoll.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import net.cookiespoll.dto.AddCookieRequest;
@@ -43,7 +43,8 @@ public class TestCookieController {
     private FileValidator fileValidator = new FileValidator();
     private CookiesController cookiesController = new CookiesController(cookieService, fileValidator);
     private byte [] byteArray = "Photo".getBytes();
-    private Cookie cookie = new Cookie("cookie", "tasty cookie", byteArray, CookieAddingStatus.WAITING);
+    private Cookie cookie = new Cookie("cookie", "tasty cookie", byteArray, CookieAddingStatus.WAITING,
+            0, 1);
     private MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "testcookie",
             "image/jpg", byteArray);
     private MockMultipartFile addCookieDtoRequest = new MockMultipartFile("data", "",
@@ -57,7 +58,9 @@ public class TestCookieController {
 
     @Test
     public void testAddCookieValidRequest() throws Exception {
-        when(cookieService.addCookie((any(AddCookieRequest.class)), any(MockMultipartFile.class))).thenReturn(cookie);
+        int userId = 1;
+        when(cookieService.addCookie((any(AddCookieRequest.class)), any(MockMultipartFile.class), userId))
+                .thenReturn(cookie);
 
         String response = mockMvc.perform(MockMvcRequestBuilders.multipart("/cookies")
                 .file(mockMultipartFile)
@@ -66,7 +69,7 @@ public class TestCookieController {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        verify(cookieService).addCookie((any(AddCookieRequest.class)), any(MockMultipartFile.class));
+        verify(cookieService).addCookie((any(AddCookieRequest.class)), any(MockMultipartFile.class), userId);
 
         AddCookieResponse addCookieResponse = new ObjectMapper().readValue(response, AddCookieResponse.class);
 
@@ -199,25 +202,26 @@ public class TestCookieController {
                 .file(cookieExceededMaxFileSize)
                 .file(addCookieDtoRequest)
         ).andExpect(status().is(500));
-    *//*            .andExpect((ResultMatcher) jsonPath("$.message", is("Maximum upload size exceeded; nested exception is java.lang.IllegalStateException: org.apache.tomcat.util.http.fileupload.FileUploadBase$SizeLimitExceededException: the request was rejected because its size (8055342) exceeds the configured maximum (5242880)")));*//*
+    /*            .andExpect((ResultMatcher) jsonPath("$.message", is("Maximum upload size exceeded; nested exception is java.lang.IllegalStateException: org.apache.tomcat.util.http.fileupload.FileUploadBase$SizeLimitExceededException: the request was rejected because its size (8055342) exceeds the configured maximum (5242880)")));*/
 
     }
 
+/*
     @Test
-    public void getCookiesInWaitingStatus () throws Exception {
+    public void getCookiesByParam() throws Exception {
         List<Cookie> cookies = new ArrayList<>();
         Cookie cookieWith1Id = new Cookie(1, "cookie", "tasty cookie", new byte[2],
                 CookieAddingStatus.WAITING, 0);
         Cookie cookieWith2Id = new Cookie(2,"cookie", "tasty cookie", new byte[2],
                 CookieAddingStatus.WAITING, 0);
         CookieAddingStatus cookieAddingStatus = CookieAddingStatus.WAITING;
-        int id = 1;
+        Integer userId = 1;
         cookies.add(cookieWith1Id);
         cookies.add(cookieWith2Id);
         when(cookieService.getCookiesByParam(cookieAddingStatus)).thenReturn(cookies);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/cookies/waiting")
-                .param("id", String.valueOf(id))
+        mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
+                .param("id", String.valueOf(userId))
         ).andExpect(status().isOk())
                .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":" +
                         "\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0}," +
@@ -225,17 +229,18 @@ public class TestCookieController {
                         "\"cookieAddingStatus\":\"WAITING\",\"rating\":0}]"));
 
     }
+*/
 
     @Test
     public void testUpdateCookie () throws Exception {
         UpdateCookieRequest updateCookieRequest = new UpdateCookieRequest(
                 1, "cookie", "tasty cookie", byteArray,
-                CookieAddingStatus.APPROVED, 0);
+                CookieAddingStatus.APPROVED, 0, 1);
         Gson gson = new Gson();
         String request = gson.toJson(updateCookieRequest);
         UpdateCookieResponse updateCookieResponse = new UpdateCookieResponse(
                 1, "cookie", "tasty cookie", byteArray,
-                CookieAddingStatus.APPROVED, 0);
+                CookieAddingStatus.APPROVED, 0, 1);
 
         when(cookieService.updateCookie(any(UpdateCookieRequest.class))).thenReturn(cookie);
 
@@ -262,5 +267,5 @@ public class TestCookieController {
 
     }
 
-}*/
+}
 
