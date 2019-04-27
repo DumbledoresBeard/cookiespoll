@@ -82,7 +82,10 @@ public class CookiesController {
         /* TODO if(!cookieService.getUserRole(id).equals(Role.ADMIN))
         { return new ArrayList<Cookie>() ; }*/
 
-        cookieService.updateCookie(updateCookieRequest);
+        Cookie cookie = cookieService.updateCookie(updateCookieRequest);
+        if (cookie.getCookieAddingStatus().equals(CookieAddingStatus.APPROVED)) {
+            /*here will be a method which will add cookie id to table with user id*/
+        }
         return new UpdateCookieResponse(updateCookieRequest.getId(),
                 updateCookieRequest.getName(), updateCookieRequest.getDescription(),
                 updateCookieRequest.getFileData(), updateCookieRequest.getApprovalStatus(),

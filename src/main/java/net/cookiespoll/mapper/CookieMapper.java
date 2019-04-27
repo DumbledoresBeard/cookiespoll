@@ -28,9 +28,9 @@ public interface CookieMapper {
                     "</if>",
                     "<if test='cookieAddingStatus != null'> AND cookie_adding_status like #{cookieAddingStatus}",
                     "</if>",
-                    "<if test='rating != null'> AND rating like #{rating}",
+                    "<if test='rating != null'> AND rating=#{rating}",
                     "</if>",
-                    "<if test='userId != null '> AND user_id like #{userId}",
+                    "<if test='userId != null '> AND user_id=#{userId}",
                     "</if>",
                     "</where>" +
                     "</script>"})
