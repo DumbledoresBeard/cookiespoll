@@ -3,10 +3,12 @@ package net.cookiespoll.controller;
 import io.swagger.annotations.*;
 import net.cookiespoll.dto.*;
 import net.cookiespoll.exception.FileValidationException;
+import net.cookiespoll.exception.ParametersValidationException;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.service.CookieService;
 import net.cookiespoll.validation.FileValidator;
+import net.cookiespoll.validation.ParametersValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -25,11 +28,14 @@ public class CookiesController {
 
     private CookieService cookieService;
     private FileValidator fileValidator;
+    private ParametersValidator parametersValidator;
 
     @Autowired
-    public CookiesController(CookieService cookieService, FileValidator fileValidator) {
+    public CookiesController(CookieService cookieService, FileValidator fileValidator, ParametersValidator
+                             parametersValidator) {
         this.cookieService = cookieService;
         this.fileValidator = fileValidator;
+        this.parametersValidator = parametersValidator;
     }
 
     @ApiOperation(value = "Add new cookie to store in database", response = AddCookieResponse.class)
@@ -57,6 +63,12 @@ public class CookiesController {
 
     }
 
+    @ApiOperation(value = "Get list of cookies by parameter", response = ArrayList.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Cookies were received"),
+            @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
+            @ApiResponse(code = 500, message = "Internal server error"),
+    })
     @RequestMapping(value = "/cookies/lists",
             method = RequestMethod.GET)
     @ResponseBody
@@ -66,10 +78,16 @@ public class CookiesController {
                                                @RequestParam (value="description", required =false) String description,
                                                @RequestParam (value="status", required =false) CookieAddingStatus
                                                            cookieAddingStatus,
-                                               @RequestParam (value="rating", required =false) Integer rating) {
+                                               @RequestParam (value="rating", required =false) Integer rating)
+                                                throws ParametersValidationException {
        /* TODO if(!cookieService.getUserRole(id).equals(Role.ADMIN))
         { return new ArrayList<Cookie>() ; }*/
+            LOGGER.info("Starting process request {} {} {} {} {} {}", userId, id, name, description,
+                    cookieAddingStatus, rating);
 
+            if (name != null || description != null || rating != null) {
+                parametersValidator.validate(name, description, rating);
+            }
 
             return cookieService.getCookiesByParam(id, name, description,
                     cookieAddingStatus, rating, userId);

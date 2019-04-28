@@ -60,4 +60,24 @@ public class ControllerExceptionHandler {
 
         return errorResponse;
     }
+
+    @ExceptionHandler(ParametersValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponse handleParametersValidationException (HttpServletRequest req, ParametersValidationException ex) {
+        LOGGER.error("Request: " + req.getRequestURL() + " raised exception " + ex);
+
+
+        List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
+        ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
+        error.setFieldName(ex.getMessage());
+        error.setMessage(ex.getMessage());
+        errorDetails.add(error);
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setErrors(errorDetails);
+
+        return errorResponse;
+    }
+
+
 }
