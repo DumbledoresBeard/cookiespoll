@@ -11,4 +11,5 @@ public interface CookieUserRatingMapper {
     @Select("SELECT rating from cookie_user_rating where user_id =#{userId} AND cookie_id=#{cookieId}")
     Integer getRatingByUserAndCookie(@Param("userId") int userId, @Param("cookieId") int cookieId);
 
+
 }

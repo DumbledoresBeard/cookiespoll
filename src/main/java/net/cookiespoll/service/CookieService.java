@@ -49,4 +49,8 @@ public class CookieService {
 
     }
 
+    public List<Cookie> getUnratedCookiesByUserId (int userId) {
+        return cookieDao.getUnratedCookiesByUserId(userId);
+    }
+
 }

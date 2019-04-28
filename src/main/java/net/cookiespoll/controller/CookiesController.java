@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -103,5 +104,13 @@ public class CookiesController {
         }
         cookieUserRatingService.setRatingToCookie(userId, cookie.getId(), cookie.getRating());
         return "ok";
+    }
+
+    @RequestMapping(value = "/cookies/poll",
+                    method = RequestMethod.GET)
+    @ResponseBody
+    public List<Cookie> getUnratedCookies () {
+        int userId = 1; // temporary decision until getting userId from session will be implemented
+        return cookieService.getUnratedCookiesByUserId(userId);
     }
 }

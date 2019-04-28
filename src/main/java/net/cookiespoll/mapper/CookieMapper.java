@@ -46,6 +46,16 @@ public interface CookieMapper {
                             String description, @Param("cookieAddingStatus") CookieAddingStatus cookieAddingStatus,
                             @Param("rating") Integer rating, @Param("userId") Integer userId);
 
+    @Select("SELECT id, name, description, file_data FROM cookie LEFT JOIN cookie_user_rating ON" +
+            "cookie.id = cookie_user_rating.cookie_id WHERE cookie_user_rating.rating is null AND" +
+            "cookie.cookie_adding_status = 'APPROVED' AND cookie_user_rating.user_id = #{userId}")
+    @Results({
+            @Result(property = "id", column = "id", javaType = Integer.class),
+            @Result(property = "name", column = "name", javaType = String.class),
+            @Result(property = "description", column = "description", javaType = String.class),
+            @Result(property = "fileData", column = "file_data", javaType = byte[].class),
+    })
+    List<Cookie> getUnratedCookiesByUserId(@Param("userId") int userId);
 
     @Update("UPDATE cookie SET name = #{name}, description = #{description}, file_data = #{fileData}," +
             "cookie_adding_status = #{cookieAddingStatus}, rating = #{rating}, user_id = #{userId}" +
