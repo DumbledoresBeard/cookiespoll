@@ -9,6 +9,7 @@ import net.cookiespoll.exception.ControllerExceptionHandler;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.service.CookieService;
+import net.cookiespoll.service.CookieUserRatingService;
 import net.cookiespoll.validation.FileValidator;
 import org.junit.Assert;
 import org.junit.Before;
@@ -41,7 +42,9 @@ public class TestCookieController {
     private MockMvc mockMvc;
     private CookieService cookieService = mock(CookieService.class);
     private FileValidator fileValidator = new FileValidator();
-    private CookiesController cookiesController = new CookiesController(cookieService, fileValidator);
+    private CookieUserRatingService cookieUserRatingService = mock(CookieUserRatingService.class);
+    private CookiesController cookiesController = new CookiesController(cookieService, fileValidator,
+                                                    cookieUserRatingService);
     private byte [] byteArray = "Photo".getBytes();
     private Cookie cookie = new Cookie("cookie", "tasty cookie", byteArray, CookieAddingStatus.WAITING,
             0, 1);

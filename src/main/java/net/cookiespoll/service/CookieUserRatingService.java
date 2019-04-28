@@ -2,7 +2,9 @@ package net.cookiespoll.service;
 
 import net.cookiespoll.dao.CookieUserRatingDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CookieUserRatingService {
 
     private CookieUserRatingDao cookieUserRatingDao;
@@ -12,8 +14,12 @@ public class CookieUserRatingService {
         this.cookieUserRatingDao = cookieUserRatingDao;
     }
 
-    public int addCookieToAllUsers (int cookie_id) {
-        int rating = 0;
-        return cookieUserRatingDao.updateAddCookieToAllUsers(cookie_id, rating);
+    public int setRatingToCookie(int userId, int cookieId, int rating) {
+        return cookieUserRatingDao.insert(userId, cookieId, rating);
     }
-}
+
+    public Integer getRatingByUserAndCookie(int userId, int cookieId) {
+        return cookieUserRatingDao.getRatingByUserAndCookie(userId, cookieId);
+    }
+    }
+

@@ -1,14 +1,14 @@
 package net.cookiespoll.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 public interface CookieUserRatingMapper {
 
     @Insert("INSERT INTO cookie_user_rating (user_id, cookie_id, rating) VALUES "
-            + "( #{userId}, #(cookieId), #(rating))")
-    Integer insert(@Param("userId") int user_id, @Param("cookieId") int cookie_id, @Param("rating") int rating);
+            + "( #{userId}, #{cookieId}, #{rating})")
+    Integer insert(@Param("userId") int userId, @Param("cookieId") int cookieId, @Param("rating") int rating);
+
+    @Select("SELECT rating from cookie_user_rating where user_id =#{userId} AND cookie_id=#{cookieId}")
+    Integer getRatingByUserAndCookie(@Param("userId") int userId, @Param("cookieId") int cookieId);
 
 }
