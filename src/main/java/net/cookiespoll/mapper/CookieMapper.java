@@ -18,10 +18,8 @@ public interface CookieMapper {
     Integer insert(@Param("cookie") Cookie cookie);
 
     @Select({"<script>",
-            "SELECT id, name, description, file_data, cookie_adding_status, rating FROM cookie",
+            "SELECT id, name, description, file_data, cookie_adding_status, rating, user_id FROM cookie",
             "<where>" +
-                    "<if test='id != null'>id=#{id}",
-                    "</if>",
                     "<if test='name != null'> AND name like #{name}",
                     "</if>",
                     "<if test='description != null'> AND description like #{description}",
@@ -42,10 +40,13 @@ public interface CookieMapper {
             @Result(property = "cookieAddingStatus", column = "cookie_adding_status", javaType = CookieAddingStatus.class),
             @Result(property = "rating", column = "rating", javaType = Integer.class),
     })
-    List<Cookie> getByParam(@Param("id") Integer id, @Param("name") String name, @Param("description")
+    List<Cookie> getByParam(@Param("name") String name, @Param("description")
                             String description, @Param("cookieAddingStatus") CookieAddingStatus cookieAddingStatus,
                             @Param("rating") Integer rating, @Param("userId") Integer userId);
 
+    @Select("SELECT id, name, description, file_data, cookie_adding_status, rating, user_id FROM cookie" +
+            "WHERE id = #{id}")
+    Cookie getById (int id);
 
     @Update("UPDATE cookie SET name = #{name}, description = #{description}, file_data = #{fileData}," +
             "cookie_adding_status = #{cookieAddingStatus}, rating = #{rating}, user_id = #{userId}" +

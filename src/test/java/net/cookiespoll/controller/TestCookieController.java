@@ -10,7 +10,6 @@ import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.service.CookieService;
 import net.cookiespoll.validation.FileValidator;
-import net.cookiespoll.validation.ParametersValidator;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -26,9 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -42,9 +38,7 @@ public class TestCookieController {
     private MockMvc mockMvc;
     private CookieService cookieService = mock(CookieService.class);
     private FileValidator fileValidator = new FileValidator();
-    private ParametersValidator parametersValidator = new ParametersValidator();
-    private CookiesController cookiesController = new CookiesController(cookieService, fileValidator,
-                                                    parametersValidator);
+    private CookiesController cookiesController = new CookiesController(cookieService, fileValidator);
     private byte [] byteArray = "Photo".getBytes();
     private Cookie cookie = new Cookie("cookie", "tasty cookie", byteArray, CookieAddingStatus.WAITING,
             0, 1);

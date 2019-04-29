@@ -12,7 +12,7 @@ public interface CookieDao {
 
     public Cookie getById(int id);
 
-    public List<Cookie> getByParam(Integer id, String name, String description,
+    public List<Cookie> getByParam(String name, String description,
                                    CookieAddingStatus cookieAddingStatus, Integer rating, Integer userId);
 
     public Cookie update(Cookie cookie);

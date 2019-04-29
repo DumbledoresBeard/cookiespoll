@@ -80,9 +80,9 @@ public class TestCookieService {
         cookies.add(cookieWithId);
         cookies.add(cookieWith2Id);
 
-        when(cookieDao.getByParam(id, name, description, cookieAddingStatus, rating, userId)).thenReturn(cookies);
+        when(cookieDao.getByParam(name, description, cookieAddingStatus, rating, userId)).thenReturn(cookies);
 
-        List<Cookie> resultCookieList = cookieService.getCookiesByParam(id, name, description, cookieAddingStatus,
+        List<Cookie> resultCookieList = cookieService.getCookiesByParam(name, description, cookieAddingStatus,
                                         rating, userId);
 
         Assert.assertEquals(resultCookieList.get(0).getId(), cookieWithId.getId());
@@ -99,7 +99,7 @@ public class TestCookieService {
         Assert.assertEquals(resultCookieList.get(1).getCookieAddingStatus(), cookieWith2Id.getCookieAddingStatus());
         Assert.assertEquals(resultCookieList.get(1).getRating(), cookieWith2Id.getRating());
 
-        verify(cookieDao).getByParam(id, name, description, cookieAddingStatus, rating, userId);
+        verify(cookieDao).getByParam(name, description, cookieAddingStatus, rating, userId);
 
     }
 
@@ -115,6 +115,8 @@ public class TestCookieService {
 
 
     }
+
+
 
 }
 
