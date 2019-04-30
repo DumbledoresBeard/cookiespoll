@@ -60,7 +60,6 @@ public class CookiesController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Cookies were received"),
             @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
-            @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal server error"),
     })
     @RequestMapping(value = "/cookies/lists",
@@ -70,7 +69,7 @@ public class CookiesController {
                                                 {
        /* TODO if(!cookieService.getUserRole(id).equals(Role.ADMIN))
         { return new ArrayList<Cookie>() ; }*/
-            LOGGER.info("Starting process request {} {} {} {} {} {} ", cookiesByParameterRequest);
+            LOGGER.info("Starting processing request {} {} {} {} {} {} ", cookiesByParameterRequest);
 
             return cookieService.getCookiesByParam(cookiesByParameterRequest.getName(),
                     cookiesByParameterRequest.getDescription(), cookiesByParameterRequest.getCookieAddingStatus(),
@@ -89,16 +88,25 @@ public class CookiesController {
             method = RequestMethod.GET)
     @ResponseBody
     public Cookie getCookieById (@RequestParam (value="id") Integer id) {
-        LOGGER.info("Starting process request {} ", id);
+        LOGGER.info("Starting processing request {} ", id);
+
         return cookieService.getCookieById(id);
     }
 
+    @ApiOperation(value = "Update cookie in database", response = UpdateCookieResponse.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Cookie has been updated"),
+            @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
+            @ApiResponse(code = 500, message = "Internal server error"),
+    })
     @RequestMapping(value = "/cookies",
             method = RequestMethod.PATCH)
     @ResponseBody
     public UpdateCookieResponse updateCookie (@RequestBody UpdateCookieRequest updateCookieRequest) {
         /* TODO if(!cookieService.getUserRole(id).equals(Role.ADMIN))
         { return new ArrayList<Cookie>() ; }*/
+
+        LOGGER.info("Starting processing request {} " + updateCookieRequest);
 
         cookieService.updateCookie(updateCookieRequest);
         return new UpdateCookieResponse(updateCookieRequest.getId(),

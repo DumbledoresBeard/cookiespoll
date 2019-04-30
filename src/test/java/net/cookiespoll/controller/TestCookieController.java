@@ -28,11 +28,10 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Ignore
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-
 public class TestCookieController {
 
     private MockMvc mockMvc;
@@ -40,8 +39,8 @@ public class TestCookieController {
     private FileValidator fileValidator = new FileValidator();
     private CookiesController cookiesController = new CookiesController(cookieService, fileValidator);
     private byte [] byteArray = "Photo".getBytes();
-    private Cookie cookie = new Cookie("cookie", "tasty cookie", byteArray, CookieAddingStatus.WAITING,
-            0, 1);
+    private Cookie cookie = new Cookie(1, "cookie", "tasty cookie", byteArray,
+            CookieAddingStatus.WAITING, 0, 1);
     private MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "testcookie",
             "image/jpg", byteArray);
     private MockMultipartFile addCookieDtoRequest = new MockMultipartFile("data", "",
@@ -221,12 +220,17 @@ public class TestCookieController {
         CookieAddingStatus cookieAddingStatus = null;
         Integer rating = null;
         Integer userId = null;
-        String request = gson.toJson(new CookiesByParameterRequest(userId, name, description, cookieAddingStatus, rating));
+        CookiesByParameterRequest cookiesByParameterRequest = new CookiesByParameterRequest(userId, name,
+                description, cookieAddingStatus, rating);
+        String request = gson.toJson(cookiesByParameterRequest);
 
-        when(cookieService.getCookiesByParam(name, description, cookieAddingStatus, rating, userId)).thenReturn(cookies);
+        when(cookieService.getCookiesByParam(cookiesByParameterRequest.getName(), cookiesByParameterRequest
+                .getDescription(), cookiesByParameterRequest.getCookieAddingStatus(),
+                cookiesByParameterRequest.getRating(), cookiesByParameterRequest.getUserId()))
+                            .thenReturn(cookies);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
-                .contentType(MediaType.APPLICATION_JSON)
+             .contentType(MediaType.APPLICATION_JSON)
                 .content(request)
         ).andExpect(status().isOk())
                .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":" +
@@ -250,7 +254,8 @@ public class TestCookieController {
         CookieAddingStatus cookieAddingStatus = null;
         Integer rating = null;
         Integer userId = null;
-        String request = gson.toJson(new CookiesByParameterRequest(userId, name, description, cookieAddingStatus, rating));
+        String request = gson.toJson(new CookiesByParameterRequest(userId, name, description,
+                cookieAddingStatus, rating));
 
         when(cookieService.getCookiesByParam(name, description, cookieAddingStatus, rating, userId)).thenReturn(cookies);
 
@@ -310,7 +315,8 @@ public class TestCookieController {
         Integer userId = null;
         String request = gson.toJson(new CookiesByParameterRequest(userId, name, description, cookieAddingStatus, rating));
 
-        when(cookieService.getCookiesByParam(name, description, cookieAddingStatus, rating, userId)).thenReturn(cookies);
+        when(cookieService.getCookiesByParam(name, description, cookieAddingStatus, rating, userId))
+                .thenReturn(cookies);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -393,12 +399,15 @@ public class TestCookieController {
 
         when(cookieService.getCookiesByParam(name, description, cookieAddingStatus, rating, userId)).thenReturn(cookies);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
+        String response = mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(request)
         ).andExpect(status().isOk())
-                .andExpect(content().string("[]"));
-
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+               /* .andExpect(content().string("[]"));*/
+        System.out.println(response);
     }
 
     @Test
@@ -499,7 +508,8 @@ public class TestCookieController {
         CookieAddingStatus cookieAddingStatus = null;
         Integer rating = null;
         Integer userId = -1;
-        String request = gson.toJson(new CookiesByParameterRequest(userId, name, description, cookieAddingStatus, rating));
+        String request = gson.toJson(new CookiesByParameterRequest(userId, name, description,
+                cookieAddingStatus, rating));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -507,6 +517,34 @@ public class TestCookieController {
         ).andExpect(status().is(400))
                 .andExpect(content().string("{\"errors\":[{\"fieldName\":\"userId\"," +
                         "\"message\":\"User id can not be less than 0\"}]}"));
+    }
+
+    @Test
+    public void testGetCookieById () throws Exception {
+        Integer id = 1;
+
+        when(cookieService.getCookieById(id)).thenReturn(cookie);
+
+
+        String response = mockMvc.perform(MockMvcRequestBuilders.get("/cookies")
+                .param("id", String.valueOf(id))
+        ).andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        verify(cookieService).getCookieById(id);
+
+        Cookie resultCookie = new ObjectMapper().readValue(response, Cookie.class);
+
+        Assert.assertEquals(cookie.getId(), resultCookie.getId());
+        Assert.assertEquals(cookie.getName(), resultCookie.getName());
+        Assert.assertEquals(cookie.getDescription(), resultCookie.getDescription());
+        Assert.assertArrayEquals(cookie.getFileData(), resultCookie.getFileData());
+        Assert.assertEquals(cookie.getCookieAddingStatus(), resultCookie.getCookieAddingStatus());
+        Assert.assertEquals(cookie.getRating(), resultCookie.getRating());
+        Assert.assertEquals(cookie.getId(), resultCookie.getUserId());
+
     }
 
 

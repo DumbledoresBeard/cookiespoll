@@ -39,6 +39,7 @@ public interface CookieMapper {
             @Result(property = "fileData", column = "file_data", javaType = byte[].class),
             @Result(property = "cookieAddingStatus", column = "cookie_adding_status", javaType = CookieAddingStatus.class),
             @Result(property = "rating", column = "rating", javaType = Integer.class),
+            @Result(property = "userId", column = "user_id", javaType = Integer.class),
     })
     List<Cookie> getByParam(@Param("name") String name, @Param("description")
                             String description, @Param("cookieAddingStatus") CookieAddingStatus cookieAddingStatus,
@@ -46,7 +47,16 @@ public interface CookieMapper {
 
     @Select("SELECT id, name, description, file_data, cookie_adding_status, rating, user_id FROM cookie" +
             "WHERE id = #{id}")
-    Cookie getById (int id);
+    @Results({
+            @Result(property = "id", column = "id", javaType = Integer.class),
+            @Result(property = "name", column = "name", javaType = String.class),
+            @Result(property = "description", column = "description", javaType = String.class),
+            @Result(property = "fileData", column = "file_data", javaType = byte[].class),
+            @Result(property = "cookieAddingStatus", column = "cookie_adding_status", javaType = CookieAddingStatus.class),
+            @Result(property = "rating", column = "rating", javaType = Integer.class),
+            @Result(property = "userId", column = "user_id", javaType = Integer.class),
+    })
+    Cookie getById (Integer id);
 
     @Update("UPDATE cookie SET name = #{name}, description = #{description}, file_data = #{fileData}," +
             "cookie_adding_status = #{cookieAddingStatus}, rating = #{rating}, user_id = #{userId}" +
