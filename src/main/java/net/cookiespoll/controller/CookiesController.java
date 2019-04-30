@@ -60,6 +60,7 @@ public class CookiesController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Cookies were received"),
             @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
+            @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal server error"),
     })
     @RequestMapping(value = "/cookies/lists",
@@ -71,11 +72,6 @@ public class CookiesController {
         { return new ArrayList<Cookie>() ; }*/
             LOGGER.info("Starting process request {} {} {} {} {} {} ", cookiesByParameterRequest);
 
-           /* if (name != null || description != null || rating != null) {
-                parametersValidator.validate(name, description, rating);
-            }*/
-
-
             return cookieService.getCookiesByParam(cookiesByParameterRequest.getName(),
                     cookiesByParameterRequest.getDescription(), cookiesByParameterRequest.getCookieAddingStatus(),
                     cookiesByParameterRequest.getRating(), cookiesByParameterRequest.getUserId());
@@ -86,6 +82,7 @@ public class CookiesController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Cookies were received"),
             @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
+            @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal server error"),
     })
     @RequestMapping(value = "/cookies",

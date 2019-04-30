@@ -21,7 +21,7 @@ public class CookiesByParameterRequest {
 
     private CookieAddingStatus cookieAddingStatus;
 
-    @Min(value = 0, message = "Rating can nnot be less than 0")
+    @Min(value = 0, message = "Rating can not be less than 0")
     private Integer rating;
 
 
