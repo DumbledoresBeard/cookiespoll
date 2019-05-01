@@ -57,7 +57,7 @@ public class TestCookieController {
     @Test
     public void testAddCookieValidRequest() throws Exception {
         int userId = 1;
-        when(cookieService.insert((any(AddCookieRequest.class)), any(MockMultipartFile.class), userId))
+        when(cookieService.insert((any(AddCookieRequest.class)), any(MockMultipartFile.class), eq(userId)))
                 .thenReturn(cookie);
 
         String response = mockMvc.perform(MockMvcRequestBuilders.multipart("/cookies")
@@ -67,7 +67,7 @@ public class TestCookieController {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        verify(cookieService).insert((any(AddCookieRequest.class)), any(MockMultipartFile.class), userId);
+        verify(cookieService).insert((any(AddCookieRequest.class)), any(MockMultipartFile.class), eq(userId));
 
         AddCookieResponse addCookieResponse = new ObjectMapper().readValue(response, AddCookieResponse.class);
 
