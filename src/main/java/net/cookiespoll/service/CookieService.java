@@ -2,7 +2,6 @@ package net.cookiespoll.service;
 
 import net.cookiespoll.dao.CookieDao;
 import net.cookiespoll.dto.AddCookieRequest;
-import net.cookiespoll.dto.UpdateCookieRequest;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import org.slf4j.Logger;
@@ -25,9 +24,9 @@ public class CookieService {
         this.cookieDao = cookieDao;
     }
 
-    public Cookie addCookie (AddCookieRequest addCookieRequest, MultipartFile multipartFile, int userId)
+    public Cookie insert(AddCookieRequest addCookieRequest, MultipartFile multipartFile, int userId)
             throws IOException {
-       int rating = 0;
+       float rating = 0;
 
        LOGGER.info("Set rating={} and cookieAddingStatus={} to cookie ", rating, CookieAddingStatus.WAITING);
 
@@ -36,21 +35,34 @@ public class CookieService {
     }
 
 
-    public List<Cookie> getCookiesByParam(Integer id, String name, String description,
-                                          CookieAddingStatus cookieAddingStatus, Integer rating, Integer userId) {
-        return cookieDao.getByParam(id, name, description, cookieAddingStatus, rating, userId);
+    public List<Cookie> getByParam(String name, String description,
+                                   CookieAddingStatus cookieAddingStatus, Float rating, Integer userId) {
+
+        return cookieDao.getByParam(name, description, cookieAddingStatus, rating, userId);
     }
 
-    public Cookie updateCookie (UpdateCookieRequest updateCookieRequest) {
-       return cookieDao.update(new Cookie(updateCookieRequest.getId(),
-                updateCookieRequest.getName(), updateCookieRequest.getDescription(),
-                updateCookieRequest.getFileData(), updateCookieRequest.getApprovalStatus(),
-                updateCookieRequest.getRating(), updateCookieRequest.getUserId()));
+
+    public Cookie update(Cookie cookie) {
+       return cookieDao.update(cookie);
 
     }
+
+    public Cookie getById(Integer id) {
+
+        return cookieDao.getById(id);
+    }
+
 
     public List<Cookie> getUnratedCookiesByUserId (int userId) {
+
         return cookieDao.getUnratedCookiesByUserId(userId);
     }
+
+    public Float countCookieRating (Integer usersQuantity, Long cookieRatingSum) {
+        return (float)(cookieRatingSum / usersQuantity);
+    }
+
+
+
 
 }

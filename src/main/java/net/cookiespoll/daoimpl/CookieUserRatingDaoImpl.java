@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class CookieUserRatingDaoImpl implements CookieUserRatingDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(CookieUserRatingDaoImpl.class);
@@ -18,20 +20,27 @@ public class CookieUserRatingDaoImpl implements CookieUserRatingDao {
         this.cookieUserRatingMapper = cookieUserRatingMapper;
     }
 
-
     @Override
-    public int insert(int userId, int cookieId, int rating) {
+    public Integer insert(Integer userId, Integer cookieId, Integer rating) {
         LOGGER.info("Adding cookie rating in database {} {} {}", userId, cookieId, rating);
 
-        cookieUserRatingMapper.insert(userId, cookieId, rating);
-        return 0;
+        return cookieUserRatingMapper.insert(userId, cookieId, rating);
     }
 
     @Override
-    public Integer getRatingByUserAndCookie(int userId, int cookieId) {
+    public Integer getRatingByUserAndCookie(Integer userId, Integer cookieId) {
         LOGGER.info("Select cookie rating by cookieId and userId", userId, cookieId);
 
         return cookieUserRatingMapper.getRatingByUserAndCookie(userId, cookieId);
     }
 
+    @Override
+    public Integer getUserQuantity(Integer cookieId) {
+        return cookieUserRatingMapper.getUserQuantity(cookieId);
+    }
+
+    @Override
+    public List<Integer> getRatingsByCookieId(Integer cookieId) {
+        return cookieUserRatingMapper.getRatingByCookieId(cookieId);
+    }
 }

@@ -1,6 +1,5 @@
 package net.cookiespoll.service;
 import net.cookiespoll.daoimpl.CookieDaoImpl;
-import net.cookiespoll.daoimpl.UserDaoImpl;
 import net.cookiespoll.dto.AddCookieRequest;
 import net.cookiespoll.dto.UpdateCookieRequest;
 import net.cookiespoll.model.Cookie;
@@ -31,21 +30,21 @@ public class TestCookieService {
     @InjectMocks
     CookieService cookieService;
 
-    private Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING,
-                                    0, 1);
+    private Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2],
+            CookieAddingStatus.WAITING, (float) 0, 1);
     private MockMultipartFile mockMultipartFile = new MockMultipartFile("testcookie.jpg", new byte[2]);
     private Cookie cookieWithId = new Cookie(1, "cookie", "tasty cookie", new byte[2],
-            CookieAddingStatus.WAITING, 0, 1);
+            CookieAddingStatus.WAITING, (float) 0, 1);
     private AddCookieRequest addCookieRequest = new AddCookieRequest("cookie", "tasty cookie");
     private Integer userId = 1;
     private Integer id = 1;
     private String name = "name";
     private String description = "description";
     private CookieAddingStatus cookieAddingStatus = CookieAddingStatus.WAITING;
-    private Integer rating = 0;
+    private float rating = 0;
     List<Cookie> cookies = new ArrayList<>();
     Cookie cookieWith2Id = new Cookie(2,"cookie", "tasty cookie", new byte[2],
-            CookieAddingStatus.WAITING, 0, 2);
+            CookieAddingStatus.WAITING, (float) 0, 2);
 
 
 
@@ -58,14 +57,14 @@ public class TestCookieService {
     public void testCookieDaoInsert() throws IOException {
 
         when(cookieDao.insert(cookie)).thenReturn(cookieWithId);
-        Cookie resultCookie = cookieService.addCookie(addCookieRequest, mockMultipartFile, userId);
+        Cookie resultCookie = cookieService.insert(addCookieRequest, mockMultipartFile, userId);
 
         Assert.assertEquals(1, resultCookie.getId());
         Assert.assertEquals(addCookieRequest.getName(), resultCookie.getName());
         Assert.assertEquals(addCookieRequest.getDescription(), resultCookie.getDescription());
         Assert.assertArrayEquals(mockMultipartFile.getBytes(), resultCookie.getFileData());
         Assert.assertEquals(cookie.getCookieAddingStatus(), resultCookie.getCookieAddingStatus());
-        Assert.assertEquals(0, resultCookie.getRating());
+        Assert.assertEquals(rating, resultCookie.getRating(), 0.0f);
         Assert.assertEquals(1, resultCookie.getUserId());
 
         verify(cookieDao).insert(cookie);
@@ -80,9 +79,9 @@ public class TestCookieService {
         cookies.add(cookieWithId);
         cookies.add(cookieWith2Id);
 
-        when(cookieDao.getByParam(id, name, description, cookieAddingStatus, rating, userId)).thenReturn(cookies);
+        when(cookieDao.getByParam(name, description, cookieAddingStatus, rating, userId)).thenReturn(cookies);
 
-        List<Cookie> resultCookieList = cookieService.getCookiesByParam(id, name, description, cookieAddingStatus,
+        List<Cookie> resultCookieList = cookieService.getByParam(name, description, cookieAddingStatus,
                                         rating, userId);
 
         Assert.assertEquals(resultCookieList.get(0).getId(), cookieWithId.getId());
@@ -99,22 +98,24 @@ public class TestCookieService {
         Assert.assertEquals(resultCookieList.get(1).getCookieAddingStatus(), cookieWith2Id.getCookieAddingStatus());
         Assert.assertEquals(resultCookieList.get(1).getRating(), cookieWith2Id.getRating());
 
-        verify(cookieDao).getByParam(id, name, description, cookieAddingStatus, rating, userId);
+        verify(cookieDao).getByParam(name, description, cookieAddingStatus, rating, userId);
 
     }
 
     @Test
     public void testUpdateCookie () {
-        UpdateCookieRequest updateCookieRequest = new UpdateCookieRequest(
+        Cookie cookie = new Cookie(
                 1, "cookie", "tasty cookie", new byte[2],
-                CookieAddingStatus.WAITING, 0, 1);
+                CookieAddingStatus.WAITING, (float) 0, 1);
 
         when(cookieDao.update(cookieWithId)).thenReturn(cookieWithId);
 
-        cookieService.updateCookie(updateCookieRequest);
+        cookieService.update(cookie);
 
 
     }
+
+
 
 }
 

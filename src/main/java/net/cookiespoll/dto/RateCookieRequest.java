@@ -2,26 +2,29 @@ package net.cookiespoll.dto;
 
 import net.cookiespoll.model.CookieAddingStatus;
 
-public class UpdateCookieRequest {
+public class RateCookieRequest {
     private int id;
     private String name;
     private String description;
     private byte[] fileData;
     private CookieAddingStatus approvalStatus;
-    private Float rating;
+    private Float resultRating;
     private int userId;
+    private Integer rating;
 
-    public UpdateCookieRequest() {}
+    public RateCookieRequest() {
+    }
 
-    public UpdateCookieRequest(int id, String name, String description, byte[] fileData,
-                               CookieAddingStatus approvalStatus, Float rating, int userId) {
+    public RateCookieRequest(int id, String name, String description, byte[] fileData,
+                             CookieAddingStatus approvalStatus, Float resultRating, int userId, Integer rating) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.fileData = fileData;
         this.approvalStatus = approvalStatus;
-        this.rating = rating;
+        this.resultRating = resultRating;
         this.userId = userId;
+        this.rating = rating;
     }
 
     public int getId() {
@@ -64,12 +67,12 @@ public class UpdateCookieRequest {
         this.approvalStatus = approvalStatus;
     }
 
-    public Float getRating() {
-        return rating;
+    public Float getResultRating() {
+        return resultRating;
     }
 
-    public void setRating(Float rating) {
-        this.rating = rating;
+    public void setResultRating(Float resultRating) {
+        this.resultRating = resultRating;
     }
 
     public int getUserId() {
@@ -80,4 +83,11 @@ public class UpdateCookieRequest {
         this.userId = userId;
     }
 
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
+    }
 }

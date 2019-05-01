@@ -14,12 +14,24 @@ public class CookieUserRatingService {
         this.cookieUserRatingDao = cookieUserRatingDao;
     }
 
-    public int setRatingToCookie(int userId, int cookieId, int rating) {
+    public int setRatingToCookie(Integer userId, Integer cookieId, Integer rating) {
         return cookieUserRatingDao.insert(userId, cookieId, rating);
     }
 
-    public Integer getRatingByUserAndCookie(int userId, int cookieId) {
+    public Integer getRatingByUserAndCookie(Integer userId, Integer cookieId) {
         return cookieUserRatingDao.getRatingByUserAndCookie(userId, cookieId);
+    }
+
+    public Integer getUserQuantity (Integer cookieId) {
+        return cookieUserRatingDao.getUserQuantity(cookieId);
+    }
+
+    public Long getRatingSumByCookieId(Integer cookieId) {
+        return cookieUserRatingDao.getRatingsByCookieId(cookieId)
+                .stream()
+                .mapToInt((x) -> x)
+                .summaryStatistics()
+                .getSum();
     }
     }
 

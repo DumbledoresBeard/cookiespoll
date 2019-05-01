@@ -26,21 +26,22 @@ public class CookieDaoImpl implements CookieDao {
     @Override
     @Transactional
     public Cookie insert(Cookie cookie) {
-        LOGGER.info("Adding cookie to database ", cookie);
+        LOGGER.info("Adding cookie to database {} ", cookie);
         cookie.setId(cookieMapper.insert(cookie));
         return cookie;
     }
 
     @Override
-    public Cookie getById(int id) {
-        /*To Do*/ return new Cookie();
+    public Cookie getById(Integer id) {
+        LOGGER.info("Find cookie by id in database {} ", id);
+        return cookieMapper.getById(id);
     }
 
     @Override
-    public List<Cookie> getByParam(Integer id, String name, String description, CookieAddingStatus cookieAddingStatus,
-                                   Integer rating, Integer userId) {
-        LOGGER.info("Extract list of cookie with cookieAddingStatus {} ", cookieAddingStatus);
-        return cookieMapper.getByParam(id, name, description, cookieAddingStatus, rating, userId);
+    public List<Cookie> getByParam(String name, String description, CookieAddingStatus cookieAddingStatus,
+                                   Float rating, Integer userId) {
+        LOGGER.info("Extract list of cookies by given parameters {} ", cookieAddingStatus);
+        return cookieMapper.getByParam(name, description, cookieAddingStatus, rating, userId);
     }
 
     @Override

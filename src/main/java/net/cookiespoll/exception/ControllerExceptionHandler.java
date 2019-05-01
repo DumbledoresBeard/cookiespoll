@@ -3,6 +3,7 @@ package net.cookiespoll.exception;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -23,7 +24,8 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorResponse handleMethodArgumentNotValidException(HttpServletRequest req, MethodArgumentNotValidException ex) {
+    public ErrorResponse handleMethodArgumentNotValidException(HttpServletRequest req,
+                                                               MethodArgumentNotValidException ex) {
         LOGGER.error("Request: " + req.getRequestURL() + " raised exception " + ex);
 
         List<FieldError> errors = ex.getBindingResult().getFieldErrors();
@@ -60,4 +62,33 @@ public class ControllerExceptionHandler {
 
         return errorResponse;
     }
-}
+
+    @ExceptionHandler(BindException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponse handleBindException(HttpServletRequest req,
+                                                               BindException ex) {
+        LOGGER.error("Request: " + req.getRequestURL() + " raised exception " + ex);
+
+        List<FieldError> errors = ex.getBindingResult().getFieldErrors();
+
+        List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
+        for (FieldError fieldError : errors) {
+            ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
+            error.setFieldName(fieldError.getField());
+            error.setMessage(fieldError.getDefaultMessage());
+            errorDetails.add(error);
+        }
+
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setErrors(errorDetails);
+
+        return errorResponse;
+
+
+    }
+
+    }
+
+
+
