@@ -19,8 +19,8 @@ public class FileValidator {
         if (multipartFile.isEmpty()) {
             throw new FileValidationException("File is empty, please, upload jpg, jpeg or png file");
         }
-        if (!(multipartFile.getContentType().equals(JPG_IMAGE) || multipartFile.getContentType().equals(JPEG_IMAGE)
-                || multipartFile.getContentType().equals(PNG_IMAGE))) {
+        if (!(multipartFile.getContentType().equals(JPG_IMAGE) || multipartFile.
+                getContentType().equals(JPEG_IMAGE) || multipartFile.getContentType().equals(PNG_IMAGE))) {
            throw new FileValidationException("File type is not supported, valid file types: jpg, jpeg or png");
         }
     }

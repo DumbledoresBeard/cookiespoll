@@ -47,12 +47,12 @@ public class CookiesController {
         LOGGER.info("Start processing AddCookieRequest {}", addCookieRequest, multipartFile);
         fileValidator.validate(multipartFile);
         int userId = 1; // temporary decision until getting userId from session will be implemented
-        Cookie cookie = cookieService.addCookie(addCookieRequest, multipartFile, userId);
+        Cookie cookie = cookieService.insert(addCookieRequest, multipartFile, userId);
 
         LOGGER.info("Done");
 
-        return new AddCookieResponse(cookie.getId(),cookie.getName(), cookie.getDescription(), cookie.getFileData(),
-                                        cookie.getCookieAddingStatus());
+        return new AddCookieResponse(cookie.getId(),cookie.getName(), cookie.getDescription(),
+                                    cookie.getFileData(), cookie.getCookieAddingStatus());
 
     }
 
@@ -69,10 +69,12 @@ public class CookiesController {
                                                 {
        /* TODO if(!cookieService.getUserRole(id).equals(Role.ADMIN))
         { return new ArrayList<Cookie>() ; }*/
-            LOGGER.info("Starting processing request {} {} {} {} {} {} ", cookiesByParameterRequest);
+            LOGGER.info("Starting processing request for getting cookies by parameters {} ",
+                        cookiesByParameterRequest);
 
-            return cookieService.getCookiesByParam(cookiesByParameterRequest.getName(),
-                    cookiesByParameterRequest.getDescription(), cookiesByParameterRequest.getCookieAddingStatus(),
+            return cookieService.getByParam(cookiesByParameterRequest.getName(),
+                    cookiesByParameterRequest.getDescription(),
+                    cookiesByParameterRequest.getCookieAddingStatus(),
                     cookiesByParameterRequest.getRating(), cookiesByParameterRequest.getUserId());
 
     }
@@ -88,9 +90,9 @@ public class CookiesController {
             method = RequestMethod.GET)
     @ResponseBody
     public Cookie getCookieById (@RequestParam (value="id") Integer id) {
-        LOGGER.info("Starting processing request {} ", id);
+        LOGGER.info("Starting processing request for getting cookie by id {} ", id);
 
-        return cookieService.getCookieById(id);
+        return cookieService.getById(id);
     }
 
     @ApiOperation(value = "Update cookie in database", response = UpdateCookieResponse.class)
@@ -108,7 +110,7 @@ public class CookiesController {
 
         LOGGER.info("Starting processing request {} " + updateCookieRequest);
 
-        cookieService.updateCookie(updateCookieRequest);
+        cookieService.update(updateCookieRequest);
         return new UpdateCookieResponse(updateCookieRequest.getId(),
                 updateCookieRequest.getName(), updateCookieRequest.getDescription(),
                 updateCookieRequest.getFileData(), updateCookieRequest.getApprovalStatus(),

@@ -11,7 +11,8 @@ public class AddCookieResponse {
 
     public AddCookieResponse() {}
 
-    public AddCookieResponse(int id, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus) {
+    public AddCookieResponse(int id, String name, String description, byte[] fileData,
+                             CookieAddingStatus cookieAddingStatus) {
         this.id = id;
         this.name = name;
         this.description = description;

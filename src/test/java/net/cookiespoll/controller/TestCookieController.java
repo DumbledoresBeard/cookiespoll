@@ -57,7 +57,7 @@ public class TestCookieController {
     @Test
     public void testAddCookieValidRequest() throws Exception {
         int userId = 1;
-        when(cookieService.addCookie((any(AddCookieRequest.class)), any(MockMultipartFile.class), userId))
+        when(cookieService.insert((any(AddCookieRequest.class)), any(MockMultipartFile.class), userId))
                 .thenReturn(cookie);
 
         String response = mockMvc.perform(MockMvcRequestBuilders.multipart("/cookies")
@@ -67,7 +67,7 @@ public class TestCookieController {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        verify(cookieService).addCookie((any(AddCookieRequest.class)), any(MockMultipartFile.class), userId);
+        verify(cookieService).insert((any(AddCookieRequest.class)), any(MockMultipartFile.class), userId);
 
         AddCookieResponse addCookieResponse = new ObjectMapper().readValue(response, AddCookieResponse.class);
 
@@ -224,7 +224,7 @@ public class TestCookieController {
                 description, cookieAddingStatus, rating);
         String request = gson.toJson(cookiesByParameterRequest);
 
-        when(cookieService.getCookiesByParam(cookiesByParameterRequest.getName(), cookiesByParameterRequest
+        when(cookieService.getByParam(cookiesByParameterRequest.getName(), cookiesByParameterRequest
                 .getDescription(), cookiesByParameterRequest.getCookieAddingStatus(),
                 cookiesByParameterRequest.getRating(), cookiesByParameterRequest.getUserId()))
                             .thenReturn(cookies);
@@ -257,7 +257,7 @@ public class TestCookieController {
         String request = gson.toJson(new CookiesByParameterRequest(userId, name, description,
                 cookieAddingStatus, rating));
 
-        when(cookieService.getCookiesByParam(name, description, cookieAddingStatus, rating, userId)).thenReturn(cookies);
+        when(cookieService.getByParam(name, description, cookieAddingStatus, rating, userId)).thenReturn(cookies);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -286,7 +286,7 @@ public class TestCookieController {
         Integer userId = null;
         String request = gson.toJson(new CookiesByParameterRequest(userId, name, description, cookieAddingStatus, rating));
 
-        when(cookieService.getCookiesByParam(name, description, cookieAddingStatus, rating, userId)).thenReturn(cookies);
+        when(cookieService.getByParam(name, description, cookieAddingStatus, rating, userId)).thenReturn(cookies);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -315,7 +315,7 @@ public class TestCookieController {
         Integer userId = null;
         String request = gson.toJson(new CookiesByParameterRequest(userId, name, description, cookieAddingStatus, rating));
 
-        when(cookieService.getCookiesByParam(name, description, cookieAddingStatus, rating, userId))
+        when(cookieService.getByParam(name, description, cookieAddingStatus, rating, userId))
                 .thenReturn(cookies);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
@@ -345,7 +345,7 @@ public class TestCookieController {
         Integer userId = 1;
         String request = gson.toJson(new CookiesByParameterRequest(userId, name, description, cookieAddingStatus, rating));
 
-        when(cookieService.getCookiesByParam(name, description, cookieAddingStatus, rating, userId)).thenReturn(cookies);
+        when(cookieService.getByParam(name, description, cookieAddingStatus, rating, userId)).thenReturn(cookies);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -374,7 +374,7 @@ public class TestCookieController {
         Integer userId = 1;
         String request = gson.toJson(new CookiesByParameterRequest(userId, name, description, cookieAddingStatus, rating));
 
-        when(cookieService.getCookiesByParam(name, description, cookieAddingStatus, rating, userId)).thenReturn(cookies);
+        when(cookieService.getByParam(name, description, cookieAddingStatus, rating, userId)).thenReturn(cookies);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -397,7 +397,7 @@ public class TestCookieController {
         Integer userId = null;
         String request = gson.toJson(new CookiesByParameterRequest(userId, name, description, cookieAddingStatus, rating));
 
-        when(cookieService.getCookiesByParam(name, description, cookieAddingStatus, rating, userId)).thenReturn(cookies);
+        when(cookieService.getByParam(name, description, cookieAddingStatus, rating, userId)).thenReturn(cookies);
 
         String response = mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -523,7 +523,7 @@ public class TestCookieController {
     public void testGetCookieById () throws Exception {
         Integer id = 1;
 
-        when(cookieService.getCookieById(id)).thenReturn(cookie);
+        when(cookieService.getById(id)).thenReturn(cookie);
 
 
         String response = mockMvc.perform(MockMvcRequestBuilders.get("/cookies")
@@ -533,7 +533,7 @@ public class TestCookieController {
                 .getResponse()
                 .getContentAsString();
 
-        verify(cookieService).getCookieById(id);
+        verify(cookieService).getById(id);
 
         Cookie resultCookie = new ObjectMapper().readValue(response, Cookie.class);
 
@@ -558,7 +558,7 @@ public class TestCookieController {
                 1, "cookie", "tasty cookie", byteArray,
                 CookieAddingStatus.APPROVED, 0, 1);
 
-        when(cookieService.updateCookie(any(UpdateCookieRequest.class))).thenReturn(cookie);
+        when(cookieService.update(any(UpdateCookieRequest.class))).thenReturn(cookie);
 
         String response = mockMvc.perform(MockMvcRequestBuilders.patch("/cookies")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -568,7 +568,7 @@ public class TestCookieController {
                 .getResponse()
                 .getContentAsString();
 
-        verify(cookieService).updateCookie(any(UpdateCookieRequest.class));
+        verify(cookieService).update(any(UpdateCookieRequest.class));
 
         UpdateCookieResponse resultResponse = new ObjectMapper().readValue(response,
                                                             UpdateCookieResponse.class);

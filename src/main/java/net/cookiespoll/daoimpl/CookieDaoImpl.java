@@ -34,8 +34,7 @@ public class CookieDaoImpl implements CookieDao {
     @Override
     public Cookie getById(Integer id) {
         LOGGER.info("Find cookie by id in database {} ", id);
-        cookieMapper.getById(id);
-        return new Cookie();
+        return cookieMapper.getById(id);
     }
 
     @Override

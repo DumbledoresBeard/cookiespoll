@@ -1,6 +1,5 @@
 package net.cookiespoll.service;
 import net.cookiespoll.daoimpl.CookieDaoImpl;
-import net.cookiespoll.daoimpl.UserDaoImpl;
 import net.cookiespoll.dto.AddCookieRequest;
 import net.cookiespoll.dto.UpdateCookieRequest;
 import net.cookiespoll.model.Cookie;
@@ -58,7 +57,7 @@ public class TestCookieService {
     public void testCookieDaoInsert() throws IOException {
 
         when(cookieDao.insert(cookie)).thenReturn(cookieWithId);
-        Cookie resultCookie = cookieService.addCookie(addCookieRequest, mockMultipartFile, userId);
+        Cookie resultCookie = cookieService.insert(addCookieRequest, mockMultipartFile, userId);
 
         Assert.assertEquals(1, resultCookie.getId());
         Assert.assertEquals(addCookieRequest.getName(), resultCookie.getName());
@@ -82,7 +81,7 @@ public class TestCookieService {
 
         when(cookieDao.getByParam(name, description, cookieAddingStatus, rating, userId)).thenReturn(cookies);
 
-        List<Cookie> resultCookieList = cookieService.getCookiesByParam(name, description, cookieAddingStatus,
+        List<Cookie> resultCookieList = cookieService.getByParam(name, description, cookieAddingStatus,
                                         rating, userId);
 
         Assert.assertEquals(resultCookieList.get(0).getId(), cookieWithId.getId());
@@ -111,7 +110,7 @@ public class TestCookieService {
 
         when(cookieDao.update(cookieWithId)).thenReturn(cookieWithId);
 
-        cookieService.updateCookie(updateCookieRequest);
+        cookieService.update(updateCookieRequest);
 
 
     }

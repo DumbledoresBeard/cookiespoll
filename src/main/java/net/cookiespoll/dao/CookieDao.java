@@ -8,14 +8,14 @@ import java.util.List;
 
 public interface CookieDao {
 
-    public Cookie insert (Cookie cookie);
+    Cookie insert (Cookie cookie);
 
-    public Cookie getById(int id);
+    Cookie getById(Integer id);
 
-    public List<Cookie> getByParam(String name, String description,
+    List<Cookie> getByParam(String name, String description,
                                    CookieAddingStatus cookieAddingStatus, Integer rating, Integer userId);
 
-    public Cookie update(Cookie cookie);
+    Cookie update(Cookie cookie);
 
-    public void delete (Cookie cookie);
+    void delete (Cookie cookie);
 }

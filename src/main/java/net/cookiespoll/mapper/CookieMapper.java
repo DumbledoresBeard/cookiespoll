@@ -37,12 +37,13 @@ public interface CookieMapper {
             @Result(property = "name", column = "name", javaType = String.class),
             @Result(property = "description", column = "description", javaType = String.class),
             @Result(property = "fileData", column = "file_data", javaType = byte[].class),
-            @Result(property = "cookieAddingStatus", column = "cookie_adding_status", javaType = CookieAddingStatus.class),
+            @Result(property = "cookieAddingStatus", column = "cookie_adding_status", javaType =
+                    CookieAddingStatus.class),
             @Result(property = "rating", column = "rating", javaType = Integer.class),
             @Result(property = "userId", column = "user_id", javaType = Integer.class),
     })
-    List<Cookie> getByParam(@Param("name") String name, @Param("description")
-                            String description, @Param("cookieAddingStatus") CookieAddingStatus cookieAddingStatus,
+    List<Cookie> getByParam(@Param("name") String name, @Param("description") String description,
+                            @Param("cookieAddingStatus") CookieAddingStatus cookieAddingStatus,
                             @Param("rating") Integer rating, @Param("userId") Integer userId);
 
     @Select("SELECT id, name, description, file_data, cookie_adding_status, rating, user_id FROM cookie" +
@@ -52,7 +53,8 @@ public interface CookieMapper {
             @Result(property = "name", column = "name", javaType = String.class),
             @Result(property = "description", column = "description", javaType = String.class),
             @Result(property = "fileData", column = "file_data", javaType = byte[].class),
-            @Result(property = "cookieAddingStatus", column = "cookie_adding_status", javaType = CookieAddingStatus.class),
+            @Result(property = "cookieAddingStatus", column = "cookie_adding_status", javaType =
+                    CookieAddingStatus.class),
             @Result(property = "rating", column = "rating", javaType = Integer.class),
             @Result(property = "userId", column = "user_id", javaType = Integer.class),
     })
