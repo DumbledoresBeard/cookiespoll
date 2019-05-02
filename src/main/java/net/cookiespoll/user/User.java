@@ -2,37 +2,25 @@ package net.cookiespoll.user;
 
 
 public class User {
-    private int id;
+    private String id;
     private String login;
-    private String password;
-    private String firstName;
-    private String lastName;
+    private String name;
     private Role role;
 
     public User() { }
 
-    public User(int id, String login, String password, String firstName, String lastName, Role role) {
+    public User(String id, String login, String name, Role role) {
         this.id = id;
         this.login = login;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = name;
         this.role = role;
     }
 
-    public User(String login, String password, String firstName, String lastName, Role role) {
-        this.login = login;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.role = role;
-    }
-
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -44,28 +32,12 @@ public class User {
         this.login = login;
     }
 
-    public String getPassword() {
-        return password;
+    public String getName() {
+        return name;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Role getRole() {

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Component
 public class UserDaoImpl implements UserDao {
 
@@ -25,9 +27,8 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     @Transactional
-    public User getById(int id) {
-        User user = userMapper.getUserById(id);
-        return user;
+    public User getById(String id) {
+        return userMapper.getUserById(id);
     }
 
     @Override

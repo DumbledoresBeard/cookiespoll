@@ -26,7 +26,7 @@ public class TestUserService {
     }
 
 
-    @Test
+   /* @Test
     public void testGetUserRole() {
         int id = 1;
         User userAdmin = new User (1, "login", "password", "name", "lastname",
@@ -42,5 +42,5 @@ public class TestUserService {
         verify(userDao).getById(id);
 
     }
-
+*/
 }

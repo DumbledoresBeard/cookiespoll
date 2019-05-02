@@ -10,6 +10,10 @@ import net.cookiespoll.validation.FileValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +21,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Api(description = "Operations related to cookie adding")
@@ -50,6 +55,7 @@ public class CookiesController {
                             ) throws IOException, FileValidationException {
         LOGGER.info("Start processing AddCookieRequest {}", addCookieRequest, multipartFile);
         fileValidator.validate(multipartFile);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         int userId = 1; // temporary decision until getting userId from session will be implemented
         Cookie cookie = cookieService.insert(addCookieRequest, multipartFile, userId);
 
@@ -95,7 +101,11 @@ public class CookiesController {
     @ResponseBody
     public Cookie getCookieById (@RequestParam (value="id") Integer id) {
         LOGGER.info("Starting processing request for getting cookie by id {} ", id);
-
+        DefaultOidcUser defaultOidcUser = (DefaultOidcUser) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        Map<String, Object> map = defaultOidcUser.getUserInfo().getClaims();
+        System.out.println(map);
+        String userId = (String) map.get("sub");
         return cookieService.getById(id);
     }
 

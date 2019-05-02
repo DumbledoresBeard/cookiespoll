@@ -63,7 +63,7 @@ public interface CookieMapper {
     List<Cookie> getUnratedCookiesByUserId(@Param("userId") int userId);
 
 
-    @Select("SELECT id, name, description, file_data, cookie_adding_status, rating, user_id FROM cookie" +
+    @Select("SELECT id, name, description, file_data, cookie_adding_status, rating, user_id FROM cookie " +
             "WHERE id = #{id}")
     @Results({
             @Result(property = "id", column = "id", javaType = Integer.class),

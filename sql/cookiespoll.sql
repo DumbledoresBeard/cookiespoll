@@ -3,11 +3,9 @@ CREATE DATABASE `cookiespoll`;
 USE `cookiespoll`;
 
 CREATE TABLE users (
-id serial PRIMARY KEY,
+id VARCHAR(150) PRIMARY KEY,
 login VARCHAR (30) UNIQUE NOT NULL,
-password VARCHAR (150),
-first_name VARCHAR (20),
-last_name VARCHAR (30),
+name VARCHAR (20),
 role VARCHAR (20)
 )
 
@@ -24,7 +22,7 @@ FOREiGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 )
 
 CREATE TABLE cookie_user_rating (
-user_id int,
+user_id VARCHAR(150),
 cookie_id int,
 rating int,
 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
