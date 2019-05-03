@@ -20,6 +20,7 @@ public class ControllerExceptionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
     private final static String FILE_FIELD = "file";
+    private final static String USER_ROLE = "user role";
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -49,7 +50,8 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(FileValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorResponse handleFileAddingException (HttpServletRequest req, FileValidationException ex) {
+    public ErrorResponse handleFileAddingException (HttpServletRequest req,
+                                                    FileValidationException ex) {
         LOGGER.error("Request: " + req.getRequestURL() + " raised exception " + ex);
 
         List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
@@ -80,6 +82,26 @@ public class ControllerExceptionHandler {
             errorDetails.add(error);
         }
 
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setErrors(errorDetails);
+
+        return errorResponse;
+
+
+    }
+
+    @ExceptionHandler(UserRoleValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponse handleUserRoleExceptiom(HttpServletRequest req,
+                                             UserRoleValidationException ex) {
+        LOGGER.error("Request: " + req.getRequestURL() + " raised exception " + ex);
+
+        List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
+        ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
+        error.setFieldName(USER_ROLE);
+        error.setMessage(ex.getMessage());
+        errorDetails.add(error);
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setErrors(errorDetails);
 

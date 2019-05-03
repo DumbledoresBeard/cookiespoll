@@ -1,4 +1,4 @@
-package net.cookiespoll.controller;
+/*package net.cookiespoll.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import net.cookiespoll.dto.*;
@@ -204,7 +204,7 @@ public class TestCookieController {
                 .file(cookieExceededMaxFileSize)
                 .file(addCookieDtoRequest)
         ).andExpect(status().is(500));
-    /*            .andExpect((ResultMatcher) jsonPath("$.message", is("Maximum upload size exceeded; nested exception is java.lang.IllegalStateException: org.apache.tomcat.util.http.fileupload.FileUploadBase$SizeLimitExceededException: the request was rejected because its size (8055342) exceeds the configured maximum (5242880)")));*/
+    *//*            .andExpect((ResultMatcher) jsonPath("$.message", is("Maximum upload size exceeded; nested exception is java.lang.IllegalStateException: org.apache.tomcat.util.http.fileupload.FileUploadBase$SizeLimitExceededException: the request was rejected because its size (8055342) exceeds the configured maximum (5242880)")));*//*
 
     }
 
@@ -417,7 +417,7 @@ public class TestCookieController {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-               /* .andExpect(content().string("[]"));*/
+               *//* .andExpect(content().string("[]"));*//*
         System.out.println(response);
     }
 
@@ -599,5 +599,5 @@ public class TestCookieController {
 
     }
 
-}
+}*/
 

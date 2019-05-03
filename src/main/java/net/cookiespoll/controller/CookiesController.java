@@ -3,10 +3,13 @@ package net.cookiespoll.controller;
 import io.swagger.annotations.*;
 import net.cookiespoll.dto.*;
 import net.cookiespoll.exception.FileValidationException;
+import net.cookiespoll.exception.UserRoleValidationException;
 import net.cookiespoll.model.Cookie;
+import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.service.CookieService;
 import net.cookiespoll.service.CookieUserRatingService;
 import net.cookiespoll.validation.FileValidator;
+import net.cookiespoll.validation.UserRoleValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,15 +32,17 @@ public class CookiesController {
     private CookieService cookieService;
     private FileValidator fileValidator;
     private CookieUserRatingService cookieUserRatingService;
+    private UserRoleValidator userRoleValidator;
 
     @Autowired
     public CookiesController(CookieService cookieService, FileValidator fileValidator,
-                             CookieUserRatingService cookieUserRatingService) {
+                             CookieUserRatingService cookieUserRatingService,
+                             UserRoleValidator userRoleValidator) {
         this.cookieService = cookieService;
         this.fileValidator = fileValidator;
         this.cookieUserRatingService = cookieUserRatingService;
+        this.userRoleValidator = userRoleValidator;
     }
-
 
     private String getUserIdFromSession() {
         DefaultOidcUser defaultOidcUser = (DefaultOidcUser) SecurityContextHolder.getContext()
@@ -82,8 +87,6 @@ public class CookiesController {
     @ResponseBody
     public List<Cookie> getCookiesByParameter (@Valid CookiesByParameterRequest cookiesByParameterRequest)
                                                 {
-       /* TODO if(!cookieService.getUserRole(id).equals(Role.ADMIN))
-        { return new ArrayList<Cookie>() ; }*/
             LOGGER.info("Starting processing request for getting cookies by parameters {} ",
                         cookiesByParameterRequest);
 
@@ -119,9 +122,14 @@ public class CookiesController {
     @RequestMapping(value = "/cookies",
             method = RequestMethod.PATCH)
     @ResponseBody
-    public UpdateCookieResponse updateCookie (@RequestBody UpdateCookieRequest updateCookieRequest) {
-        /* TODO if(!cookieService.getUserRole(id).equals(Role.ADMIN))
-        { return new ArrayList<Cookie>() ; }*/
+    public UpdateCookieResponse updateCookie (@RequestBody UpdateCookieRequest updateCookieRequest)
+            throws UserRoleValidationException {
+
+        if (updateCookieRequest.getApprovalStatus().equals(CookieAddingStatus.APPROVED)
+        || updateCookieRequest.getApprovalStatus().equals(CookieAddingStatus.DECLINED))
+        {
+            userRoleValidator.validateUserRole(getUserIdFromSession());
+        }
 
         LOGGER.info("Starting processing request {} " + updateCookieRequest);
 
@@ -141,7 +149,7 @@ public class CookiesController {
                     method = RequestMethod.POST)
     @ResponseBody
     public Cookie rateCookie (@RequestBody RateCookieRequest rateCookieRequest ) {
-        String userId = getUserIdFromSession(); // temporary decision until getting userId from session will be implemented
+        String userId = getUserIdFromSession();
         if (cookieUserRatingService.getRatingByUserAndCookie(userId,
                 rateCookieRequest.getId()) != null) {
             return new Cookie();
@@ -166,7 +174,7 @@ public class CookiesController {
                     method = RequestMethod.GET)
     @ResponseBody
     public List<Cookie> getUnratedCookies () {
-        String userId = getUserIdFromSession(); // temporary decision until getting userId from session will be implemented
+        String userId = getUserIdFromSession();
         return cookieService.getUnratedCookiesByUserId(userId);
     }
 }
