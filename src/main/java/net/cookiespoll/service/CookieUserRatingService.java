@@ -14,15 +14,16 @@ public class CookieUserRatingService {
         this.cookieUserRatingDao = cookieUserRatingDao;
     }
 
-    public int setRatingToCookie(Integer userId, Integer cookieId, Integer rating) {
+    public int setRatingToCookie(String userId, Integer cookieId, Integer rating) {
         return cookieUserRatingDao.insert(userId, cookieId, rating);
     }
 
-    public Integer getRatingByUserAndCookie(Integer userId, Integer cookieId) {
+    public Integer getRatingByUserAndCookie(String userId, Integer cookieId) {
         return cookieUserRatingDao.getRatingByUserAndCookie(userId, cookieId);
     }
 
     public Integer getUserQuantity (Integer cookieId) {
+
         return cookieUserRatingDao.getUserQuantity(cookieId);
     }
 

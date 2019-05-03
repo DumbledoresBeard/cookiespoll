@@ -5,15 +5,13 @@ import net.cookiespoll.user.Role;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
 
 @Component
 public interface UserMapper {
 
-    @Insert("INSERT INTO users (login, name, role) VALUES "
-            + "( #{user.login}, #{user.name}, #{user.role})")
-    @Options(useGeneratedKeys = true, keyProperty = "user.id")
-    Integer insert(@Param("user") User user);
+    @Insert("INSERT INTO users (id, login, name, role) VALUES "
+            + "( #{user.id}, #{user.login}, #{user.name}, #{user.role})")
+    void insert(@Param("user") User user);
 
     @Select("SELECT id, login, name, role FROM users where " +
             "id = #{id}")

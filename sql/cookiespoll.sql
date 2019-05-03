@@ -17,7 +17,7 @@ description VARCHAR (150),
 file_data BYTEA,
 cookie_adding_status VARCHAR (20),
 rating numeric(5,2),
-user_id int,
+user_id VARCHAR(150),
 FOREiGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 )
 

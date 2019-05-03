@@ -21,14 +21,14 @@ public class CookieUserRatingDaoImpl implements CookieUserRatingDao {
     }
 
     @Override
-    public Integer insert(Integer userId, Integer cookieId, Integer rating) {
+    public Integer insert(String userId, Integer cookieId, Integer rating) {
         LOGGER.info("Adding cookie rating in database {} {} {}", userId, cookieId, rating);
 
         return cookieUserRatingMapper.insert(userId, cookieId, rating);
     }
 
     @Override
-    public Integer getRatingByUserAndCookie(Integer userId, Integer cookieId) {
+    public Integer getRatingByUserAndCookie(String userId, Integer cookieId) {
         LOGGER.info("Select cookie rating by cookieId and userId", userId, cookieId);
 
         return cookieUserRatingMapper.getRatingByUserAndCookie(userId, cookieId);

@@ -9,8 +9,8 @@ import javax.validation.constraints.Size;
 
 public class CookiesByParameterRequest {
 
-    @Min(value = 1, message = "User id can not be less than 0")
-    private Integer userId;
+    @Size(min = 1, message = "User id can not be empty string")
+    private String userId;
 
     @Size(min = 4, max = 30, message = "Cookie name must be between 4 and 30 characters")
     private String name;
@@ -25,7 +25,7 @@ public class CookiesByParameterRequest {
     private Float rating;
 
 
-    public CookiesByParameterRequest(Integer userId, String name, String description,
+    public CookiesByParameterRequest(String userId, String name, String description,
                                      CookieAddingStatus cookieAddingStatus, Float rating) {
         this.userId = userId;
         this.name = name;
@@ -34,11 +34,11 @@ public class CookiesByParameterRequest {
         this.rating = rating;
     }
 
-    public Integer getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

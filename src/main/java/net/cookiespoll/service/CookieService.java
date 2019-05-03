@@ -24,7 +24,7 @@ public class CookieService {
         this.cookieDao = cookieDao;
     }
 
-    public Cookie insert(AddCookieRequest addCookieRequest, MultipartFile multipartFile, int userId)
+    public Cookie insert(AddCookieRequest addCookieRequest, MultipartFile multipartFile, String userId)
             throws IOException {
        float rating = 0;
 
@@ -36,7 +36,7 @@ public class CookieService {
 
 
     public List<Cookie> getByParam(String name, String description,
-                                   CookieAddingStatus cookieAddingStatus, Float rating, Integer userId) {
+                                   CookieAddingStatus cookieAddingStatus, Float rating, String userId) {
 
         return cookieDao.getByParam(name, description, cookieAddingStatus, rating, userId);
     }
@@ -53,7 +53,7 @@ public class CookieService {
     }
 
 
-    public List<Cookie> getUnratedCookiesByUserId (int userId) {
+    public List<Cookie> getUnratedCookiesByUserId (String userId) {
 
         return cookieDao.getUnratedCookiesByUserId(userId);
     }

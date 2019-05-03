@@ -39,13 +39,14 @@ public class CookieDaoImpl implements CookieDao {
 
     @Override
     public List<Cookie> getByParam(String name, String description, CookieAddingStatus cookieAddingStatus,
-                                   Float rating, Integer userId) {
+                                   Float rating, String userId) {
         LOGGER.info("Extract list of cookies by given parameters {} ", cookieAddingStatus);
         return cookieMapper.getByParam(name, description, cookieAddingStatus, rating, userId);
     }
 
     @Override
-    public List<Cookie> getUnratedCookiesByUserId(int userId) {
+    public List<Cookie> getUnratedCookiesByUserId(String userId) {
+
         return cookieMapper.getUnratedCookiesByUserId(userId);
     }
 

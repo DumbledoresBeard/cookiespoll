@@ -21,8 +21,8 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User insert(User user) {
-        /*TODO*/
-        return new User();
+        userMapper.insert(user);
+        return user;
     }
 
     @Override

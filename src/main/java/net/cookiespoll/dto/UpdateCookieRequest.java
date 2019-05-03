@@ -9,12 +9,12 @@ public class UpdateCookieRequest {
     private byte[] fileData;
     private CookieAddingStatus approvalStatus;
     private Float rating;
-    private int userId;
+    private String userId;
 
     public UpdateCookieRequest() {}
 
     public UpdateCookieRequest(int id, String name, String description, byte[] fileData,
-                               CookieAddingStatus approvalStatus, Float rating, int userId) {
+                               CookieAddingStatus approvalStatus, Float rating, String userId) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -72,12 +72,11 @@ public class UpdateCookieRequest {
         this.rating = rating;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
-
 }

@@ -10,9 +10,7 @@ import net.cookiespoll.validation.FileValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +38,14 @@ public class CookiesController {
         this.cookieUserRatingService = cookieUserRatingService;
     }
 
+
+    private String getUserIdFromSession() {
+        DefaultOidcUser defaultOidcUser = (DefaultOidcUser) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        Map<String, Object> atrr = defaultOidcUser.getClaims();
+        return (String) atrr.get("sub");
+    }
+
     @ApiOperation(value = "Add new cookie to store in database", response = AddCookieResponse.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Cookie was successfully added"),
@@ -55,8 +61,7 @@ public class CookiesController {
                             ) throws IOException, FileValidationException {
         LOGGER.info("Start processing AddCookieRequest {}", addCookieRequest, multipartFile);
         fileValidator.validate(multipartFile);
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        int userId = 1; // temporary decision until getting userId from session will be implemented
+        String userId = getUserIdFromSession();
         Cookie cookie = cookieService.insert(addCookieRequest, multipartFile, userId);
 
         LOGGER.info("Done");
@@ -101,11 +106,7 @@ public class CookiesController {
     @ResponseBody
     public Cookie getCookieById (@RequestParam (value="id") Integer id) {
         LOGGER.info("Starting processing request for getting cookie by id {} ", id);
-        DefaultOidcUser defaultOidcUser = (DefaultOidcUser) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
-        Map<String, Object> map = defaultOidcUser.getUserInfo().getClaims();
-        System.out.println(map);
-        String userId = (String) map.get("sub");
+        String userId = getUserIdFromSession();
         return cookieService.getById(id);
     }
 
@@ -140,13 +141,15 @@ public class CookiesController {
                     method = RequestMethod.POST)
     @ResponseBody
     public Cookie rateCookie (@RequestBody RateCookieRequest rateCookieRequest ) {
-        int userId = 1; // temporary decision until getting userId from session will be implemented
-        if (cookieUserRatingService.getRatingByUserAndCookie(userId, rateCookieRequest.getId()) != null) {
+        String userId = getUserIdFromSession(); // temporary decision until getting userId from session will be implemented
+        if (cookieUserRatingService.getRatingByUserAndCookie(userId,
+                rateCookieRequest.getId()) != null) {
             return new Cookie();
         }
         cookieUserRatingService.setRatingToCookie(userId, rateCookieRequest.getId(),
                                                     rateCookieRequest.getRating());
-        Long cookieRatingSum = cookieUserRatingService.getRatingSumByCookieId(rateCookieRequest.getId());
+        Long cookieRatingSum = cookieUserRatingService
+                                .getRatingSumByCookieId(rateCookieRequest.getId());
 
         Integer usersQuantity = cookieUserRatingService.getUserQuantity(rateCookieRequest.getId());
 
@@ -163,7 +166,7 @@ public class CookiesController {
                     method = RequestMethod.GET)
     @ResponseBody
     public List<Cookie> getUnratedCookies () {
-        int userId = 1; // temporary decision until getting userId from session will be implemented
+        String userId = getUserIdFromSession(); // temporary decision until getting userId from session will be implemented
         return cookieService.getUnratedCookiesByUserId(userId);
     }
 }

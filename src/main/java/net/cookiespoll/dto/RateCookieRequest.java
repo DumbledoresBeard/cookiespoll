@@ -9,14 +9,15 @@ public class RateCookieRequest {
     private byte[] fileData;
     private CookieAddingStatus approvalStatus;
     private Float resultRating;
-    private int userId;
+    private String userId;
     private Integer rating;
 
     public RateCookieRequest() {
     }
 
     public RateCookieRequest(int id, String name, String description, byte[] fileData,
-                             CookieAddingStatus approvalStatus, Float resultRating, int userId, Integer rating) {
+                             CookieAddingStatus approvalStatus, Float resultRating, String userId,
+                             Integer rating) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -75,11 +76,11 @@ public class RateCookieRequest {
         this.resultRating = resultRating;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
