@@ -74,13 +74,4 @@ public class CookiesByParameterRequest {
         this.rating = rating;
     }
 
-    @Override
-    public String toString() {
-        return
-                "userId=" + userId +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", cookieAddingStatus=" + cookieAddingStatus +
-                ", rating=" + rating;
-    }
 }

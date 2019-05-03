@@ -72,19 +72,39 @@ public class TestCookieDaoImpl {
                 CookieAddingStatus.WAITING, 0, 1);
         cookies.add(tastyCookie);
 
-        when(cookieMapper.getByParam(name, description, cookieAddingStatus, rating, userId)).thenReturn(cookies);
+        when(cookieMapper.getByParam(name, description, cookieAddingStatus, rating, userId))
+                .thenReturn(cookies);
 
-        List<Cookie> resultList = cookieDaoImpl.getByParam(name, description, cookieAddingStatus, rating, userId);
+        List<Cookie> resultList = cookieDaoImpl.getByParam(name, description, cookieAddingStatus,
+                rating, userId);
 
         Assert.assertEquals(resultList.get(0).getId(), tastyCookie.getId());
         Assert.assertEquals(resultList.get(0).getName(), tastyCookie.getName());
         Assert.assertEquals(resultList.get(0).getDescription(), tastyCookie.getDescription());
         Assert.assertArrayEquals(resultList.get(0).getFileData(), tastyCookie.getFileData());
-        Assert.assertEquals(resultList.get(0).getCookieAddingStatus(), tastyCookie.getCookieAddingStatus());
+        Assert.assertEquals(resultList.get(0).getCookieAddingStatus(),
+                            tastyCookie.getCookieAddingStatus());
         Assert.assertEquals(resultList.get(0).getRating(), tastyCookie.getRating());
         Assert.assertEquals(resultList.get(0).getUserId(), tastyCookie.getUserId());
 
         verify(cookieMapper).getByParam(name, description, cookieAddingStatus, rating, userId);
+    }
+
+    @Test
+    public void testCookieDaoGetById () {
+        when(cookieMapper.getById(1)).thenReturn(cookie);
+
+        Cookie resultCookie = cookieDaoImpl.getById(1);
+
+        Assert.assertEquals(resultCookie.getId(), cookie.getId());
+        Assert.assertEquals(resultCookie.getName(), cookie.getName());
+        Assert.assertEquals(resultCookie.getDescription(), cookie.getDescription());
+        Assert.assertArrayEquals(resultCookie.getFileData(), cookie.getFileData());
+        Assert.assertEquals(resultCookie.getCookieAddingStatus(), cookie.getCookieAddingStatus());
+        Assert.assertEquals(resultCookie.getRating(), cookie.getRating());
+        Assert.assertEquals(resultCookie.getUserId(), cookie.getUserId());
+
+        verify(cookieMapper).getById(1);
     }
 
 

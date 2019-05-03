@@ -83,7 +83,6 @@ public class CookiesController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Cookies were received"),
             @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
-            @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal server error"),
     })
     @RequestMapping(value = "/cookies",
