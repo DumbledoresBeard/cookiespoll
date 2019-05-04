@@ -25,9 +25,9 @@ import static org.mockito.Mockito.when;
 public class TestCookieDaoImpl {
 
     @Mock
-    CookieMapper cookieMapper;
+    private CookieMapper cookieMapper;
     @InjectMocks
-    CookieDaoImpl cookieDaoImpl;
+    private CookieDaoImpl cookieDaoImpl;
 
     private Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2],
             CookieAddingStatus.WAITING, (float) 0, 1);
@@ -106,6 +106,42 @@ public class TestCookieDaoImpl {
         Assert.assertEquals(resultCookie.getUserId(), cookie.getUserId());
 
         verify(cookieMapper).getById(1);
+    }
+
+    @Test
+    public void testGetUnratedCookiesByUserId () {
+        List<Cookie> cookies = new ArrayList<>();
+        Cookie cookieWith1Id = new Cookie(1, "cookie", "tasty cookie",
+                new byte[2], CookieAddingStatus.WAITING, (float) 0, 1);
+        Cookie cookieWith2Id = new Cookie(2,"name", "description", new byte[2],
+                CookieAddingStatus.WAITING, (float) 0, 1);
+        cookies.add(cookieWith1Id);
+        cookies.add(cookieWith2Id);
+
+        when(cookieMapper.getUnratedCookiesByUserId(1)).thenReturn(cookies);
+
+        List<Cookie> resultList = cookieDaoImpl.getUnratedCookiesByUserId(1);
+
+        Assert.assertEquals(resultList.get(0).getId(), cookieWith1Id.getId());
+        Assert.assertEquals(resultList.get(0).getName(), cookieWith1Id.getName());
+        Assert.assertEquals(resultList.get(0).getDescription(), cookieWith1Id.getDescription());
+        Assert.assertArrayEquals(resultList.get(0).getFileData(), cookieWith1Id.getFileData());
+        Assert.assertEquals(resultList.get(0).getCookieAddingStatus(),
+                cookieWith1Id.getCookieAddingStatus());
+        Assert.assertEquals(resultList.get(0).getRating(), cookieWith1Id.getRating());
+        Assert.assertEquals(resultList.get(0).getUserId(), cookieWith1Id.getUserId());
+
+        Assert.assertEquals(resultList.get(1).getId(), cookieWith2Id.getId());
+        Assert.assertEquals(resultList.get(1).getName(), cookieWith2Id.getName());
+        Assert.assertEquals(resultList.get(1).getDescription(), cookieWith2Id.getDescription());
+        Assert.assertArrayEquals(resultList.get(1).getFileData(), cookieWith2Id.getFileData());
+        Assert.assertEquals(resultList.get(1).getCookieAddingStatus(),
+                cookieWith2Id.getCookieAddingStatus());
+        Assert.assertEquals(resultList.get(1).getRating(), cookieWith2Id.getRating());
+        Assert.assertEquals(resultList.get(1).getUserId(), cookieWith2Id.getUserId());
+
+        verify(cookieMapper).getUnratedCookiesByUserId(1);
+
     }
 
 

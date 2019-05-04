@@ -21,10 +21,10 @@ public class CookieUserRatingDaoImpl implements CookieUserRatingDao {
     }
 
     @Override
-    public Integer insert(Integer userId, Integer cookieId, Integer rating) {
+    public void insert(Integer userId, Integer cookieId, Integer rating) {
         LOGGER.info("Adding cookie rating in database {} {} {}", userId, cookieId, rating);
 
-        return cookieUserRatingMapper.insert(userId, cookieId, rating);
+        cookieUserRatingMapper.insert(userId, cookieId, rating);
     }
 
     @Override

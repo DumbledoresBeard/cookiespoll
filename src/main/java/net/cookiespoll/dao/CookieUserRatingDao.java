@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface CookieUserRatingDao {
 
-    Integer insert (Integer userId, Integer cookieId, Integer rating);
+    void insert (Integer userId, Integer cookieId, Integer rating);
 
     Integer getRatingByUserAndCookie(Integer userId, Integer cookieId);
 

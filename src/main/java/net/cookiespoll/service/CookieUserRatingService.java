@@ -14,8 +14,8 @@ public class CookieUserRatingService {
         this.cookieUserRatingDao = cookieUserRatingDao;
     }
 
-    public int setRatingToCookie(Integer userId, Integer cookieId, Integer rating) {
-        return cookieUserRatingDao.insert(userId, cookieId, rating);
+    public void setRatingToCookie(Integer userId, Integer cookieId, Integer rating) {
+        cookieUserRatingDao.insert(userId, cookieId, rating);
     }
 
     public Integer getRatingByUserAndCookie(Integer userId, Integer cookieId) {
