@@ -14,8 +14,9 @@ public class CookieUserRatingService {
         this.cookieUserRatingDao = cookieUserRatingDao;
     }
 
-    public int setRatingToCookie(String userId, Integer cookieId, Integer rating) {
-        return cookieUserRatingDao.insert(userId, cookieId, rating);
+    public void setRatingToCookie(String userId, Integer cookieId, Integer rating) {
+        cookieUserRatingDao.insert(userId, cookieId, rating);
+
     }
 
     public Integer getRatingByUserAndCookie(String userId, Integer cookieId) {
@@ -27,8 +28,8 @@ public class CookieUserRatingService {
         return cookieUserRatingDao.getUserQuantity(cookieId);
     }
 
-    public Long getRatingSumByCookieId(Integer cookieId) {
-        return cookieUserRatingDao.getRatingsByCookieId(cookieId)
+    public Float getRatingSumByCookieId(Integer cookieId) {
+        return (float) cookieUserRatingDao.getRatingsByCookieId(cookieId)
                 .stream()
                 .mapToInt((x) -> x)
                 .summaryStatistics()

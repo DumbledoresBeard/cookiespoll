@@ -101,7 +101,6 @@ public class CookiesController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Cookies were received"),
             @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
-            @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal server error"),
     })
     @RequestMapping(value = "/cookies",
@@ -156,8 +155,10 @@ public class CookiesController {
         }
         cookieUserRatingService.setRatingToCookie(userId, rateCookieRequest.getId(),
                                                     rateCookieRequest.getRating());
-        Long cookieRatingSum = cookieUserRatingService
-                                .getRatingSumByCookieId(rateCookieRequest.getId());
+
+
+        Float cookieRatingSum = cookieUserRatingService.getRatingSumByCookieId(rateCookieRequest.getId());
+
 
         Integer usersQuantity = cookieUserRatingService.getUserQuantity(rateCookieRequest.getId());
 
@@ -165,7 +166,7 @@ public class CookiesController {
                 rateCookieRequest.getDescription(), rateCookieRequest.getFileData(),
                 rateCookieRequest.getApprovalStatus(), rateCookieRequest.getResultRating(),
                 rateCookieRequest.getUserId());
-        cookie.setRating(cookieService.countCookieRating(usersQuantity, cookieRatingSum));
+        cookie.setRating(cookieService.countRating(usersQuantity, cookieRatingSum));
 
         return cookieService.update(cookie);
     }

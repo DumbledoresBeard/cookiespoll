@@ -48,18 +48,17 @@ public class CookieService {
     }
 
     public Cookie getById(Integer id) {
-
         return cookieDao.getById(id);
     }
 
 
-    public List<Cookie> getUnratedCookiesByUserId (String userId) {
 
+    public List<Cookie> getUnratedCookiesByUserId (String userId) {
         return cookieDao.getUnratedCookiesByUserId(userId);
     }
 
-    public Float countCookieRating (Integer usersQuantity, Long cookieRatingSum) {
-        return (float)(cookieRatingSum / usersQuantity);
+    public Float countRating(Integer usersQuantity, Float cookieRatingSum) {
+        return (cookieRatingSum / usersQuantity);
     }
 
 
