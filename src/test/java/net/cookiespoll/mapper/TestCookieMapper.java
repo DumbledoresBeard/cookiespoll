@@ -2,6 +2,7 @@ package net.cookiespoll.mapper;
 
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,19 +44,32 @@ public class TestCookieMapper {
     @Test
     public void testCookieMapperUpdate () {
         doNothing().when(cookieMapper).update(cookie);
+        cookieMapper.insert(cookie);
         verify(cookieMapper).update(cookie);
     }
 
     @Test
     public void testCookieMapperGetByParam () {
         List<Cookie> cookies = new ArrayList<>();
-        Cookie cookieWithId = new Cookie(1, "cookie", "tasty cookie", new byte[2],
-                CookieAddingStatus.WAITING, (float) 0, 1);
-        cookies.add(cookieWithId);
+        cookies.add(cookie);
+
         when(cookieMapper.getByParam("cookie", "tasty cookie", CookieAddingStatus.WAITING,
                 (float) 0, 1)).thenReturn(cookies);
 
+        Assert.assertEquals(cookieMapper.getByParam("cookie", "tasty cookie", CookieAddingStatus.WAITING,
+                (float) 0, 1).get(0).getId(), cookie.getId());
+
         verify(cookieMapper).getByParam("cookie", "tasty cookie", CookieAddingStatus.WAITING,
                 (float) 0, 1);
+    }
+
+    @Test
+    public void testCookieMapperGetById () {
+
+        when(cookieMapper.getById(1)).thenReturn(cookie);
+
+        Assert.assertEquals(cookieMapper.getById(1).getId(), cookie.getId());
+
+        verify(cookieMapper).getById(1);
     }
 }
