@@ -42,8 +42,9 @@ public class TestCookieController {
     private CookieUserRatingService cookieUserRatingService = mock(CookieUserRatingService.class);
     private CookiesController cookiesController;
     private byte [] byteArray = "Photo".getBytes();
+    private Float cookieRating = new Float(0);
     private Cookie cookie = new Cookie(1, "cookie", "tasty cookie", byteArray,
-            CookieAddingStatus.WAITING, (float) 0, 1);
+            CookieAddingStatus.WAITING, cookieRating, 1);
     private MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "testcookie",
             "image/jpg", byteArray);
     private MockMultipartFile addCookieDtoRequest = new MockMultipartFile("data", "",
@@ -63,9 +64,9 @@ public class TestCookieController {
     private List<Cookie> createCookiesList () {
         List<Cookie> cookies = new ArrayList<>();
         Cookie cookieWith1Id = new Cookie(1, "cookie", "tasty cookie",
-                new byte[2], CookieAddingStatus.WAITING, (float) 0, 1);
+                new byte[2], CookieAddingStatus.WAITING, cookieRating, 1);
         Cookie cookieWith2Id = new Cookie(2,"name", "description", new byte[2],
-                CookieAddingStatus.WAITING, (float) 0, 1);
+                CookieAddingStatus.WAITING, cookieRating, 1);
         cookies.add(cookieWith1Id);
         cookies.add(cookieWith2Id);
         return cookies;
@@ -234,7 +235,7 @@ public class TestCookieController {
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
                 .param("name", name)
         ).andExpect(status().isOk())
-        .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"userId\":1},{\"id\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":5,\"userId\":2}]"));
+        .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0.0,\"userId\":1},{\"id\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0.0,\"userId\":1}]"));
 
         verify(cookieService).getByParam(name, null, null, null,
                 null);

@@ -131,6 +131,46 @@ public class TestCookieService {
         verify(cookieDao).getById(1);
     }
 
+    @Test
+    public void testGetUnratedCookiesByUserId () {
+        List<Cookie> cookies = new ArrayList<>();
+        cookies.add(cookieWithId);
+        cookies.add(cookieWith2Id);
+
+        when(cookieDao.getUnratedCookiesByUserId(userId)).thenReturn(cookies);
+
+        List<Cookie> resultCookieList = cookieService.getUnratedCookiesByUserId(userId);
+
+        Assert.assertEquals(resultCookieList.get(0).getId(), cookieWithId.getId());
+        Assert.assertEquals(resultCookieList.get(0).getName(), cookieWithId.getName());
+        Assert.assertEquals(resultCookieList.get(0).getDescription(), cookieWithId.getDescription());
+        Assert.assertArrayEquals(resultCookieList.get(0).getFileData(), cookieWithId.getFileData());
+        Assert.assertEquals(resultCookieList.get(0).getCookieAddingStatus(),
+                cookieWithId.getCookieAddingStatus());
+        Assert.assertEquals(resultCookieList.get(0).getRating(), cookieWithId.getRating());
+
+        Assert.assertEquals(resultCookieList.get(1).getId(), cookieWith2Id.getId());
+        Assert.assertEquals(resultCookieList.get(1).getName(), cookieWith2Id.getName());
+        Assert.assertEquals(resultCookieList.get(1).getDescription(), cookieWith2Id.getDescription());
+        Assert.assertArrayEquals(resultCookieList.get(1).getFileData(), cookieWith2Id.getFileData());
+        Assert.assertEquals(resultCookieList.get(1).getCookieAddingStatus(),
+                cookieWith2Id.getCookieAddingStatus());
+        Assert.assertEquals(resultCookieList.get(1).getRating(), cookieWith2Id.getRating());
+
+        verify(cookieDao).getUnratedCookiesByUserId(userId);
+    }
+
+    @Test
+    public void testCountRating () {
+        Integer usersQuantity = 10;
+        float cookieRatingSum = 34;
+        float rating = (float) 3.4;
+
+        float resultRating = cookieService.countRating(usersQuantity, cookieRatingSum);
+
+        Assert.assertEquals(rating, resultRating, 0.0f);
+    }
+
 
 }
 

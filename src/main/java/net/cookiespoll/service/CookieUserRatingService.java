@@ -26,8 +26,8 @@ public class CookieUserRatingService {
         return cookieUserRatingDao.getUserQuantity(cookieId);
     }
 
-    public Long getRatingSumByCookieId(Integer cookieId) {
-        return cookieUserRatingDao.getRatingsByCookieId(cookieId)
+    public Float getRatingSumByCookieId(Integer cookieId) {
+        return (float) cookieUserRatingDao.getRatingsByCookieId(cookieId)
                 .stream()
                 .mapToInt((x) -> x)
                 .summaryStatistics()

@@ -135,7 +135,7 @@ public class CookiesController {
         }
         cookieUserRatingService.setRatingToCookie(userId, rateCookieRequest.getId(),
                                                     rateCookieRequest.getRating());
-        Long cookieRatingSum = cookieUserRatingService.getRatingSumByCookieId(rateCookieRequest.getId());
+        Float cookieRatingSum = cookieUserRatingService.getRatingSumByCookieId(rateCookieRequest.getId());
 
         Integer usersQuantity = cookieUserRatingService.getUserQuantity(rateCookieRequest.getId());
 
@@ -143,7 +143,7 @@ public class CookiesController {
                 rateCookieRequest.getDescription(), rateCookieRequest.getFileData(),
                 rateCookieRequest.getApprovalStatus(), rateCookieRequest.getResultRating(),
                 rateCookieRequest.getUserId());
-        cookie.setRating(cookieService.countCookieRating(usersQuantity, cookieRatingSum));
+        cookie.setRating(cookieService.countRating(usersQuantity, cookieRatingSum));
 
         return cookieService.update(cookie);
     }
