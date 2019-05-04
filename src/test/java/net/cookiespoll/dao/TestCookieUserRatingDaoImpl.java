@@ -27,7 +27,7 @@ public class TestCookieUserRatingDaoImpl {
     private CookieUserRatingDaoImpl cookieUserRatingDao;
 
     private Integer rating = 1;
-    private Integer userId = 1;
+    private String userId = "1";
     private Integer cookieId = 1;
 
     @Before

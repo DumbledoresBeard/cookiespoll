@@ -32,15 +32,15 @@ public class TestCookieService {
     CookieService cookieService;
 
     private Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2],
-            CookieAddingStatus.WAITING, (float) 0, 1);
+            CookieAddingStatus.WAITING, (float) 0, "1");
     private MockMultipartFile mockMultipartFile = new MockMultipartFile("testcookie.jpg", new byte[2]);
     private Cookie cookieWithId = new Cookie(1, "cookie", "tasty cookie",
-            new byte[2], CookieAddingStatus.WAITING, (float) 0, 1);
+            new byte[2], CookieAddingStatus.WAITING, (float) 0, "1");
     private AddCookieRequest addCookieRequest = new AddCookieRequest("cookie",
             "tasty cookie");
     private Cookie cookieWith2Id = new Cookie(2,"cookie", "tasty cookie",
-            new byte[2], CookieAddingStatus.WAITING, (float) 0, 2);
-    private Integer userId = 1;
+            new byte[2], CookieAddingStatus.WAITING, (float) 0, "1");
+    private String userId = "1";
 
     @Before
     public void setUp() throws Exception {
@@ -105,7 +105,7 @@ public class TestCookieService {
     public void testUpdateCookie () {
         Cookie cookie = new Cookie(
                 1, "cookie", "tasty cookie", new byte[2],
-                CookieAddingStatus.WAITING, (float) 0, 1);
+                CookieAddingStatus.WAITING, (float) 0, "1");
 
         when(cookieDao.update(cookieWithId)).thenReturn(cookieWithId);
 

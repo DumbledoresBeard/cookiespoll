@@ -21,7 +21,7 @@ public class TestCookieUserRatingMapper {
     private CookieUserRatingMapper cookieUserRatingMapper;
 
     private Integer rating = 1;
-    private Integer userId = 1;
+    private String userId = "1";
     private Integer cookieId = 1;
 
     @Before

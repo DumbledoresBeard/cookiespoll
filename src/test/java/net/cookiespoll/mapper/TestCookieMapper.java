@@ -24,7 +24,7 @@ public class TestCookieMapper {
     private CookieMapper cookieMapper;
 
     Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING,
-            (float) 0, 1);
+            (float) 0, "1");
 
 
     @Before
@@ -54,13 +54,13 @@ public class TestCookieMapper {
         cookies.add(cookie);
 
         when(cookieMapper.getByParam("cookie", "tasty cookie", CookieAddingStatus.WAITING,
-                (float) 0, 1)).thenReturn(cookies);
+                (float) 0, "1")).thenReturn(cookies);
 
         Assert.assertEquals(cookieMapper.getByParam("cookie", "tasty cookie", CookieAddingStatus.WAITING,
-                (float) 0, 1).get(0).getId(), cookie.getId());
+                (float) 0, "1").get(0).getId(), cookie.getId());
 
         verify(cookieMapper).getByParam("cookie", "tasty cookie", CookieAddingStatus.WAITING,
-                (float) 0, 1);
+                (float) 0, "1");
     }
 
     @Test
@@ -77,16 +77,17 @@ public class TestCookieMapper {
     public void testGetUnratedCookiesByUserId () {
         List<Cookie> cookies = new ArrayList<>();
         Cookie cookieWith1Id = new Cookie(1, "cookie", "tasty cookie",
-                new byte[2], CookieAddingStatus.WAITING, (float) 0, 1);
+                new byte[2], CookieAddingStatus.WAITING, (float) 0, "1");
         Cookie cookieWith2Id = new Cookie(2,"name", "description", new byte[2],
-                CookieAddingStatus.WAITING, (float) 0, 1);
+                CookieAddingStatus.WAITING, (float) 0, "1");
         cookies.add(cookieWith1Id);
         cookies.add(cookieWith2Id);
+        String userId = "1";
 
-        when(cookieMapper.getUnratedCookiesByUserId(1)).thenReturn(cookies);
+        when(cookieMapper.getUnratedCookiesByUserId(userId)).thenReturn(cookies);
 
-        Assert.assertEquals(cookies, cookieMapper.getUnratedCookiesByUserId(1));
+        Assert.assertEquals(cookies, cookieMapper.getUnratedCookiesByUserId(userId));
 
-        verify(cookieMapper).getUnratedCookiesByUserId(1);
+        verify(cookieMapper).getUnratedCookiesByUserId(userId);
     }
 }
