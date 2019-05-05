@@ -2,14 +2,26 @@ package net.cookiespoll.dto;
 
 import net.cookiespoll.model.CookieAddingStatus;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
+
 public class RateCookieRequest {
     private int id;
+
+    @Size(min = 4, max = 30, message = "Cookie name must be between 4 and 30 characters")
     private String name;
+
+    @Size(min = 1, max = 150, message = "Cookie description must be less then 150 characters and cannot be empty")
     private String description;
+
     private byte[] fileData;
     private CookieAddingStatus approvalStatus;
     private Float resultRating;
     private int userId;
+
+    @Min(value = 1, message = "Rating must be a digit between 1 and 5")
+    @Max(value = 5, message = "Rating must be a digit between 1 and 5")
     private Integer rating;
 
     public RateCookieRequest() {

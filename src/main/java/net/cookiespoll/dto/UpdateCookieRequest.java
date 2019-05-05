@@ -2,10 +2,17 @@ package net.cookiespoll.dto;
 
 import net.cookiespoll.model.CookieAddingStatus;
 
+import javax.validation.constraints.Size;
+
 public class UpdateCookieRequest {
     private int id;
+
+    @Size(min = 4, max = 30, message = "Cookie name must be between 4 and 30 characters")
     private String name;
+
+    @Size(min = 1, max = 150, message = "Cookie description must be less then 150 characters and cannot be empty")
     private String description;
+
     private byte[] fileData;
     private CookieAddingStatus approvalStatus;
     private Float rating;

@@ -107,7 +107,7 @@ public class CookiesController {
     @RequestMapping(value = "/cookies",
             method = RequestMethod.PATCH)
     @ResponseBody
-    public UpdateCookieResponse updateCookie (@RequestBody UpdateCookieRequest updateCookieRequest) {
+    public UpdateCookieResponse updateCookie (@RequestBody @Valid UpdateCookieRequest updateCookieRequest) {
         /* TODO if(!cookieService.getUserRole(id).equals(Role.ADMIN))
         { return new ArrayList<Cookie>() ; }*/
 
@@ -125,10 +125,17 @@ public class CookiesController {
                 updateCookieRequest.getRating(), updateCookieRequest.getUserId());
     }
 
+
+    @ApiOperation(value = "Set rating from user to cookie and count overall cookie rating", response = Cookie.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Cookie got rating and overall rating has been counted"),
+            @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
+            @ApiResponse(code = 500, message = "Internal server error"),
+    })
     @RequestMapping(value = "/cookies/poll",
                     method = RequestMethod.POST)
     @ResponseBody
-    public Cookie rateCookie (@RequestBody RateCookieRequest rateCookieRequest ) {
+    public Cookie rateCookie (@RequestBody @Valid RateCookieRequest rateCookieRequest ) {
         int userId = 1; // temporary decision until getting userId from session will be implemented
         if (cookieUserRatingService.getRatingByUserAndCookie(userId, rateCookieRequest.getId()) != null) {
             return new Cookie();
@@ -148,6 +155,12 @@ public class CookiesController {
         return cookieService.update(cookie);
     }
 
+    @ApiOperation(value = "Get cookies unrated yet by user", response = Cookie.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Cookies were received"),
+            @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
+            @ApiResponse(code = 500, message = "Internal server error"),
+    })
     @RequestMapping(value = "/cookies/poll",
                     method = RequestMethod.GET)
     @ResponseBody
