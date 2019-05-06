@@ -2,6 +2,7 @@ package net.cookiespoll.controller;
 
 import io.swagger.annotations.*;
 import net.cookiespoll.dto.*;
+import net.cookiespoll.exception.CookieRateException;
 import net.cookiespoll.exception.FileValidationException;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.service.CookieService;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@Api(description = "Operations related to cookie adding")
+@Api
 public class CookiesController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CookiesController.class);
 
@@ -41,8 +42,7 @@ public class CookiesController {
             @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
             @ApiResponse(code = 500, message = "Internal server error"),
     })
-    @RequestMapping(value = "/cookies",
-            method = RequestMethod.POST)
+    @RequestMapping(value = "/cookies", method = RequestMethod.POST)
     @ResponseBody
     public AddCookieResponse addCookie(
                             @RequestPart("file") MultipartFile multipartFile,
@@ -66,8 +66,7 @@ public class CookiesController {
             @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
             @ApiResponse(code = 500, message = "Internal server error"),
     })
-    @RequestMapping(value = "/cookies/lists",
-            method = RequestMethod.GET)
+    @RequestMapping(value = "/cookies/lists", method = RequestMethod.GET)
     @ResponseBody
     public List<Cookie> getCookiesByParameter (@Valid CookiesByParameterRequest cookiesByParameterRequest)
                                                 {
@@ -89,8 +88,7 @@ public class CookiesController {
             @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
             @ApiResponse(code = 500, message = "Internal server error"),
     })
-    @RequestMapping(value = "/cookies",
-            method = RequestMethod.GET)
+    @RequestMapping(value = "/cookies", method = RequestMethod.GET)
     @ResponseBody
     public Cookie getCookieById (@RequestParam (value="id") Integer id) {
         LOGGER.info("Starting processing request for getting cookie by id {} ", id);
@@ -104,8 +102,7 @@ public class CookiesController {
             @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
             @ApiResponse(code = 500, message = "Internal server error"),
     })
-    @RequestMapping(value = "/cookies",
-            method = RequestMethod.PATCH)
+    @RequestMapping(value = "/cookies", method = RequestMethod.PATCH)
     @ResponseBody
     public UpdateCookieResponse updateCookie (@RequestBody @Valid UpdateCookieRequest updateCookieRequest) {
         /* TODO if(!cookieService.getUserRole(id).equals(Role.ADMIN))
@@ -132,13 +129,12 @@ public class CookiesController {
             @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
             @ApiResponse(code = 500, message = "Internal server error"),
     })
-    @RequestMapping(value = "/cookies/poll",
-                    method = RequestMethod.POST)
+    @RequestMapping(value = "/cookies/poll", method = RequestMethod.POST)
     @ResponseBody
-    public Cookie rateCookie (@RequestBody @Valid RateCookieRequest rateCookieRequest ) {
+    public Cookie rateCookie (@RequestBody @Valid RateCookieRequest rateCookieRequest ) throws CookieRateException {
         int userId = 1; // temporary decision until getting userId from session will be implemented
         if (cookieUserRatingService.getRatingByUserAndCookie(userId, rateCookieRequest.getId()) != null) {
-            return new Cookie();
+          throw new CookieRateException("This cookie already has been rated by user");
         }
         cookieUserRatingService.setRatingToCookie(userId, rateCookieRequest.getId(),
                                                     rateCookieRequest.getRating());
@@ -161,8 +157,7 @@ public class CookiesController {
             @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
             @ApiResponse(code = 500, message = "Internal server error"),
     })
-    @RequestMapping(value = "/cookies/poll",
-                    method = RequestMethod.GET)
+    @RequestMapping(value = "/cookies/poll", method = RequestMethod.GET)
     @ResponseBody
     public List<Cookie> getUnratedCookies () {
         int userId = 1; // temporary decision until getting userId from session will be implemented
