@@ -1,6 +1,7 @@
 package net.cookiespoll.dto;
 
 import net.cookiespoll.model.CookieAddingStatus;
+import net.cookiespoll.user.User;
 
 public class UpdateCookieRequest {
     private int id;
@@ -9,19 +10,19 @@ public class UpdateCookieRequest {
     private byte[] fileData;
     private CookieAddingStatus approvalStatus;
     private int rating;
-    private int userId;
+    private User cookieOwner;
 
     public UpdateCookieRequest() {}
 
     public UpdateCookieRequest(int id, String name, String description, byte[] fileData,
-                               CookieAddingStatus approvalStatus, int rating, int userId) {
+                               CookieAddingStatus approvalStatus, int rating, User cookieOwner) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.fileData = fileData;
         this.approvalStatus = approvalStatus;
         this.rating = rating;
-        this.userId = userId;
+        this.cookieOwner = cookieOwner;
     }
 
     public int getId() {
@@ -72,11 +73,11 @@ public class UpdateCookieRequest {
         this.rating = rating;
     }
 
-    public int getUserId() {
-        return userId;
+    public User getCookieOwner() {
+        return cookieOwner;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setCookieOwner(User cookieOwner) {
+        this.cookieOwner = cookieOwner;
     }
 }

@@ -5,6 +5,7 @@ import net.cookiespoll.dto.*;
 import net.cookiespoll.exception.FileValidationException;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.service.CookieService;
+import net.cookiespoll.user.User;
 import net.cookiespoll.validation.FileValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,8 +47,9 @@ public class CookiesController {
                             ) throws IOException, FileValidationException {
         LOGGER.info("Start processing AddCookieRequest {}", addCookieRequest, multipartFile);
         fileValidator.validate(multipartFile);
-        int userId = 1; // temporary decision until getting userId from session will be implemented
-        Cookie cookie = cookieService.insert(addCookieRequest, multipartFile, userId);
+        User user = new User();
+        user.setId(1); // temporary decision until getting userId from session will be implemented
+        Cookie cookie = cookieService.insert(addCookieRequest, multipartFile, user);
 
         LOGGER.info("Done");
 
@@ -113,6 +115,6 @@ public class CookiesController {
         return new UpdateCookieResponse(updateCookieRequest.getId(),
                 updateCookieRequest.getName(), updateCookieRequest.getDescription(),
                 updateCookieRequest.getFileData(), updateCookieRequest.getApprovalStatus(),
-                updateCookieRequest.getRating(), updateCookieRequest.getUserId());
+                updateCookieRequest.getRating(), updateCookieRequest.getCookieOwner());
     }
 }

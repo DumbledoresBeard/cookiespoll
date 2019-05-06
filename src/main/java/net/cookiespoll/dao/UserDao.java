@@ -10,5 +10,4 @@ public interface UserDao {
 
     User update (User user);
 
-    void delete (User user);
 }

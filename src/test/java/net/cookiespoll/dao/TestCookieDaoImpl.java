@@ -39,7 +39,7 @@ public class TestCookieDaoImpl {
     @Test
     public void testCookieDaoInsert() {
         when(cookieMapper.insert(cookie)).thenReturn(1);
-        Cookie resultCookie = cookieDaoImpl.insert(cookie);
+        Cookie resultCookie = cookieDaoImpl.insert(cookie, );
 
         Assert.assertEquals (1, resultCookie.getId());
         Assert.assertEquals(cookie.getName(), resultCookie.getName());

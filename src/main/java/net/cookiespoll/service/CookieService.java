@@ -5,6 +5,7 @@ import net.cookiespoll.dto.AddCookieRequest;
 import net.cookiespoll.dto.UpdateCookieRequest;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
+import net.cookiespoll.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +26,14 @@ public class CookieService {
         this.cookieDao = cookieDao;
     }
 
-    public Cookie insert(AddCookieRequest addCookieRequest, MultipartFile multipartFile, int userId)
+    public Cookie insert(AddCookieRequest addCookieRequest, MultipartFile multipartFile, User cookieOwner)
             throws IOException {
        int rating = 0;
 
        LOGGER.info("Set rating={} and cookieAddingStatus={} to cookie ", rating, CookieAddingStatus.WAITING);
 
        return cookieDao.insert(new Cookie(addCookieRequest.getName(), addCookieRequest.getDescription(),
-                                multipartFile.getBytes(), CookieAddingStatus.WAITING, rating, userId));
+                                multipartFile.getBytes(), CookieAddingStatus.WAITING, rating, cookieOwner));
     }
 
 
@@ -47,7 +48,7 @@ public class CookieService {
        return cookieDao.update(new Cookie(updateCookieRequest.getId(),
                 updateCookieRequest.getName(), updateCookieRequest.getDescription(),
                 updateCookieRequest.getFileData(), updateCookieRequest.getApprovalStatus(),
-                updateCookieRequest.getRating(), updateCookieRequest.getUserId()));
+                updateCookieRequest.getRating(), updateCookieRequest.getCookieOwner()));
 
     }
 

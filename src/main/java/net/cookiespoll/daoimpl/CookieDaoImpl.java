@@ -4,6 +4,7 @@ import net.cookiespoll.dao.CookieDao;
 import net.cookiespoll.mapper.CookieMapper;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
+import net.cookiespoll.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class CookieDaoImpl implements CookieDao {
     @Transactional
     public Cookie insert(Cookie cookie) {
         LOGGER.info("Adding cookie to database {} ", cookie);
-        cookie.setId(cookieMapper.insert(cookie));
+        cookie.setId(cookieMapper.insert(cookie, cookie.getCookieOwner().getId()));
         return cookie;
     }
 
@@ -47,7 +48,7 @@ public class CookieDaoImpl implements CookieDao {
     @Override
     public Cookie update(Cookie cookie) {
         LOGGER.info("Update cookie {} ", cookie);
-        cookieMapper.update(cookie);
+        cookieMapper.update(cookie, cookie.getCookieOwner().getId());
         return cookie;
     }
 

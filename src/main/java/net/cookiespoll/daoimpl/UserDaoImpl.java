@@ -36,8 +36,4 @@ public class UserDaoImpl implements UserDao {
         return new User();
     }
 
-    @Override
-    public void delete(User user) {
-
-    }
 }

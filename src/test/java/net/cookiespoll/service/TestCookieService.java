@@ -1,5 +1,4 @@
 package net.cookiespoll.service;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import net.cookiespoll.daoimpl.CookieDaoImpl;
 import net.cookiespoll.dto.AddCookieRequest;
 import net.cookiespoll.dto.UpdateCookieRequest;
@@ -7,7 +6,6 @@ import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -51,7 +49,7 @@ public class TestCookieService {
     @Test
     public void testCookieDaoInsert() throws IOException {
 
-        when(cookieDao.insert(cookie)).thenReturn(cookieWithId);
+        when(cookieDao.insert(cookie, )).thenReturn(cookieWithId);
         Cookie resultCookie = cookieService.insert(addCookieRequest, mockMultipartFile, userId);
 
         Assert.assertEquals(1, resultCookie.getId());
@@ -62,7 +60,7 @@ public class TestCookieService {
         Assert.assertEquals(0, resultCookie.getRating());
         Assert.assertEquals(1, resultCookie.getUserId());
 
-        verify(cookieDao).insert(cookie);
+        verify(cookieDao).insert(cookie, );
 
     }
 

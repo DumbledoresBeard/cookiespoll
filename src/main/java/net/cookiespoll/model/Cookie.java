@@ -1,5 +1,7 @@
 package net.cookiespoll.model;
 
+import net.cookiespoll.user.User;
+
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -10,30 +12,25 @@ public class Cookie {
     private byte[] fileData;
     private CookieAddingStatus cookieAddingStatus;
     private int rating;
-    private int userId;
+    private User cookieOwner;
 
     public Cookie() {
     }
 
-    public Cookie(String name, String description, byte[] fileData,
-                  CookieAddingStatus cookieAddingStatus, int rating, int userId) {
-        this.name = name;
-        this.description = description;
-        this.fileData = fileData;
-        this.cookieAddingStatus = cookieAddingStatus;
-        this.rating = rating;
-        this.userId = userId;
-    }
-
     public Cookie(int id, String name, String description, byte[] fileData,
-                  CookieAddingStatus cookieAddingStatus, int rating, int userId) {
+                  CookieAddingStatus cookieAddingStatus, int rating, User cookieOwner) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.fileData = fileData;
         this.cookieAddingStatus = cookieAddingStatus;
         this.rating = rating;
-        this.userId = userId;
+        this.cookieOwner = cookieOwner;
+    }
+
+    public Cookie (String name, String description, byte[] fileData,
+                   CookieAddingStatus cookieAddingStatus, int rating, User cookieOwner) {
+        this (0, name, description, fileData, cookieAddingStatus, rating, cookieOwner);
     }
 
     public int getId() {
@@ -84,12 +81,12 @@ public class Cookie {
         this.rating = rating;
     }
 
-    public int getUserId() {
-        return userId;
+    public User getCookieOwner() {
+        return cookieOwner;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setCookieOwner(User cookieOwner) {
+        this.cookieOwner = cookieOwner;
     }
 
     @Override
@@ -99,17 +96,16 @@ public class Cookie {
         Cookie cookie = (Cookie) o;
         return getId() == cookie.getId() &&
                 getRating() == cookie.getRating() &&
-                getUserId() == cookie.getUserId() &&
                 Objects.equals(getName(), cookie.getName()) &&
                 Objects.equals(getDescription(), cookie.getDescription()) &&
                 Arrays.equals(getFileData(), cookie.getFileData()) &&
-                getCookieAddingStatus() == cookie.getCookieAddingStatus();
+                getCookieAddingStatus() == cookie.getCookieAddingStatus() &&
+                Objects.equals(getCookieOwner(), cookie.getCookieOwner());
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(getId(), getName(), getDescription(), getCookieAddingStatus(),
-                getRating(), getUserId());
+        int result = Objects.hash(getId(), getName(), getDescription(), getCookieAddingStatus(), getRating(), getCookieOwner());
         result = 31 * result + Arrays.hashCode(getFileData());
         return result;
     }
