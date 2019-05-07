@@ -1,4 +1,4 @@
-package net.cookiespoll.user;
+package net.cookiespoll.model;
 
 
 import java.util.Objects;

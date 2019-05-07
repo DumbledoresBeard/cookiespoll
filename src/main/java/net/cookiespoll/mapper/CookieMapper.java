@@ -2,7 +2,6 @@ package net.cookiespoll.mapper;
 
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
-import net.cookiespoll.user.User;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
@@ -12,14 +11,15 @@ import java.util.List;
 @Component
 public interface CookieMapper {
 
-    @Insert("INSERT INTO cookie (name, description, file_data, cookie_adding_status, rating, user_id) VALUES "
-            + "( #{cookie.name}, #{cookie.description}, #{cookie.fileData}, #{cookie.cookieAddingStatus}," +
+    @Insert("INSERT INTO cookie (name, description, file_data, cookie_adding_status, rating, user_id) " +
+            "VALUES ( #{cookie.name}, #{cookie.description}, #{cookie.fileData}, #{cookie.cookieAddingStatus}," +
             " #{cookie.rating}, #{userId})")
     @Options(useGeneratedKeys = true, keyProperty = "cookie.id")
     Integer insert(@Param("cookie") Cookie cookie, @Param("userId") Integer userId);
 
     @Select({"<script>",
-            "SELECT id, name, description, file_data, cookie_adding_status, rating, user_id FROM cookie",
+            "SELECT id, name, description, file_data, cookie_adding_status, rating, user_id " +
+            "FROM cookie",
             "<where>" +
                     "<if test='name != null'> " +
                     "AND name like #{name}",
@@ -35,9 +35,9 @@ public interface CookieMapper {
                     "</if>",
                     "<if test='userId != null '> " +
                     "AND user_id=#{userId}",
-                    "</if>",
-                     "</where>" +
-                    "</script>"})
+                    "<+/if>",
+            "</where>" +
+            "</script>"})
     @Results({
             @Result(property = "id", column = "id", javaType = Integer.class),
             @Result(property = "name", column = "name", javaType = String.class),
@@ -53,7 +53,8 @@ public interface CookieMapper {
                             @Param("cookieAddingStatus") CookieAddingStatus cookieAddingStatus,
                             @Param("rating") Integer rating, @Param("userId") Integer userId);
 
-    @Select("SELECT id, name, description, file_data, cookie_adding_status, rating, user_id FROM cookie" +
+    @Select("SELECT id, name, description, file_data, cookie_adding_status, rating, user_id " +
+            "FROM cookie " +
             "WHERE id = #{id}")
     @Results({
             @Result(property = "id", column = "id", javaType = Integer.class),
@@ -68,7 +69,8 @@ public interface CookieMapper {
     })
     Cookie getById (Integer id);
 
-    @Update("UPDATE cookie SET name = #{name}, description = #{description}, file_data = #{fileData}," +
+    @Update("UPDATE cookie " +
+            "SET name = #{name}, description = #{description}, file_data = #{fileData}," +
             "cookie_adding_status = #{cookieAddingStatus}, rating = #{rating}, user_id = #{userId}" +
             " WHERE id = #{id} ")
     void update(@Param("cookie") Cookie cookie, @Param("userId") Integer userId);

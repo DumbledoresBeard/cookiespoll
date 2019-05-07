@@ -6,7 +6,7 @@ import net.cookiespoll.dto.CookiesByParameterRequest;
 import net.cookiespoll.dto.UpdateCookieRequest;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
-import net.cookiespoll.user.User;
+import net.cookiespoll.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class CookieService {
     }
 
     public Cookie insert(AddCookieRequest addCookieRequest, MultipartFile multipartFile, User cookieOwner)
-            throws IOException {
+                        throws IOException {
        int rating = 0;
 
        LOGGER.info("Set rating={} and cookieAddingStatus={} to cookie ", rating, CookieAddingStatus.WAITING);
@@ -39,7 +39,6 @@ public class CookieService {
 
 
     public List<Cookie> getByParam(CookiesByParameterRequest cookiesByParameterRequest) {
-
         return cookieDao.getByParam(cookiesByParameterRequest);
     }
 
@@ -49,11 +48,9 @@ public class CookieService {
                 updateCookieRequest.getName(), updateCookieRequest.getDescription(),
                 updateCookieRequest.getFileData(), updateCookieRequest.getApprovalStatus(),
                 updateCookieRequest.getRating(), updateCookieRequest.getCookieOwner()));
-
     }
 
     public Cookie getById(Integer id) {
-
         return cookieDao.getById(id);
     }
 }

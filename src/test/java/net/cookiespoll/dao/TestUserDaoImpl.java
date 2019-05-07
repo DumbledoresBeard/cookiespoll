@@ -2,8 +2,8 @@ package net.cookiespoll.dao;
 
 import net.cookiespoll.daoimpl.UserDaoImpl;
 import net.cookiespoll.mapper.UserMapper;
-import net.cookiespoll.user.User;
-import net.cookiespoll.user.Role;
+import net.cookiespoll.model.Role;
+import net.cookiespoll.model.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +35,7 @@ public class TestUserDaoImpl {
     @Test
     public void testUserDaoGetUserById () {
         when(userMapper.getUserById(id)).thenReturn(userAdmin);
+
         User resultUser = userDaoImpl.getById(id);
 
         Assert.assertEquals(userAdmin.getId(), resultUser.getId());

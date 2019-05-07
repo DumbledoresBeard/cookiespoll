@@ -5,8 +5,8 @@ import net.cookiespoll.dto.CookiesByParameterRequest;
 import net.cookiespoll.mapper.CookieMapper;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
-import net.cookiespoll.user.Role;
-import net.cookiespoll.user.User;
+import net.cookiespoll.model.Role;
+import net.cookiespoll.model.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,9 +19,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestCookieDaoImpl {
@@ -43,6 +41,7 @@ public class TestCookieDaoImpl {
     @Test
     public void testCookieDaoInsert() {
         when(cookieMapper.insert(cookie, cookieOwner.getId())).thenReturn(1);
+
         Cookie resultCookie = cookieDaoImpl.insert(cookie);
 
         Assert.assertEquals (1, resultCookie.getId());
@@ -54,13 +53,14 @@ public class TestCookieDaoImpl {
         Assert.assertEquals(cookie.getCookieOwner(), resultCookie.getCookieOwner());
 
         verify(cookieMapper).insert(cookie, cookieOwner.getId());
-
     }
 
     @Test
     public void testCookieDaoUpdate () {
         doNothing().when(cookieMapper).update(cookie, cookieOwner.getId());
+
         Cookie updatedCookie = cookieDaoImpl.update(cookie);
+
         verify(cookieMapper).update(cookie, cookieOwner.getId());
     }
 
@@ -75,8 +75,7 @@ public class TestCookieDaoImpl {
 
         when(cookieMapper.getByParam(cookiesByParameterRequest.getName(), cookiesByParameterRequest.getDescription(),
                                     cookiesByParameterRequest.getCookieAddingStatus(), cookiesByParameterRequest.getRating(),
-                                    cookiesByParameterRequest.getUserId()))
-                .thenReturn(cookies);
+                                    cookiesByParameterRequest.getUserId())).thenReturn(cookies);
 
         List<Cookie> resultList = cookieDaoImpl.getByParam(cookiesByParameterRequest);
 

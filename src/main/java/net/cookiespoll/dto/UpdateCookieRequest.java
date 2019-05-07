@@ -1,7 +1,7 @@
 package net.cookiespoll.dto;
 
 import net.cookiespoll.model.CookieAddingStatus;
-import net.cookiespoll.user.User;
+import net.cookiespoll.model.User;
 
 public class UpdateCookieRequest {
     private int id;
@@ -73,9 +73,7 @@ public class UpdateCookieRequest {
         this.rating = rating;
     }
 
-    public User getCookieOwner() {
-        return cookieOwner;
-    }
+    public User getCookieOwner() { return cookieOwner; }
 
     public void setCookieOwner(User cookieOwner) {
         this.cookieOwner = cookieOwner;

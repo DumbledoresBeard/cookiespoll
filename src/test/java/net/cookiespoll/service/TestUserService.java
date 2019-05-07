@@ -1,8 +1,8 @@
 package net.cookiespoll.service;
 
 import net.cookiespoll.daoimpl.UserDaoImpl;
-import net.cookiespoll.user.Role;
-import net.cookiespoll.user.User;
+import net.cookiespoll.model.Role;
+import net.cookiespoll.model.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +39,6 @@ public class TestUserService {
         Assert.assertEquals(admin, resultRole);
 
         verify(userDao).getById(id);
-
     }
 
 }

@@ -2,8 +2,8 @@ package net.cookiespoll.mapper;
 
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
-import net.cookiespoll.user.Role;
-import net.cookiespoll.user.User;
+import net.cookiespoll.model.Role;
+import net.cookiespoll.model.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,9 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestCookieMapper {
@@ -39,7 +37,9 @@ public class TestCookieMapper {
     @Test
     public void testCookieMapperInsert() {
         when(cookieMapper.insert(cookie, cookieOwner.getId())).thenReturn(1);
+
         assert cookieMapper.insert(cookie, cookieOwner.getId()) == 1;
+
         verify(cookieMapper).insert(cookie, cookieOwner.getId());
 
     }
@@ -47,7 +47,9 @@ public class TestCookieMapper {
     @Test
     public void testCookieMapperUpdate () {
         doNothing().when(cookieMapper).update(cookie, cookieOwner.getId());
+
         cookieMapper.update(cookie, cookieOwner.getId());
+
         verify(cookieMapper).update(cookie, cookieOwner.getId());
     }
 
@@ -55,6 +57,7 @@ public class TestCookieMapper {
     public void testCookieMapperGetByParam () {
         List<Cookie> cookies = new ArrayList<>();
         cookies.add(cookie);
+
         when(cookieMapper.getByParam("cookie", "tasty cookie", CookieAddingStatus.WAITING,
                 0, 1)).thenReturn(cookies);
 
@@ -67,7 +70,6 @@ public class TestCookieMapper {
 
     @Test
     public void testCookieMapperGetById () {
-
         when(cookieMapper.getById(1)).thenReturn(cookie);
 
         Assert.assertEquals(cookieMapper.getById(1).getId(), cookie.getId());

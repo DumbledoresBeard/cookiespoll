@@ -1,6 +1,6 @@
 package net.cookiespoll.dao;
 
-import net.cookiespoll.user.User;
+import net.cookiespoll.model.User;
 
 public interface UserDao {
 

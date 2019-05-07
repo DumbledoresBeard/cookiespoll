@@ -1,24 +1,24 @@
 package net.cookiespoll.service;
+
 import net.cookiespoll.daoimpl.CookieDaoImpl;
 import net.cookiespoll.dto.AddCookieRequest;
 import net.cookiespoll.dto.CookiesByParameterRequest;
 import net.cookiespoll.dto.UpdateCookieRequest;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
-import net.cookiespoll.user.Role;
-import net.cookiespoll.user.User;
+import net.cookiespoll.model.Role;
+import net.cookiespoll.model.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.mock.web.MockMultipartFile;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,8 +53,8 @@ public class TestCookieService {
 
     @Test
     public void testCookieDaoInsert() throws IOException {
-
         when(cookieDao.insert(cookie)).thenReturn(cookieWithId);
+
         Cookie resultCookie = cookieService.insert(addCookieRequest, mockMultipartFile, cookieOwner);
 
         Assert.assertEquals(1, resultCookie.getId());
@@ -66,14 +66,12 @@ public class TestCookieService {
         Assert.assertEquals(1, resultCookie.getCookieOwner().getId());
 
         verify(cookieDao).insert(cookie);
-
     }
 
     @Test
     public void testGetCookiesByParam () {
         CookiesByParameterRequest cookiesByParameterRequest = new CookiesByParameterRequest(1, "name",
                 "description", CookieAddingStatus.WAITING, 0);
-
         List<Cookie> cookies = new ArrayList<>();
         cookies.add(cookieWithId);
         cookies.add(cookieWith2Id);
@@ -101,7 +99,6 @@ public class TestCookieService {
         Assert.assertEquals(resultCookieList.get(1).getCookieOwner(), cookieWith2Id.getCookieOwner());
 
         verify(cookieDao).getByParam(cookiesByParameterRequest);
-
     }
 
     @Test
@@ -115,7 +112,6 @@ public class TestCookieService {
         cookieService.update(updateCookieRequest);
 
         verify(cookieDao).update(cookieWithId);
-
     }
 
     @Test

@@ -1,7 +1,5 @@
 package net.cookiespoll.model;
 
-import net.cookiespoll.user.User;
-
 import java.util.Arrays;
 import java.util.Objects;
 
