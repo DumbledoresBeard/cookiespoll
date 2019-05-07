@@ -74,10 +74,7 @@ public class CookiesController {
             LOGGER.info("Starting processing request for getting cookies by parameters {} ",
                         cookiesByParameterRequest);
 
-            return cookieService.getByParam(cookiesByParameterRequest.getName(),
-                    cookiesByParameterRequest.getDescription(),
-                    cookiesByParameterRequest.getCookieAddingStatus(),
-                    cookiesByParameterRequest.getRating(), cookiesByParameterRequest.getUserId());
+            return cookieService.getByParam(cookiesByParameterRequest);
 
     }
 

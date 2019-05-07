@@ -6,6 +6,8 @@ import net.cookiespoll.exception.ControllerExceptionHandler;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.service.CookieService;
+import net.cookiespoll.user.Role;
+import net.cookiespoll.user.User;
 import net.cookiespoll.validation.FileValidator;
 import org.junit.Assert;
 import org.junit.Before;
@@ -40,8 +42,9 @@ public class TestCookieController {
     private FileValidator fileValidator = new FileValidator();
     private CookiesController cookiesController;
     private byte [] byteArray = "Photo".getBytes();
+    private User cookieOwner = new User(1, "login", "name", Role.USER);
     private Cookie cookie = new Cookie(1, "cookie", "tasty cookie", byteArray,
-            CookieAddingStatus.WAITING, 0, 1);
+            CookieAddingStatus.WAITING, 0, cookieOwner);
     private MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "testcookie",
             "image/jpg", byteArray);
     private MockMultipartFile addCookieDtoRequest = new MockMultipartFile("data", "",
@@ -60,9 +63,9 @@ public class TestCookieController {
     private List<Cookie> createCookiesList () {
         List<Cookie> cookies = new ArrayList<>();
         Cookie cookieWith1Id = new Cookie(1, "cookie", "tasty cookie", new byte[2],
-                CookieAddingStatus.WAITING, 0, 1);
+                CookieAddingStatus.WAITING, 0, cookieOwner);
         Cookie cookieWith2Id = new Cookie(2,"name", "description", new byte[2],
-                CookieAddingStatus.WAITING, 0, 1);
+                CookieAddingStatus.WAITING, 0, cookieOwner);
         cookies.add(cookieWith1Id);
         cookies.add(cookieWith2Id);
         return cookies;
@@ -71,7 +74,7 @@ public class TestCookieController {
     @Test
     public void testAddCookieValidRequest() throws Exception {
         int userId = 1;
-        when(cookieService.insert((any(AddCookieRequest.class)), any(MockMultipartFile.class), eq(userId)))
+        when(cookieService.insert((any(AddCookieRequest.class)), any(MockMultipartFile.class), any(User.class)))
                 .thenReturn(cookie);
 
         String response = mockMvc.perform(MockMvcRequestBuilders.multipart("/cookies")
@@ -81,7 +84,7 @@ public class TestCookieController {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        verify(cookieService).insert((any(AddCookieRequest.class)), any(MockMultipartFile.class), eq(userId));
+        verify(cookieService).insert((any(AddCookieRequest.class)), any(MockMultipartFile.class), any(User.class));
 
         AddCookieResponse addCookieResponse = new ObjectMapper().readValue(response, AddCookieResponse.class);
 
@@ -225,16 +228,16 @@ public class TestCookieController {
         List<Cookie> cookies = createCookiesList();
         String name = "cookie";
 
-        when(cookieService.getByParam(name, null, null, null,
-                null)).thenReturn(cookies);
+        when(cookieService.getByParam(any(CookiesByParameterRequest.class))).thenReturn(cookies);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
                 .param("name", name)
         ).andExpect(status().isOk())
-        .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"userId\":1},{\"id\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"userId\":1}]"));
+        .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}},{\"id\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}}]"));
 
-        verify(cookieService).getByParam(name, null, null, null,
-                null);
+        verify(cookieService).getByParam(any(CookiesByParameterRequest.class));
+
+        System.out.println();
 
     }
 
@@ -243,16 +246,14 @@ public class TestCookieController {
         List<Cookie> cookies = createCookiesList();
         String description = "tasty cookie";
 
-        when(cookieService.getByParam(null, description, null, null,
-                null)).thenReturn(cookies);
+        when(cookieService.getByParam(any(CookiesByParameterRequest.class))).thenReturn(cookies);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
                 .param("description", description)
         ).andExpect(status().isOk())
-                .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"userId\":1},{\"id\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"userId\":1}]"));
+                .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}},{\"id\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}}]"));
 
-        verify(cookieService).getByParam(null, description, null, null,
-                null);
+        verify(cookieService).getByParam(any(CookiesByParameterRequest.class));
     }
 
     @Test
@@ -260,16 +261,14 @@ public class TestCookieController {
         List<Cookie> cookies = createCookiesList();
         CookieAddingStatus cookieAddingStatus = CookieAddingStatus.WAITING;
 
-        when(cookieService.getByParam(null, null, cookieAddingStatus, null,
-                null)).thenReturn(cookies);
+        when(cookieService.getByParam(any(CookiesByParameterRequest.class))).thenReturn(cookies);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
                 .param("cookieAddingStatus", cookieAddingStatus.toString())
         ).andExpect(status().isOk())
-                .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"userId\":1},{\"id\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"userId\":1}]"));
+                .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}},{\"id\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}}]"));
 
-        verify(cookieService).getByParam(null, null, cookieAddingStatus, null,
-                null);
+        verify(cookieService).getByParam(any(CookiesByParameterRequest.class));
     }
 
     @Test
@@ -277,76 +276,66 @@ public class TestCookieController {
         List<Cookie> cookies = createCookiesList();
         Integer rating = 0;
 
-        when(cookieService.getByParam(null, null, null, rating,
-                null)).thenReturn(cookies);
+        when(cookieService.getByParam(any(CookiesByParameterRequest.class))).thenReturn(cookies);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
                 .param("rating", rating.toString())
         ).andExpect(status().isOk())
-                .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"userId\":1},{\"id\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"userId\":1}]"));
+                .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}},{\"id\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}}]"));
 
-        verify(cookieService).getByParam(null, null, null,
-                rating, null);
+        verify(cookieService).getByParam(any(CookiesByParameterRequest.class));
     }
 
     @Test
-    public void testGetCookiesbByParamUserId() throws Exception {
+    public void testGetCookiesByParamUserId() throws Exception {
         List<Cookie> cookies = createCookiesList();
         Integer userId = 1;
 
-        when(cookieService.getByParam(null, null, null, null,
-                userId)).thenReturn(cookies);
+        when(cookieService.getByParam(any(CookiesByParameterRequest.class))).thenReturn(cookies);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
                .param("userId", userId.toString())
         ).andExpect(status().isOk())
-                .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"userId\":1},{\"id\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"userId\":1}]"));
+                .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}},{\"id\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}}]"));
 
-        verify(cookieService).getByParam(null, null, null, null,
-                userId);
+        verify(cookieService).getByParam(any(CookiesByParameterRequest.class));
     }
 
     @Test
     public void testGetCookiesByParamAllParams() throws Exception {
         List<Cookie> cookies = new ArrayList<>();
         Cookie cookieWith1Id = new Cookie(1, "cookie", "tasty cookie", new byte[2],
-                CookieAddingStatus.WAITING, 0, 1);
+                CookieAddingStatus.WAITING, 0, cookieOwner);
         cookies.add(cookieWith1Id);
-        String name = "cookie";
-        String description = "tasty cookie";
-        CookieAddingStatus cookieAddingStatus = CookieAddingStatus.WAITING;
-        Integer rating = 0;
-        Integer userId = 1;
+        CookiesByParameterRequest cookiesByParameterRequest = new CookiesByParameterRequest(1,"cookie",
+                "tasty cookie", CookieAddingStatus.WAITING, 0 );
 
-        when(cookieService.getByParam(name, description, cookieAddingStatus, rating, userId))
+        when(cookieService.getByParam(any(CookiesByParameterRequest.class)))
                 .thenReturn(cookies);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
-               .param("name", name)
-                .param("description", description)
-                .param("cookieAddingStatus", cookieAddingStatus.toString())
-                .param("rating", rating.toString())
-                .param("userId", userId.toString())
+               .param("name", cookiesByParameterRequest.getName())
+                .param("description", cookiesByParameterRequest.getDescription())
+                .param("cookieAddingStatus", cookiesByParameterRequest.getCookieAddingStatus().toString())
+                .param("rating", cookiesByParameterRequest.getRating().toString())
+                .param("userId", cookiesByParameterRequest.getUserId().toString())
         ).andExpect(status().isOk())
-                .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"userId\":1}]"));
+                .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}}]"));
 
-        verify(cookieService).getByParam(name, description, cookieAddingStatus, rating,
-                userId);
+        verify(cookieService).getByParam(any(CookiesByParameterRequest.class));
     }
 
     @Test
     public void testGetCookiesByParamNoParams() throws Exception {
         List<Cookie> cookies = createCookiesList();
 
-        when(cookieService.getByParam(null, null, null, null,
-                null)).thenReturn(cookies);
+        when(cookieService.getByParam(any(CookiesByParameterRequest.class))).thenReturn(cookies);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
         ).andExpect(status().isOk())
-                .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"userId\":1},{\"id\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"userId\":1}]"));
+                .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}},{\"id\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}}]"));
 
-        verify(cookieService).getByParam(null, null, null, null,
-                null);
+        verify(cookieService).getByParam(any(CookiesByParameterRequest.class));
     }
 
     @Test
@@ -399,7 +388,7 @@ public class TestCookieController {
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
                 .param("cookieAddingStatus", "a")
         ).andExpect(status().is(400))
-                .andExpect(content().string("{\"errors\":[{\"fieldName\":\"cookieAddingStatus\",\"message\":\"Failed to convert value of type 'java.lang.String[]' to required type 'net.cookiespoll.model.CookieAddingStatus'; nested exception is org.springframework.core.convert.ConversionFailedException: Failed to convert from type [java.lang.String] to type [net.cookiespoll.model.CookieAddingStatus] for value 'a'; nested exception is java.lang.IllegalArgumentException: No enum constant net.cookiespoll.model.CookieAddingStatus.a\"}]}"));
+                .andExpect(content().string("{\"errors\":[{\"fieldName\":\"cookieAddingStatus\",\"message\":\"Failed to convert property value of type 'java.lang.String' to required type 'net.cookiespoll.model.CookieAddingStatus' for property 'cookieAddingStatus'; nested exception is org.springframework.core.convert.ConversionFailedException: Failed to convert from type [java.lang.String] to type [net.cookiespoll.model.CookieAddingStatus] for value 'a'; nested exception is java.lang.IllegalArgumentException: No enum constant net.cookiespoll.model.CookieAddingStatus.a\"}]}"));
     }
 
     @Test
@@ -448,7 +437,7 @@ public class TestCookieController {
         Assert.assertArrayEquals(cookie.getFileData(), resultCookie.getFileData());
         Assert.assertEquals(cookie.getCookieAddingStatus(), resultCookie.getCookieAddingStatus());
         Assert.assertEquals(cookie.getRating(), resultCookie.getRating());
-        Assert.assertEquals(cookie.getId(), resultCookie.getUserId());
+        Assert.assertEquals(cookie.getCookieOwner(), resultCookie.getCookieOwner());
 
     }
 
@@ -457,11 +446,11 @@ public class TestCookieController {
     public void testUpdateCookie () throws Exception {
         UpdateCookieRequest updateCookieRequest = new UpdateCookieRequest(
                 1, "cookie", "tasty cookie", byteArray,
-                CookieAddingStatus.APPROVED, 0, 1);
+                CookieAddingStatus.APPROVED, 0, cookieOwner);
         String request = gson.toJson(updateCookieRequest);
         UpdateCookieResponse updateCookieResponse = new UpdateCookieResponse(
                 1, "cookie", "tasty cookie", byteArray,
-                CookieAddingStatus.APPROVED, 0, 1);
+                CookieAddingStatus.APPROVED, 0, cookieOwner);
 
         when(cookieService.update(any(UpdateCookieRequest.class))).thenReturn(cookie);
 
@@ -485,6 +474,7 @@ public class TestCookieController {
         Assert.assertEquals(updateCookieResponse.getCookieAddingStatus(),
                                     resultResponse.getCookieAddingStatus());
         Assert.assertEquals(updateCookieResponse.getRating(), resultResponse.getRating());
+        Assert.assertEquals(updateCookieRequest.getCookieOwner(), resultResponse.getCookieOwner());
 
     }
 

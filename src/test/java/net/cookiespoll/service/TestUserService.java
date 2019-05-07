@@ -29,8 +29,7 @@ public class TestUserService {
     @Test
     public void testGetUserRole() {
         int id = 1;
-        User userAdmin = new User (1, "login", "password", "name", "lastname",
-                Role.ADMIN);
+        User userAdmin = new User (1, "login", "name", Role.ADMIN);
         Role admin = Role.ADMIN;
 
         when(userDao.getById(id)).thenReturn(userAdmin);

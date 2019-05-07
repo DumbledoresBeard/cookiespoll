@@ -1,5 +1,6 @@
 package net.cookiespoll.dao;
 
+import net.cookiespoll.dto.CookiesByParameterRequest;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.user.User;
@@ -13,8 +14,7 @@ public interface CookieDao {
 
     Cookie getById(Integer id);
 
-    List<Cookie> getByParam(String name, String description,
-                                   CookieAddingStatus cookieAddingStatus, Integer rating, Integer userId);
+    List<Cookie> getByParam(CookiesByParameterRequest cookiesByParameterRequest);
 
     Cookie update(Cookie cookie);
 

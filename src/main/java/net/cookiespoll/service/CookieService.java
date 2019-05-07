@@ -2,6 +2,7 @@ package net.cookiespoll.service;
 
 import net.cookiespoll.dao.CookieDao;
 import net.cookiespoll.dto.AddCookieRequest;
+import net.cookiespoll.dto.CookiesByParameterRequest;
 import net.cookiespoll.dto.UpdateCookieRequest;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
@@ -37,10 +38,9 @@ public class CookieService {
     }
 
 
-    public List<Cookie> getByParam(String name, String description,
-                                   CookieAddingStatus cookieAddingStatus, Integer rating, Integer userId) {
+    public List<Cookie> getByParam(CookiesByParameterRequest cookiesByParameterRequest) {
 
-        return cookieDao.getByParam(name, description, cookieAddingStatus, rating, userId);
+        return cookieDao.getByParam(cookiesByParameterRequest);
     }
 
 

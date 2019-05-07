@@ -25,8 +25,7 @@ public class TestUserDaoImpl {
     UserDaoImpl userDaoImpl;
 
     int id = 1;
-    User userAdmin = new User(1, "login", "password", "name", "lastname",
-            Role.ADMIN);
+    User userAdmin = new User(1, "login", "name", Role.ADMIN);
 
     @Before
     public void setUp() throws Exception {
@@ -40,9 +39,7 @@ public class TestUserDaoImpl {
 
         Assert.assertEquals(userAdmin.getId(), resultUser.getId());
         Assert.assertEquals(userAdmin.getLogin(), resultUser.getLogin());
-        Assert.assertEquals(userAdmin.getPassword(), resultUser.getPassword());
-        Assert.assertEquals(userAdmin.getFirstName(), resultUser.getFirstName());
-        Assert.assertEquals(userAdmin.getLastName(), resultUser.getLastName());
+        Assert.assertEquals(userAdmin.getName(), resultUser.getName());
         Assert.assertEquals(userAdmin.getRole(), resultUser.getRole());
 
         verify(userMapper).getUserById(id);

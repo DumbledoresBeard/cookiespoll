@@ -24,6 +24,8 @@ public class CookiesByParameterRequest {
     @Min(value = 0, message = "Rating can not be less than 0")
     private Integer rating;
 
+    public CookiesByParameterRequest() {
+    }
 
     public CookiesByParameterRequest(Integer userId, String name, String description,
                                      CookieAddingStatus cookieAddingStatus, Integer rating) {

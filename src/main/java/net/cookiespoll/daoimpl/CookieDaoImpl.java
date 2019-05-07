@@ -1,6 +1,7 @@
 package net.cookiespoll.daoimpl;
 
 import net.cookiespoll.dao.CookieDao;
+import net.cookiespoll.dto.CookiesByParameterRequest;
 import net.cookiespoll.mapper.CookieMapper;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
@@ -39,10 +40,11 @@ public class CookieDaoImpl implements CookieDao {
     }
 
     @Override
-    public List<Cookie> getByParam(String name, String description, CookieAddingStatus cookieAddingStatus,
-                                   Integer rating, Integer userId) {
-        LOGGER.info("Extract list of cookies by given parameters {} ", cookieAddingStatus);
-        return cookieMapper.getByParam(name, description, cookieAddingStatus, rating, userId);
+    public List<Cookie> getByParam(CookiesByParameterRequest cookiesByParameterRequest) {
+        LOGGER.info("Extract list of cookies by given parameters {} ", cookiesByParameterRequest);
+        return cookieMapper.getByParam(cookiesByParameterRequest.getName(), cookiesByParameterRequest.getDescription(),
+                                        cookiesByParameterRequest.getCookieAddingStatus(), cookiesByParameterRequest.getRating(),
+                                        cookiesByParameterRequest.getUserId());
     }
 
     @Override

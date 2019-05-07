@@ -9,8 +9,7 @@ import org.springframework.stereotype.Component;
 public interface UserMapper {
 
     @Insert("INSERT INTO users (login, password, first_name, last_name, role) VALUES "
-            + "( #{user.login}, #{user.password}, #{user.fistName}, #{user.lastName}," +
-            " #{user.role})")
+            + "( #{user.login}, #{user.name}, #{user.role})")
     @Options(useGeneratedKeys = true, keyProperty = "user.id")
     Integer insert(@Param("user") User user);
 
@@ -19,9 +18,7 @@ public interface UserMapper {
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "login", column = "login", javaType = String.class),
-            @Result(property = "password", column = "password", javaType = String.class),
-            @Result(property = "firstName", column = "first_name", javaType = String.class),
-            @Result(property = "lastName", column = "last_name", javaType = String.class),
+            @Result(property = "name", column = "first_name", javaType = String.class),
             @Result(property = "role", column = "role", javaType = Role.class)
     })
 

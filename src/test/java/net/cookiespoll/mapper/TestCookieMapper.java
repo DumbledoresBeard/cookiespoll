@@ -2,6 +2,8 @@ package net.cookiespoll.mapper;
 
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
+import net.cookiespoll.user.Role;
+import net.cookiespoll.user.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,8 +25,9 @@ public class TestCookieMapper {
     @Mock
     CookieMapper cookieMapper;
 
+    private User cookieOwner = new User(1, "login", "name", Role.USER);
     Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING,
-                                0, 1);
+                                0, cookieOwner);
 
 
     @Before
@@ -35,17 +38,17 @@ public class TestCookieMapper {
 
     @Test
     public void testCookieMapperInsert() {
-        when(cookieMapper.insert(cookie)).thenReturn(1);
-        assert cookieMapper.insert(cookie) == 1;
-        verify(cookieMapper).insert(cookie);
+        when(cookieMapper.insert(cookie, cookieOwner.getId())).thenReturn(1);
+        assert cookieMapper.insert(cookie, cookieOwner.getId()) == 1;
+        verify(cookieMapper).insert(cookie, cookieOwner.getId());
 
     }
 
     @Test
     public void testCookieMapperUpdate () {
-        doNothing().when(cookieMapper).update(cookie);
-        cookieMapper.insert(cookie);
-        verify(cookieMapper).update(cookie);
+        doNothing().when(cookieMapper).update(cookie, cookieOwner.getId());
+        cookieMapper.update(cookie, cookieOwner.getId());
+        verify(cookieMapper).update(cookie, cookieOwner.getId());
     }
 
     @Test

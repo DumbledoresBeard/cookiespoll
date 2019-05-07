@@ -5,9 +5,7 @@ USE `cookiespoll`;
 CREATE TABLE users (
 id serial PRIMARY KEY,
 login VARCHAR (30) UNIQUE NOT NULL,
-password VARCHAR (150),
-first_name VARCHAR (20),
-last_name VARCHAR (30),
+name VARCHAR (20),
 role VARCHAR (20)
 )
 

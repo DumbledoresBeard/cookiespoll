@@ -18,8 +18,7 @@ public class TestUserMapper {
     @Mock
     UserMapper userMapper;
 
-    User userAdmin = new User (1, "login", "password", "name", "lastname",
-            Role.ADMIN);
+    User userAdmin = new User (1, "login", "name", Role.ADMIN);
     int id = 1;
 
     @Before

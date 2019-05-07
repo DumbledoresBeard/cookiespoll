@@ -46,7 +46,8 @@ public interface CookieMapper {
             @Result(property = "cookieAddingStatus", column = "cookie_adding_status", javaType =
                     CookieAddingStatus.class),
             @Result(property = "rating", column = "rating", javaType = Integer.class),
-            @Result(property = "userId", column = "user_id", javaType = Integer.class),
+            @Result(property = "cookieOwner", column = "user_id", javaType = Integer.class,
+            one=@One(select = "net.cookiespoll.mapper.UserMapper.getUserById")),
     })
     List<Cookie> getByParam(@Param("name") String name, @Param("description") String description,
                             @Param("cookieAddingStatus") CookieAddingStatus cookieAddingStatus,
@@ -62,7 +63,8 @@ public interface CookieMapper {
             @Result(property = "cookieAddingStatus", column = "cookie_adding_status",
                     javaType = CookieAddingStatus.class),
             @Result(property = "rating", column = "rating", javaType = Integer.class),
-            @Result(property = "userId", column = "user_id", javaType = Integer.class),
+            @Result(property = "cookieOwner", column = "user_id", javaType = Integer.class,
+                    one=@One(select = "net.cookiespoll.mapper.UserMapper.getUserById")),
     })
     Cookie getById (Integer id);
 
