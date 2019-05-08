@@ -1,7 +1,7 @@
 package net.cookiespoll.dto;
 
 import net.cookiespoll.model.CookieAddingStatus;
-import net.cookiespoll.model.User;
+import net.cookiespoll.model.user.User;
 
 public class UpdateCookieRequest {
     private int id;

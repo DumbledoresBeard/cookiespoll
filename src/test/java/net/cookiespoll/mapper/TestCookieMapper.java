@@ -2,8 +2,8 @@ package net.cookiespoll.mapper;
 
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
-import net.cookiespoll.model.Role;
-import net.cookiespoll.model.User;
+import net.cookiespoll.model.user.Role;
+import net.cookiespoll.model.user.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,11 +46,11 @@ public class TestCookieMapper {
 
     @Test
     public void testCookieMapperUpdate () {
-        doNothing().when(cookieMapper).update(cookie, cookieOwner.getId());
+        doNothing().when(cookieMapper).update(cookie);
 
-        cookieMapper.update(cookie, cookieOwner.getId());
+        cookieMapper.update(cookie);
 
-        verify(cookieMapper).update(cookie, cookieOwner.getId());
+        verify(cookieMapper).update(cookie);
     }
 
     @Test

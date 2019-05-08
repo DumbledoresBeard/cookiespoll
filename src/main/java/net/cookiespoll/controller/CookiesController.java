@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiResponses;
 import net.cookiespoll.dto.*;
 import net.cookiespoll.exception.FileValidationException;
 import net.cookiespoll.model.Cookie;
-import net.cookiespoll.model.User;
+import net.cookiespoll.model.user.User;
 import net.cookiespoll.service.CookieService;
 import net.cookiespoll.validation.FileValidator;
 import org.slf4j.Logger;

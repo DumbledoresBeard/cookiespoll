@@ -53,7 +53,7 @@ public class CookieDaoImpl implements CookieDao {
     public Cookie update(Cookie cookie) {
         LOGGER.info("Update cookie {} ", cookie);
 
-        cookieMapper.update(cookie, cookie.getCookieOwner().getId());
+        cookieMapper.update(cookie);
 
         return cookie;
     }

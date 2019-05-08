@@ -1,7 +1,7 @@
 package net.cookiespoll.mapper;
 
-import net.cookiespoll.model.Role;
-import net.cookiespoll.model.User;
+import net.cookiespoll.model.user.Role;
+import net.cookiespoll.model.user.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

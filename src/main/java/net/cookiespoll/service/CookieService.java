@@ -6,7 +6,7 @@ import net.cookiespoll.dto.CookiesByParameterRequest;
 import net.cookiespoll.dto.UpdateCookieRequest;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
-import net.cookiespoll.model.User;
+import net.cookiespoll.model.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

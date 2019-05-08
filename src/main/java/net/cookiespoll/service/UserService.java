@@ -1,8 +1,8 @@
 package net.cookiespoll.service;
 
 import net.cookiespoll.dao.UserDao;
-import net.cookiespoll.model.Role;
-import net.cookiespoll.model.User;
+import net.cookiespoll.model.user.Role;
+import net.cookiespoll.model.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

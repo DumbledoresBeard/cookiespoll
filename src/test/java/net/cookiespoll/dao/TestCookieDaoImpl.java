@@ -5,8 +5,8 @@ import net.cookiespoll.dto.CookiesByParameterRequest;
 import net.cookiespoll.mapper.CookieMapper;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
-import net.cookiespoll.model.Role;
-import net.cookiespoll.model.User;
+import net.cookiespoll.model.user.Role;
+import net.cookiespoll.model.user.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,11 +57,11 @@ public class TestCookieDaoImpl {
 
     @Test
     public void testCookieDaoUpdate () {
-        doNothing().when(cookieMapper).update(cookie, cookieOwner.getId());
+        doNothing().when(cookieMapper).update(cookie);
 
         Cookie updatedCookie = cookieDaoImpl.update(cookie);
 
-        verify(cookieMapper).update(cookie, cookieOwner.getId());
+        verify(cookieMapper).update(cookie);
     }
 
     @Test

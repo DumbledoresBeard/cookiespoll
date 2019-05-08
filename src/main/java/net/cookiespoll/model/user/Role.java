@@ -1,4 +1,4 @@
-package net.cookiespoll.model;
+package net.cookiespoll.model.user;
 
 public enum Role {
 
