@@ -16,11 +16,13 @@ public class FileValidator {
         if (multipartFile == null) {
             throw new FileValidationException("File is null, please, upload a file");
         }
+
         if (multipartFile.isEmpty()) {
             throw new FileValidationException("File is empty, please, upload jpg, jpeg or png file");
         }
-        if (!(multipartFile.getContentType().equals(JPG_IMAGE) || multipartFile.getContentType().equals(JPEG_IMAGE)
-                || multipartFile.getContentType().equals(PNG_IMAGE))) {
+
+        if (!(JPG_IMAGE.equals(multipartFile.getContentType()) || JPEG_IMAGE.equals(multipartFile.getContentType())
+                || PNG_IMAGE.equals(multipartFile.getContentType()))) {
            throw new FileValidationException("File type is not supported, valid file types: jpg, jpeg or png");
         }
     }

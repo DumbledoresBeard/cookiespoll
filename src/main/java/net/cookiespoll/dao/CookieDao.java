@@ -1,15 +1,20 @@
 package net.cookiespoll.dao;
 
+import net.cookiespoll.dto.CookiesByParameterRequest;
 import net.cookiespoll.model.Cookie;
+
+import java.util.List;
 
 
 public interface CookieDao {
 
-    public Cookie insert (Cookie cookie);
+    Cookie insert(Cookie cookie);
 
-    public Cookie getCookieById (int id);
+    Cookie getById(Integer id);
 
-    public void updateCookie (Cookie cookie);
+    List<Cookie> getByParam(CookiesByParameterRequest cookiesByParameterRequest);
 
-    public void deleteCookie (Cookie cookie);
+    Cookie update(Cookie cookie);
+
+    void delete (Cookie cookie);
 }
