@@ -3,7 +3,6 @@ package net.cookiespoll.service;
 import net.cookiespoll.dao.CookieDao;
 import net.cookiespoll.dto.AddCookieRequest;
 import net.cookiespoll.dto.CookiesByParameterRequest;
-import net.cookiespoll.dto.UpdateCookieRequest;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.model.user.User;
@@ -49,13 +48,12 @@ public class CookieService {
         return cookieDao.getById(id);
     }
 
-
-    public List<Cookie> getUnratedCookiesByUserId (int userId) {
+    public List<Cookie> getUnratedByUserId(int userId) {
         return cookieDao.getUnratedCookiesByUserId(userId);
     }
 
     public Float countRating(Integer usersQuantity, Float cookieRatingSum) {
-        return (float)(cookieRatingSum / usersQuantity);
+        return (cookieRatingSum / usersQuantity);
     }
 
 

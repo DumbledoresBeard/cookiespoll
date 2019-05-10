@@ -134,7 +134,7 @@ public class TestCookieService {
 
         when(cookieDao.getUnratedCookiesByUserId(userId)).thenReturn(cookies);
 
-        List<Cookie> resultCookieList = cookieService.getUnratedCookiesByUserId(userId);
+        List<Cookie> resultCookieList = cookieService.getUnratedByUserId(userId);
 
         Assert.assertEquals(resultCookieList.get(0).getId(), cookieWithId.getId());
         Assert.assertEquals(resultCookieList.get(0).getName(), cookieWithId.getName());

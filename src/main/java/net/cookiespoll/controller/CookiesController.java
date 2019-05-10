@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import net.cookiespoll.dto.*;
+import net.cookiespoll.dto.mapper.DtoMapper;
 import net.cookiespoll.exception.CookieRateException;
 import net.cookiespoll.exception.FileValidationException;
 import net.cookiespoll.model.Cookie;
@@ -32,13 +33,15 @@ public class CookiesController {
     private CookieService cookieService;
     private FileValidator fileValidator;
     private CookieUserRatingService cookieUserRatingService;
+    private DtoMapper dtoMapper;
 
     @Autowired
     public CookiesController(CookieService cookieService, FileValidator fileValidator,
-                             CookieUserRatingService cookieUserRatingService) {
+                             CookieUserRatingService cookieUserRatingService, DtoMapper dtoMapper) {
         this.cookieService = cookieService;
         this.fileValidator = fileValidator;
         this.cookieUserRatingService = cookieUserRatingService;
+        this.dtoMapper = dtoMapper;
     }
 
     @ApiOperation(value = "Add new cookie to store in database", response = AddCookieResponse.class)
@@ -112,15 +115,7 @@ public class CookiesController {
 
         LOGGER.info("Starting processing request {} ", updateCookieRequest);
 
-        cookieService.update(new Cookie(updateCookieRequest.getId(), updateCookieRequest.getName(),
-                updateCookieRequest.getDescription(), updateCookieRequest.getFileData(),
-                updateCookieRequest.getApprovalStatus(), updateCookieRequest.getRating(),
-                updateCookieRequest.getCookieOwner()));
-
-        return new UpdateCookieResponse(updateCookieRequest.getId(),
-                updateCookieRequest.getName(), updateCookieRequest.getDescription(),
-                updateCookieRequest.getFileData(), updateCookieRequest.getApprovalStatus(),
-                updateCookieRequest.getRating(), updateCookieRequest.getCookieOwner());
+        return dtoMapper.convertCookieToDto(cookieService.update(dtoMapper.convertDtoToCookie(updateCookieRequest)));
     }
 
 
@@ -132,7 +127,7 @@ public class CookiesController {
     })
     @RequestMapping(value = "/cookies/poll", method = RequestMethod.POST)
     @ResponseBody
-    public Cookie rateCookie (@RequestBody @Valid RateCookieRequest rateCookieRequest) throws CookieRateException {
+    public RateCookieResponse rateCookie (@RequestBody @Valid RateCookieRequest rateCookieRequest) throws CookieRateException {
         int userId = 1; // temporary decision until getting userId from session will be implemented
 
         if (cookieUserRatingService.getRatingByUserAndCookie(userId, rateCookieRequest.getId()) != null) {
@@ -145,14 +140,11 @@ public class CookiesController {
 
         Integer usersQuantity = cookieUserRatingService.getUserQuantity(rateCookieRequest.getId());
 
-        Cookie cookie = new Cookie(rateCookieRequest.getId(), rateCookieRequest.getName(),
-                rateCookieRequest.getDescription(), rateCookieRequest.getFileData(),
-                rateCookieRequest.getApprovalStatus(), rateCookieRequest.getResultRating(),
-                rateCookieRequest.getCookieOwner());
+        Cookie cookie = dtoMapper.convertDtoToCookie(rateCookieRequest);
 
         cookie.setRating(cookieService.countRating(usersQuantity, cookieRatingSum));
 
-        return cookieService.update(cookie);
+        return new RateCookieResponse(cookieService.update(cookie), rateCookieRequest.getRating());
     }
 
     @ApiOperation(value = "Get cookies unrated yet by user", response = Cookie.class)
@@ -165,6 +157,6 @@ public class CookiesController {
     @ResponseBody
     public List<Cookie> getUnratedCookies () {
         int userId = 1; // temporary decision until getting userId from session will be implemented
-        return cookieService.getUnratedCookiesByUserId(userId);
+        return cookieService.getUnratedByUserId(userId);
     }
 }

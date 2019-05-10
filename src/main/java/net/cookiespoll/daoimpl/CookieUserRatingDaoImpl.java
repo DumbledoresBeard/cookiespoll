@@ -29,7 +29,7 @@ public class CookieUserRatingDaoImpl implements CookieUserRatingDao {
 
     @Override
     public Integer getRatingByUserAndCookie(Integer userId, Integer cookieId) {
-        LOGGER.info("Select cookie rating by cookieId and userId", userId, cookieId);
+        LOGGER.info("Select cookie rating by cookieId and userId {}, {} ", userId, cookieId);
 
         return cookieUserRatingMapper.getRatingByUserAndCookie(userId, cookieId);
     }
