@@ -105,7 +105,7 @@ public class CookiesController {
         /* TODO if(!cookieService.getUserRole(id).equals(Role.ADMIN))
         { return new ArrayList<Cookie>() ; }*/
 
-        LOGGER.info("Starting processing request {} " + updateCookieRequest);
+        LOGGER.info("Starting processing request {} ", updateCookieRequest);
 
         cookieService.update(updateCookieRequest);
 
