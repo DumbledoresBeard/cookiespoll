@@ -1,5 +1,6 @@
 package net.cookiespoll.controller;
 
+import net.cookiespoll.exception.CookieRateException;
 import net.cookiespoll.exception.FileValidationException;
 import net.cookiespoll.model.ErrorResponse;
 import org.slf4j.Logger;

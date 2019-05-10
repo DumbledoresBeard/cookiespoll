@@ -3,6 +3,7 @@ package net.cookiespoll.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import net.cookiespoll.dto.*;
+import net.cookiespoll.dto.mapper.DtoMapper;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.model.user.Role;
@@ -41,6 +42,7 @@ public class TestCookieController {
     private MockMvc mockMvc;
     private CookieService cookieService = mock(CookieService.class);
     private FileValidator fileValidator = new FileValidator();
+    private DtoMapper dtoMapper = new DtoMapper();
     private CookieUserRatingService cookieUserRatingService = mock(CookieUserRatingService.class);
     private CookiesController cookiesController;
     private byte [] byteArray = "Photo".getBytes();
@@ -58,7 +60,7 @@ public class TestCookieController {
     @Before
     public void init() {
         cookiesController = new CookiesController(cookieService, fileValidator,
-                cookieUserRatingService);
+                cookieUserRatingService, dtoMapper);
         mockMvc = MockMvcBuilders.standaloneSetup(cookiesController).setControllerAdvice
                   (new ControllerExceptionHandler()).build();
         MockitoAnnotations.initMocks(this);

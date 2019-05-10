@@ -62,12 +62,7 @@ public class CookiesController {
         User user = new User();
         user.setId(1); // temporary decision until getting userId from session will be implemented
 
-        Cookie cookie = cookieService.insert(addCookieRequest, multipartFile, user);
-
-        LOGGER.info("Done");
-
-        return new AddCookieResponse(cookie.getId(), cookie.getName(), cookie.getDescription(),
-                                    cookie.getFileData(), cookie.getCookieAddingStatus());
+        return dtoMapper.convertCookieToAddCookieResponse(cookieService.insert(addCookieRequest, multipartFile, user));
     }
 
     @ApiOperation(value = "Get list of cookies by parameter", response = ArrayList.class)
@@ -115,7 +110,7 @@ public class CookiesController {
 
         LOGGER.info("Starting processing request {} ", updateCookieRequest);
 
-        return dtoMapper.convertCookieToDto(cookieService.update(dtoMapper.convertDtoToCookie(updateCookieRequest)));
+        return dtoMapper.convertCookieToUpdateResponse(cookieService.update(dtoMapper.convertDtoToCookie(updateCookieRequest)));
     }
 
 
@@ -157,6 +152,7 @@ public class CookiesController {
     @ResponseBody
     public List<Cookie> getUnratedCookies () {
         int userId = 1; // temporary decision until getting userId from session will be implemented
+
         return cookieService.getUnratedByUserId(userId);
     }
 }

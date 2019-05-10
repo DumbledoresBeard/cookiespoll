@@ -1,6 +1,8 @@
 package net.cookiespoll.model.user;
 
+import net.cookiespoll.model.Cookie;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 public class User {
@@ -8,18 +10,29 @@ public class User {
     private String login;
     private String name;
     private Role role;
+    private HashMap<Cookie, Integer> ratedCookies;
+
 
     public User() { }
+
+    public User(int id, String login, String name, Role role, HashMap<Cookie, Integer> ratedCookies) {
+        this.id = id;
+        this.login = login;
+        this.name = name;
+        this.role = role;
+        this.ratedCookies = ratedCookies;
+    }
+
+    public User(String login, String name, Role role, HashMap<Cookie, Integer> ratedCookies) {
+        this (0, login, name, role, ratedCookies);
+    }
 
     public User(int id, String login, String name, Role role) {
         this.id = id;
         this.login = login;
         this.name = name;
         this.role = role;
-    }
-
-    public User(String login, String name, Role role) {
-        this (0, login, name, role);
+        ratedCookies = new HashMap<>();
     }
 
     public int getId() {

@@ -1,5 +1,6 @@
 package net.cookiespoll.dto.mapper;
 
+import net.cookiespoll.dto.AddCookieResponse;
 import net.cookiespoll.dto.RateCookieRequest;
 import net.cookiespoll.dto.UpdateCookieRequest;
 import net.cookiespoll.dto.UpdateCookieResponse;
@@ -24,9 +25,14 @@ public class DtoMapper {
                 rateCookieRequest.getCookieOwner());
     }
 
-    public UpdateCookieResponse convertCookieToDto (Cookie cookie) {
+    public UpdateCookieResponse convertCookieToUpdateResponse(Cookie cookie) {
         return new UpdateCookieResponse(cookie.getId(), cookie.getName(), cookie.getDescription(), cookie.getFileData(),
                 cookie.getCookieAddingStatus(), cookie.getRating(), cookie.getCookieOwner());
+    }
+
+    public AddCookieResponse convertCookieToAddCookieResponse(Cookie cookie) {
+        return new AddCookieResponse(cookie.getId(), cookie.getName(), cookie.getDescription(),
+                cookie.getFileData(), cookie.getCookieAddingStatus());
     }
 
 
