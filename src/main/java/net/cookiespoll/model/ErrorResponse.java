@@ -1,4 +1,4 @@
-package net.cookiespoll.exception;
+package net.cookiespoll.model;
 
 import java.util.List;
 

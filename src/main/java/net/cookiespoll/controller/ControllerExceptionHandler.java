@@ -1,5 +1,7 @@
-package net.cookiespoll.exception;
+package net.cookiespoll.controller;
 
+import net.cookiespoll.exception.FileValidationException;
+import net.cookiespoll.model.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -27,7 +29,7 @@ public class ControllerExceptionHandler {
     @ResponseBody
     public ErrorResponse handleMethodArgumentNotValidException(HttpServletRequest req,
                                                                MethodArgumentNotValidException ex) {
-        LOGGER.error("Request: " + req.getRequestURL() + " raised exception " + ex);
+        LOGGER.error("Request: {} raised exception {} ", req.getRequestURL(), ex);
 
         List<FieldError> errors = ex.getBindingResult().getFieldErrors();
 
@@ -43,15 +45,13 @@ public class ControllerExceptionHandler {
         errorResponse.setErrors(errorDetails);
 
         return errorResponse;
-
-
     }
 
     @ExceptionHandler(FileValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorResponse handleFileAddingException (HttpServletRequest req, FileValidationException ex) {
-        LOGGER.error("Request: " + req.getRequestURL() + " raised exception " + ex);
+    public ErrorResponse handleFileAddingException(HttpServletRequest req, FileValidationException ex) {
+        LOGGER.error("Request: {} raised exception {} ", req.getRequestURL(), ex);
 
         List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
         ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
@@ -67,9 +67,8 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorResponse handleBindException(HttpServletRequest req,
-                                                               BindException ex) {
-        LOGGER.error("Request: " + req.getRequestURL() + " raised exception " + ex);
+    public ErrorResponse handleBindException(HttpServletRequest req, BindException ex) {
+        LOGGER.error("Request: {} raised exception {} ", req.getRequestURL(), ex);
 
         List<FieldError> errors = ex.getBindingResult().getFieldErrors();
 
@@ -85,8 +84,6 @@ public class ControllerExceptionHandler {
         errorResponse.setErrors(errorDetails);
 
         return errorResponse;
-
-
     }
 
     @ExceptionHandler(CookieRateException.class)

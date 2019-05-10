@@ -1,10 +1,14 @@
 package net.cookiespoll.controller;
 
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import net.cookiespoll.dto.*;
 import net.cookiespoll.exception.CookieRateException;
 import net.cookiespoll.exception.FileValidationException;
 import net.cookiespoll.model.Cookie;
+import net.cookiespoll.model.user.User;
 import net.cookiespoll.service.CookieService;
 import net.cookiespoll.service.CookieUserRatingService;
 import net.cookiespoll.validation.FileValidator;
@@ -14,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,20 +49,22 @@ public class CookiesController {
     })
     @RequestMapping(value = "/cookies", method = RequestMethod.POST)
     @ResponseBody
-    public AddCookieResponse addCookie(
-                            @RequestPart("file") MultipartFile multipartFile,
-                            @Valid @RequestPart("data") AddCookieRequest addCookieRequest
-                            ) throws IOException, FileValidationException {
-        LOGGER.info("Start processing AddCookieRequest {}", addCookieRequest, multipartFile);
+    public AddCookieResponse addCookie(@RequestPart("file") MultipartFile multipartFile,
+                                       @Valid @RequestPart("data") AddCookieRequest addCookieRequest)
+                                        throws IOException, FileValidationException {
+        LOGGER.info("Start processing AddCookieRequest {} ", addCookieRequest, multipartFile);
+
         fileValidator.validate(multipartFile);
-        int userId = 1; // temporary decision until getting userId from session will be implemented
-        Cookie cookie = cookieService.insert(addCookieRequest, multipartFile, userId);
+
+        User user = new User();
+        user.setId(1); // temporary decision until getting userId from session will be implemented
+
+        Cookie cookie = cookieService.insert(addCookieRequest, multipartFile, user);
 
         LOGGER.info("Done");
 
-        return new AddCookieResponse(cookie.getId(),cookie.getName(), cookie.getDescription(),
+        return new AddCookieResponse(cookie.getId(), cookie.getName(), cookie.getDescription(),
                                     cookie.getFileData(), cookie.getCookieAddingStatus());
-
     }
 
     @ApiOperation(value = "Get list of cookies by parameter", response = ArrayList.class)
@@ -68,18 +75,13 @@ public class CookiesController {
     })
     @RequestMapping(value = "/cookies/lists", method = RequestMethod.GET)
     @ResponseBody
-    public List<Cookie> getCookiesByParameter (@Valid CookiesByParameterRequest cookiesByParameterRequest)
-                                                {
+    public List<Cookie> getCookiesByParameter(@Valid CookiesByParameterRequest cookiesByParameterRequest) {
        /* TODO if(!cookieService.getUserRole(id).equals(Role.ADMIN))
         { return new ArrayList<Cookie>() ; }*/
-            LOGGER.info("Starting processing request for getting cookies by parameters {} ",
-                        cookiesByParameterRequest);
 
-            return cookieService.getByParam(cookiesByParameterRequest.getName(),
-                    cookiesByParameterRequest.getDescription(),
-                    cookiesByParameterRequest.getCookieAddingStatus(),
-                    cookiesByParameterRequest.getRating(), cookiesByParameterRequest.getUserId());
+       LOGGER.info("Starting processing request for getting cookies by parameters {} ", cookiesByParameterRequest);
 
+       return cookieService.getByParam(cookiesByParameterRequest);
     }
 
     @ApiOperation(value = "Get cookie by id", response = ArrayList.class)
@@ -90,7 +92,7 @@ public class CookiesController {
     })
     @RequestMapping(value = "/cookies", method = RequestMethod.GET)
     @ResponseBody
-    public Cookie getCookieById (@RequestParam (value="id") Integer id) {
+    public Cookie getCookieById (@RequestParam (value = "id") Integer id) {
         LOGGER.info("Starting processing request for getting cookie by id {} ", id);
 
         return cookieService.getById(id);
@@ -108,18 +110,17 @@ public class CookiesController {
         /* TODO if(!cookieService.getUserRole(id).equals(Role.ADMIN))
         { return new ArrayList<Cookie>() ; }*/
 
-        LOGGER.info("Starting processing request {} " + updateCookieRequest);
+        LOGGER.info("Starting processing request {} ", updateCookieRequest);
 
-
-        cookieService.update(new Cookie(updateCookieRequest.getId(),
-                updateCookieRequest.getName(), updateCookieRequest.getDescription(),
-                updateCookieRequest.getFileData(), updateCookieRequest.getApprovalStatus(),
-                updateCookieRequest.getRating(), updateCookieRequest.getUserId()));
+        cookieService.update(new Cookie(updateCookieRequest.getId(), updateCookieRequest.getName(),
+                updateCookieRequest.getDescription(), updateCookieRequest.getFileData(),
+                updateCookieRequest.getApprovalStatus(), updateCookieRequest.getRating(),
+                updateCookieRequest.getCookieOwner()));
 
         return new UpdateCookieResponse(updateCookieRequest.getId(),
                 updateCookieRequest.getName(), updateCookieRequest.getDescription(),
                 updateCookieRequest.getFileData(), updateCookieRequest.getApprovalStatus(),
-                updateCookieRequest.getRating(), updateCookieRequest.getUserId());
+                updateCookieRequest.getRating(), updateCookieRequest.getCookieOwner());
     }
 
 
@@ -131,13 +132,15 @@ public class CookiesController {
     })
     @RequestMapping(value = "/cookies/poll", method = RequestMethod.POST)
     @ResponseBody
-    public Cookie rateCookie (@RequestBody @Valid RateCookieRequest rateCookieRequest ) throws CookieRateException {
+    public Cookie rateCookie (@RequestBody @Valid RateCookieRequest rateCookieRequest) throws CookieRateException {
         int userId = 1; // temporary decision until getting userId from session will be implemented
+
         if (cookieUserRatingService.getRatingByUserAndCookie(userId, rateCookieRequest.getId()) != null) {
           throw new CookieRateException("This cookie already has been rated by user");
         }
-        cookieUserRatingService.setRatingToCookie(userId, rateCookieRequest.getId(),
-                                                    rateCookieRequest.getRating());
+
+        cookieUserRatingService.setRatingToCookie(userId, rateCookieRequest.getId(), rateCookieRequest.getRating());
+
         Float cookieRatingSum = cookieUserRatingService.getRatingSumByCookieId(rateCookieRequest.getId());
 
         Integer usersQuantity = cookieUserRatingService.getUserQuantity(rateCookieRequest.getId());
@@ -145,7 +148,8 @@ public class CookiesController {
         Cookie cookie = new Cookie(rateCookieRequest.getId(), rateCookieRequest.getName(),
                 rateCookieRequest.getDescription(), rateCookieRequest.getFileData(),
                 rateCookieRequest.getApprovalStatus(), rateCookieRequest.getResultRating(),
-                rateCookieRequest.getUserId());
+                rateCookieRequest.getCookieOwner());
+
         cookie.setRating(cookieService.countRating(usersQuantity, cookieRatingSum));
 
         return cookieService.update(cookie);

@@ -1,6 +1,7 @@
 package net.cookiespoll.dto;
 
 import net.cookiespoll.model.CookieAddingStatus;
+import net.cookiespoll.model.user.User;
 
 import javax.validation.constraints.Size;
 
@@ -16,19 +17,19 @@ public class UpdateCookieRequest {
     private byte[] fileData;
     private CookieAddingStatus approvalStatus;
     private Float rating;
-    private int userId;
+    private User cookieOwner;
 
-    public UpdateCookieRequest() {}
+    public UpdateCookieRequest(int i, String cookie, String tasty_cookie, byte[] byteArray, Float cookieRating, User cookieOwner) {}
 
     public UpdateCookieRequest(int id, String name, String description, byte[] fileData,
-                               CookieAddingStatus approvalStatus, Float rating, int userId) {
+                               CookieAddingStatus approvalStatus, Float rating, User cookieOwner) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.fileData = fileData;
         this.approvalStatus = approvalStatus;
         this.rating = rating;
-        this.userId = userId;
+        this.cookieOwner = cookieOwner;
     }
 
     public int getId() {
@@ -79,12 +80,10 @@ public class UpdateCookieRequest {
         this.rating = rating;
     }
 
-    public int getUserId() {
-        return userId;
-    }
+    public User getCookieOwner() { return cookieOwner; }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setCookieOwner(User cookieOwner) {
+        this.cookieOwner = cookieOwner;
     }
 
 }

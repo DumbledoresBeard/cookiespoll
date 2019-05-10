@@ -1,6 +1,6 @@
 package net.cookiespoll.dao;
 
-import net.cookiespoll.user.User;
+import net.cookiespoll.model.user.User;
 
 public interface UserDao {
 
@@ -10,5 +10,4 @@ public interface UserDao {
 
     User update (User user);
 
-    void delete (User user);
 }
