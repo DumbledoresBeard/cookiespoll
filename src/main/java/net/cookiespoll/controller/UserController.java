@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 public class UserController {
 
 
-    @RequestMapping(value = "/cookie poll/login",
+    @RequestMapping(value = "/cookiepoll/login",
             method = RequestMethod.GET)
     @ResponseBody
     public String getLoginPage () {

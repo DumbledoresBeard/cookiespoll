@@ -1,8 +1,8 @@
 package net.cookiespoll.service;
 
 import net.cookiespoll.dao.UserDao;
-import net.cookiespoll.user.User;
-import net.cookiespoll.user.Role;
+import net.cookiespoll.model.user.Role;
+import net.cookiespoll.model.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;

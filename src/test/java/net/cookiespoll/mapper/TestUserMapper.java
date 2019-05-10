@@ -1,7 +1,7 @@
 /*package net.cookiespoll.mapper;
 
-import net.cookiespoll.user.Role;
-import net.cookiespoll.user.User;
+import net.cookiespoll.model.user.Role;
+import net.cookiespoll.model.user.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,8 +18,7 @@ public class TestUserMapper {
     @Mock
     UserMapper userMapper;
 
-    User userAdmin = new User (1, "login", "password", "name", "lastname",
-            Role.ADMIN);
+    User userAdmin = new User (1, "login", "name", Role.ADMIN);
     int id = 1;
 
     @Before
@@ -29,9 +28,11 @@ public class TestUserMapper {
 
     @Test
     public void testUserMapperGetUserById () {
-        when(userMapper.getUserById(id)).thenReturn(userAdmin);
-        userMapper.getUserById(id);
-        verify(userMapper).getUserById(id);
+        when(userMapper.getById(id)).thenReturn(userAdmin);
+
+        userMapper.getById(id);
+
+        verify(userMapper).getById(id);
     }
 
 }*/

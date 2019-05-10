@@ -1,6 +1,6 @@
 package net.cookiespoll.dao;
 
-import net.cookiespoll.user.User;
+import net.cookiespoll.model.user.User;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -12,5 +12,4 @@ public interface UserDao {
 
     User update (User user);
 
-    void delete (User user);
 }

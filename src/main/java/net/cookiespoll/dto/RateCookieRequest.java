@@ -1,39 +1,60 @@
 package net.cookiespoll.dto;
 
 import net.cookiespoll.model.CookieAddingStatus;
+import net.cookiespoll.model.user.User;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 public class RateCookieRequest {
-    private int id;
+    private Integer id;
+
+    @Size(min = 4, max = 30, message = "Cookie name must be between 4 and 30 characters")
     private String name;
+
+    @Size(min = 1, max = 150, message = "Cookie description must be less then 150 characters and cannot be empty")
     private String description;
+
     private byte[] fileData;
     private CookieAddingStatus approvalStatus;
     private Float resultRating;
-    private String userId;
+    private User cookieOwner;
+
+    @Min(value = 1, message = "Rating must be a digit between 1 and 5")
+    @Max(value = 5, message = "Rating must be a digit between 1 and 5")
     private Integer rating;
 
     public RateCookieRequest() {
     }
 
-    public RateCookieRequest(int id, String name, String description, byte[] fileData,
-                             CookieAddingStatus approvalStatus, Float resultRating, String userId,
-                             Integer rating) {
+    public RateCookieRequest(Integer id, String name, String description, byte[] fileData,
+                             CookieAddingStatus approvalStatus, Float resultRating, User cookieOwner, Integer rating) {
+
         this.id = id;
         this.name = name;
         this.description = description;
         this.fileData = fileData;
         this.approvalStatus = approvalStatus;
         this.resultRating = resultRating;
-        this.userId = userId;
+        this.cookieOwner = cookieOwner;
         this.rating = rating;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
+    }
+
+    public User getCookieOwner() {
+        return cookieOwner;
+    }
+
+    public void setCookieOwner(User cookieOwner) {
+        this.cookieOwner = cookieOwner;
     }
 
     public String getName() {
@@ -76,14 +97,6 @@ public class RateCookieRequest {
         this.resultRating = resultRating;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     public Integer getRating() {
         return rating;
     }
@@ -91,4 +104,6 @@ public class RateCookieRequest {
     public void setRating(Integer rating) {
         this.rating = rating;
     }
+
+
 }

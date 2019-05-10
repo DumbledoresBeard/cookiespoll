@@ -2,8 +2,10 @@ package net.cookiespoll.service;
 
 import net.cookiespoll.dao.CookieDao;
 import net.cookiespoll.dto.AddCookieRequest;
+import net.cookiespoll.dto.CookiesByParameterRequest;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
+import net.cookiespoll.model.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,44 +26,34 @@ public class CookieService {
         this.cookieDao = cookieDao;
     }
 
-    public Cookie insert(AddCookieRequest addCookieRequest, MultipartFile multipartFile, String userId)
+    public Cookie insert(AddCookieRequest addCookieRequest, MultipartFile multipartFile, User cookieOwner)
             throws IOException {
        float rating = 0;
 
        LOGGER.info("Set rating={} and cookieAddingStatus={} to cookie ", rating, CookieAddingStatus.WAITING);
 
        return cookieDao.insert(new Cookie(addCookieRequest.getName(), addCookieRequest.getDescription(),
-                                multipartFile.getBytes(), CookieAddingStatus.WAITING, rating, userId));
+                                multipartFile.getBytes(), CookieAddingStatus.WAITING, rating, cookieOwner));
     }
 
-
-    public List<Cookie> getByParam(String name, String description,
-                                   CookieAddingStatus cookieAddingStatus, Float rating, String userId) {
-
-        return cookieDao.getByParam(name, description, cookieAddingStatus, rating, userId);
+    public List<Cookie> getByParam(CookiesByParameterRequest cookiesByParameterRequest) {
+        return cookieDao.getByParam(cookiesByParameterRequest);
     }
-
 
     public Cookie update(Cookie cookie) {
-       return cookieDao.update(cookie);
-
+        return cookieDao.update(cookie);
     }
 
     public Cookie getById(Integer id) {
         return cookieDao.getById(id);
     }
 
-
-
-    public List<Cookie> getUnratedCookiesByUserId (String userId) {
+    public List<Cookie> getUnratedByUserId(String userId) {
         return cookieDao.getUnratedCookiesByUserId(userId);
     }
 
     public Float countRating(Integer usersQuantity, Float cookieRatingSum) {
         return (cookieRatingSum / usersQuantity);
     }
-
-
-
 
 }

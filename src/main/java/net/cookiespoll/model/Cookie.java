@@ -1,5 +1,7 @@
 package net.cookiespoll.model;
 
+import net.cookiespoll.model.user.User;
+
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -10,86 +12,57 @@ public class Cookie {
     private byte[] fileData;
     private CookieAddingStatus cookieAddingStatus;
     private Float rating;
-    private String userId;
+    private User cookieOwner;
 
     public Cookie() {
     }
 
     public Cookie(int id, String name, String description, byte[] fileData,
-                  CookieAddingStatus cookieAddingStatus, Float rating, String userId) {
+                  CookieAddingStatus cookieAddingStatus, Float rating, User cookieOwner) {
+
         this.id = id;
         this.name = name;
         this.description = description;
         this.fileData = fileData;
         this.cookieAddingStatus = cookieAddingStatus;
         this.rating = rating;
-        this.userId = userId;
+        this.cookieOwner = cookieOwner;
     }
 
-    public Cookie(String name, String description, byte[] fileData,
-                  CookieAddingStatus cookieAddingStatus, Float rating, String userId) {
-        this.name = name;
-        this.description = description;
-        this.fileData = fileData;
-        this.cookieAddingStatus = cookieAddingStatus;
-        this.rating = rating;
-        this.userId = userId;
+    public Cookie (String name, String description, byte[] fileData,
+                   CookieAddingStatus cookieAddingStatus, Float rating, User cookieOwner) {
+        this(0, name, description, fileData, cookieAddingStatus, rating, cookieOwner);
+
     }
 
-    public int getId() {
-        return id;
-    }
+    public int getId() { return id; }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    public void setId(int id) { this.id = id; }
 
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setName(String name) { this.name = name; }
 
-    public String getDescription() {
-        return description;
-    }
+    public String getDescription() { return description; }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public void setDescription(String description) { this.description = description; }
 
-    public byte[] getFileData() {
-        return fileData;
-    }
+    public byte[] getFileData() { return fileData; }
 
-    public void setFileData(byte[] fileData) {
-        this.fileData = fileData;
-    }
+    public void setFileData(byte[] fileData) { this.fileData = fileData; }
 
-    public CookieAddingStatus getCookieAddingStatus() {
-        return cookieAddingStatus;
-    }
+    public CookieAddingStatus getCookieAddingStatus() { return cookieAddingStatus; }
 
-    public void setCookieAddingStatus(CookieAddingStatus cookieAddingStatus) {
-        this.cookieAddingStatus = cookieAddingStatus;
-    }
+    public void setCookieAddingStatus(CookieAddingStatus cookieAddingStatus) { this.cookieAddingStatus = cookieAddingStatus; }
 
-    public Float getRating() {
-        return rating;
-    }
+    public Float getRating() {return rating; }
 
-    public void setRating(Float rating) {
-        this.rating = rating;
-    }
+    public void setRating(Float rating) { this.rating = rating; }
 
-    public String getUserId() {
-        return userId;
-    }
+    public User getCookieOwner() { return cookieOwner; }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setCookieOwner(User cookieOwner) {
+        this.cookieOwner = cookieOwner;
     }
 
     @Override
@@ -103,13 +76,12 @@ public class Cookie {
                 Arrays.equals(getFileData(), cookie.getFileData()) &&
                 getCookieAddingStatus() == cookie.getCookieAddingStatus() &&
                 Objects.equals(getRating(), cookie.getRating()) &&
-                Objects.equals(getUserId(), cookie.getUserId());
+                Objects.equals(getCookieOwner(), cookie.getCookieOwner());
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(getId(), getName(), getDescription(), getCookieAddingStatus(),
-                getRating(), getUserId());
+        int result = Objects.hash(getId(), getName(), getDescription(), getCookieAddingStatus(), getRating(), getCookieOwner());
         result = 31 * result + Arrays.hashCode(getFileData());
         return result;
     }

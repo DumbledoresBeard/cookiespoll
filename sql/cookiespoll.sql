@@ -7,17 +7,22 @@ id VARCHAR(150) PRIMARY KEY,
 login VARCHAR (30) UNIQUE NOT NULL,
 name VARCHAR (20),
 role VARCHAR (20)
-)
+);
 
 
-CREATE TABLE cookie (
-id serial PRIMARY KEY,
+CREATE TABLE cookies (
+id SERIAL PRIMARY KEY,
 name VARCHAR (30) UNIQUE NOT NULL,
 description VARCHAR (150),
 file_data BYTEA,
 cookie_adding_status VARCHAR (20),
+<<<<<<< HEAD
 rating numeric(5,2),
 user_id VARCHAR(150),
+=======
+rating NUMERIC(5,2),
+user_id INT,
+>>>>>>> origin/feature/cookie-poll
 FOREiGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 )
 

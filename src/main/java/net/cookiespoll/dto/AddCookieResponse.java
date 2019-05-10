@@ -44,13 +44,9 @@ public class AddCookieResponse {
         this.description = description;
     }
 
-    public byte[] getFileData() {
-        return fileData;
-    }
+    public byte[] getFileData() { return fileData; }
 
-    public void setFileData(byte[] fileData) {
-        this.fileData = fileData;
-    }
+    public void setFileData(byte[] fileData) { this.fileData = fileData; }
 
     public CookieAddingStatus getCookieAddingStatus() {
         return cookieAddingStatus;

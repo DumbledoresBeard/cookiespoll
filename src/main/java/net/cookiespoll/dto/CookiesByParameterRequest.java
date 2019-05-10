@@ -1,9 +1,7 @@
 package net.cookiespoll.dto;
 
 import net.cookiespoll.model.CookieAddingStatus;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
@@ -24,6 +22,8 @@ public class CookiesByParameterRequest {
     @Min(value = 0, message = "Rating can not be less than 0")
     private Float rating;
 
+    public CookiesByParameterRequest() {
+    }
 
     public CookiesByParameterRequest(String userId, String name, String description,
                                      CookieAddingStatus cookieAddingStatus, Float rating) {
