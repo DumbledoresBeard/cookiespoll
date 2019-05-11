@@ -177,4 +177,16 @@ public class CookiesController {
 
         return cookieService.getUnratedByUserId(userId);
     }
+
+    @RequestMapping(value = "/cookies", method = RequestMethod.DELETE)
+    @ResponseBody
+    public DeleteCookieResponse deleteCookie(@PathVariable ("id") Integer id) throws UserRoleValidationException {
+        if(cookieService.getById(id).getCookieAddingStatus().equals(CookieAddingStatus.APPROVED)) {
+            userRoleValidator.validateUserRole(getUserIdFromSession());
+        }
+
+        LOGGER.info("Starting processing request {} ", id);
+
+        return new DeleteCookieResponse(cookieService.delete(id));
+    }
 }

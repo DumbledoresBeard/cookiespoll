@@ -65,7 +65,7 @@ public class CookieDaoImpl implements CookieDao {
     }
 
     @Override
-    public void delete (Cookie cookie) {
-        /*TODO delete given cookie*/
+    public Integer delete (Integer id) {
+        return cookieMapper.delete(id);
     }
 }

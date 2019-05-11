@@ -1,8 +1,8 @@
 package net.cookiespoll.validation;
 
 import net.cookiespoll.exception.UserRoleValidationException;
+import net.cookiespoll.model.user.Role;
 import net.cookiespoll.service.UserService;
-import net.cookiespoll.user.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

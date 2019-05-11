@@ -92,6 +92,9 @@ public interface CookieMapper {
     void update(@Param("cookie") Cookie cookie);
 
 
+    @Delete("DELETE FROM cookies " +
+            "WHERE cookie_id = #{id}")
+    Integer delete(@Param("id") Integer id);
 
 
 

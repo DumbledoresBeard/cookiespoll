@@ -56,4 +56,8 @@ public class CookieService {
         return (cookieRatingSum / usersQuantity);
     }
 
+    public Integer delete(Integer id) {
+        return cookieDao.delete(id);
+    }
+
 }

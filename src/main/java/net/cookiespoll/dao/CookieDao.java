@@ -18,5 +18,5 @@ public interface CookieDao {
 
     Cookie update(Cookie cookie);
 
-    void delete (Cookie cookie);
+    Integer delete (Integer id);
 }
