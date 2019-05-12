@@ -5,6 +5,7 @@ import net.cookiespoll.dto.AddCookieRequest;
 import net.cookiespoll.dto.CookiesByParameterRequest;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
+import net.cookiespoll.model.CookieUserRating;
 import net.cookiespoll.model.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,11 +53,12 @@ public class CookieService {
         return cookieDao.getUnratedCookiesByUserId(userId);
     }
 
-    public Float countRating(Integer usersQuantity, Float cookieRatingSum) {
-        return (cookieRatingSum / usersQuantity);
+    public Float countRating(Cookie cookie) {
+        List<CookieUserRating> cookieUserRatingList = this.getById(cookie.getId()).getUsersRatings();
+        Long usersQuantity = cookieUserRatingList.stream().count();
+        Integer cookieRatingSum = cookieUserRatingList.stream()
+                .mapToInt(cookieUserRating -> cookieUserRating.getRating()).sum();
+        return  (float)(cookieRatingSum / usersQuantity);
     }
-
-
-
 
 }

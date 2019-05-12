@@ -1,3 +1,4 @@
+/*
 package net.cookiespoll.mapper;
 
 import net.cookiespoll.model.user.Role;
@@ -36,3 +37,4 @@ public class TestUserMapper {
     }
 
 }
+*/

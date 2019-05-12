@@ -1,4 +1,4 @@
-package net.cookiespoll.service;
+/*package net.cookiespoll.service;
 
 import net.cookiespoll.daoimpl.UserDaoImpl;
 import net.cookiespoll.model.user.Role;
@@ -41,4 +41,4 @@ public class TestUserService {
         verify(userDao).getById(id);
     }
 
-}
+}*/

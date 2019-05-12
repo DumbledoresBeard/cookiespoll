@@ -5,13 +5,15 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import net.cookiespoll.dto.*;
-import net.cookiespoll.dto.mapper.DtoMapper;
+import net.cookiespoll.dto.mapper.CookieDtoMapper;
 import net.cookiespoll.exception.CookieRateException;
 import net.cookiespoll.exception.FileValidationException;
 import net.cookiespoll.model.Cookie;
+import net.cookiespoll.model.CookieUserRating;
 import net.cookiespoll.model.user.User;
 import net.cookiespoll.service.CookieService;
 import net.cookiespoll.service.CookieUserRatingService;
+import net.cookiespoll.service.UserService;
 import net.cookiespoll.validation.FileValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,15 +35,17 @@ public class CookiesController {
     private CookieService cookieService;
     private FileValidator fileValidator;
     private CookieUserRatingService cookieUserRatingService;
-    private DtoMapper dtoMapper;
+    private CookieDtoMapper cookieDtoMapper;
+    private UserService userService;
 
     @Autowired
     public CookiesController(CookieService cookieService, FileValidator fileValidator,
-                             CookieUserRatingService cookieUserRatingService, DtoMapper dtoMapper) {
+                             CookieUserRatingService cookieUserRatingService, CookieDtoMapper cookieDtoMapper, UserService userService) {
         this.cookieService = cookieService;
         this.fileValidator = fileValidator;
         this.cookieUserRatingService = cookieUserRatingService;
-        this.dtoMapper = dtoMapper;
+        this.cookieDtoMapper = cookieDtoMapper;
+        this.userService = userService;
     }
 
     @ApiOperation(value = "Add new cookie to store in database", response = AddCookieResponse.class)
@@ -62,7 +66,7 @@ public class CookiesController {
         User user = new User();
         user.setId(1); // temporary decision until getting userId from session will be implemented
 
-        return dtoMapper.convertCookieToAddCookieResponse(cookieService.insert(addCookieRequest, multipartFile, user));
+        return cookieDtoMapper.convertToAddCookieResponse(cookieService.insert(addCookieRequest, multipartFile, user));
     }
 
     @ApiOperation(value = "Get list of cookies by parameter", response = ArrayList.class)
@@ -110,7 +114,7 @@ public class CookiesController {
 
         LOGGER.info("Starting processing request {} ", updateCookieRequest);
 
-        return dtoMapper.convertCookieToUpdateResponse(cookieService.update(dtoMapper.convertDtoToCookie(updateCookieRequest)));
+        return cookieDtoMapper.convertToUpdateResponse(cookieService.update(cookieDtoMapper.convertDto(updateCookieRequest)));
     }
 
 
@@ -125,21 +129,36 @@ public class CookiesController {
     public RateCookieResponse rateCookie (@RequestBody @Valid RateCookieRequest rateCookieRequest) throws CookieRateException {
         int userId = 1; // temporary decision until getting userId from session will be implemented
 
-        if (cookieUserRatingService.getRatingByUserAndCookie(userId, rateCookieRequest.getId()) != null) {
-          throw new CookieRateException("This cookie already has been rated by user");
+//        if (cookieUserRatingService.getRatingByUserAndCookie(userId, rateCookieRequest.getId()) != null) {
+//          throw new CookieRateException("This cookie already has been rated by user");
+//        }
+//
+//        cookieUserRatingService.setRatingToCookie(userId, rateCookieRequest.getId(), rateCookieRequest.getRating());
+//
+//        Float cookieRatingSum = cookieUserRatingService.getRatingSumByCookieId(rateCookieRequest.getId());
+//
+//        Integer usersQuantity = cookieUserRatingService.getUserQuantity(rateCookieRequest.getId());
+//
+//        Cookie cookie = cookieDtoMapper.convertDto(rateCookieRequest);
+//
+//        cookie.setRating(cookieService.countRating(usersQuantity, cookieRatingSum));
+//
+//        return new RateCookieResponse(cookieService.update(cookie), rateCookieRequest.getRating());
+        Cookie cookie = cookieDtoMapper.convertDto(rateCookieRequest);
+
+        List<CookieUserRating> cookieUserRatings = userService.getById(userId).getRatedCookies();
+        for (CookieUserRating cookieUserRating: cookieUserRatings) {
+            if (cookieUserRating.getCookie().equals(cookie)) {
+                throw new CookieRateException("This cookie already has been rated by user");
+            }
         }
 
         cookieUserRatingService.setRatingToCookie(userId, rateCookieRequest.getId(), rateCookieRequest.getRating());
 
-        Float cookieRatingSum = cookieUserRatingService.getRatingSumByCookieId(rateCookieRequest.getId());
-
-        Integer usersQuantity = cookieUserRatingService.getUserQuantity(rateCookieRequest.getId());
-
-        Cookie cookie = dtoMapper.convertDtoToCookie(rateCookieRequest);
-
-        cookie.setRating(cookieService.countRating(usersQuantity, cookieRatingSum));
+        cookie.setRating(cookieService.countRating(cookie));
 
         return new RateCookieResponse(cookieService.update(cookie), rateCookieRequest.getRating());
+
     }
 
     @ApiOperation(value = "Get cookies unrated yet by user", response = Cookie.class)
@@ -154,5 +173,13 @@ public class CookiesController {
         int userId = 1; // temporary decision until getting userId from session will be implemented
 
         return cookieService.getUnratedByUserId(userId);
+    }
+
+    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    @ResponseBody
+    public User getUserById (@RequestParam (value = "id") Integer id) {
+        LOGGER.info("Starting processing request for getting cookie by id {} ", id);
+
+        return userService.getById(id);
     }
 }

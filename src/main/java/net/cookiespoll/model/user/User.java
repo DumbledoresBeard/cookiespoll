@@ -1,8 +1,9 @@
 package net.cookiespoll.model.user;
 
 import net.cookiespoll.model.Cookie;
+import net.cookiespoll.model.CookieUserRating;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 public class User {
@@ -10,21 +11,26 @@ public class User {
     private String login;
     private String name;
     private Role role;
-    private HashMap<Cookie, Integer> ratedCookies;
+    private List<CookieUserRating> ratedCookies;
+    private List<Cookie> addedCookies;
 
+    public User() {}
 
-    public User() { }
-
-    public User(int id, String login, String name, Role role, HashMap<Cookie, Integer> ratedCookies) {
+    public User(int id, String login, String name, Role role, List<CookieUserRating> ratedCookies, List<Cookie> addedCookies) {
         this.id = id;
         this.login = login;
         this.name = name;
         this.role = role;
         this.ratedCookies = ratedCookies;
+        this.addedCookies = addedCookies;
     }
 
-    public User(String login, String name, Role role, HashMap<Cookie, Integer> ratedCookies) {
-        this (0, login, name, role, ratedCookies);
+    public User(String login, String name, Role role, List<CookieUserRating> ratedCookies, List<Cookie> addedCookies) {
+        this.login = login;
+        this.name = name;
+        this.role = role;
+        this.ratedCookies = ratedCookies;
+        this.addedCookies = addedCookies;
     }
 
     public User(int id, String login, String name, Role role) {
@@ -32,7 +38,14 @@ public class User {
         this.login = login;
         this.name = name;
         this.role = role;
-        ratedCookies = new HashMap<>();
+    }
+
+    public User(int id, String login, String name, Role role, List<CookieUserRating> ratedCookies) {
+        this.id = id;
+        this.login = login;
+        this.name = name;
+        this.role = role;
+        this.ratedCookies = ratedCookies;
     }
 
     public int getId() {
@@ -67,6 +80,22 @@ public class User {
         this.role = role;
     }
 
+    public List<CookieUserRating> getRatedCookies() {
+        return ratedCookies;
+    }
+
+    public void setRatedCookies(List<CookieUserRating> ratedCookies) {
+        this.ratedCookies = ratedCookies;
+    }
+
+    public List<Cookie> getAddedCookies() {
+        return addedCookies;
+    }
+
+    public void setAddedCookies(List<Cookie> addedCookies) {
+        this.addedCookies = addedCookies;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -75,11 +104,13 @@ public class User {
         return getId() == user.getId() &&
                 Objects.equals(getLogin(), user.getLogin()) &&
                 Objects.equals(getName(), user.getName()) &&
-                getRole() == user.getRole();
+                getRole() == user.getRole() &&
+                Objects.equals(getRatedCookies(), user.getRatedCookies()) &&
+                Objects.equals(getAddedCookies(), user.getAddedCookies());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getLogin(), getName(), getRole());
+        return Objects.hash(getId(), getLogin(), getName(), getRole(), getRatedCookies(), getAddedCookies());
     }
 }

@@ -28,7 +28,7 @@ public class CookieDaoImpl implements CookieDao {
     public Cookie insert(Cookie cookie) {
         LOGGER.info("Adding cookie to database {} ", cookie);
 
-        cookie.setId(cookieMapper.insert(cookie, cookie.getCookieOwner().getId()));
+        cookie.setId(cookieMapper.insert(cookie));
 
         return cookie;
     }

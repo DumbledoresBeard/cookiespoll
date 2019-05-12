@@ -19,4 +19,8 @@ public class UserService {
         User user = userDao.getById(id);
         return user.getRole();
     }
+
+    public User getById (int id) {
+        return userDao.getById(id);
+    }
 }

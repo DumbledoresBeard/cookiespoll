@@ -1,4 +1,4 @@
-package net.cookiespoll.dao;
+/*package net.cookiespoll.dao;
 
 import net.cookiespoll.daoimpl.UserDaoImpl;
 import net.cookiespoll.mapper.UserMapper;
@@ -46,4 +46,4 @@ public class TestUserDaoImpl {
         verify(userMapper).getUserById(id);
     }
 
-}
+}*/

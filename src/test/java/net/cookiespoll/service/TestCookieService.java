@@ -1,4 +1,4 @@
-package net.cookiespoll.service;
+/*package net.cookiespoll.service;
 
 import net.cookiespoll.daoimpl.CookieDaoImpl;
 import net.cookiespoll.dto.AddCookieRequest;
@@ -167,5 +167,5 @@ public class TestCookieService {
     }
 
 
-}
+}*/
 

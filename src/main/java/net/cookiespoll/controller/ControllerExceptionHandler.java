@@ -28,8 +28,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorResponse handleMethodArgumentNotValidException(HttpServletRequest req,
-                                                               MethodArgumentNotValidException ex) {
+    public ErrorResponse handleMethodArgumentNotValidException(HttpServletRequest req, MethodArgumentNotValidException ex) {
         LOGGER.error("Request: {} raised exception {} ", req.getRequestURL(), ex);
 
         List<FieldError> errors = ex.getBindingResult().getFieldErrors();

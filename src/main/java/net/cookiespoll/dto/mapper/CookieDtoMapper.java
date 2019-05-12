@@ -8,29 +8,29 @@ import net.cookiespoll.model.Cookie;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DtoMapper {
+public class CookieDtoMapper {
 
-    public DtoMapper() {
+    public CookieDtoMapper() {
     }
 
-    public Cookie convertDtoToCookie (UpdateCookieRequest updateCookieRequest) {
+    public Cookie convertDto(UpdateCookieRequest updateCookieRequest) {
         return new Cookie(updateCookieRequest.getId(), updateCookieRequest.getName(), updateCookieRequest.getDescription(),
                 updateCookieRequest.getFileData(), updateCookieRequest.getApprovalStatus(), updateCookieRequest.getRating(),
                 updateCookieRequest.getCookieOwner());
     }
 
-    public Cookie convertDtoToCookie (RateCookieRequest rateCookieRequest) {
+    public Cookie convertDto(RateCookieRequest rateCookieRequest) {
         return new Cookie(rateCookieRequest.getId(), rateCookieRequest.getName(), rateCookieRequest.getDescription(),
                 rateCookieRequest.getFileData(), rateCookieRequest.getApprovalStatus(), rateCookieRequest.getResultRating(),
                 rateCookieRequest.getCookieOwner());
     }
 
-    public UpdateCookieResponse convertCookieToUpdateResponse(Cookie cookie) {
+    public UpdateCookieResponse convertToUpdateResponse(Cookie cookie) {
         return new UpdateCookieResponse(cookie.getId(), cookie.getName(), cookie.getDescription(), cookie.getFileData(),
                 cookie.getCookieAddingStatus(), cookie.getRating(), cookie.getCookieOwner());
     }
 
-    public AddCookieResponse convertCookieToAddCookieResponse(Cookie cookie) {
+    public AddCookieResponse convertToAddCookieResponse(Cookie cookie) {
         return new AddCookieResponse(cookie.getId(), cookie.getName(), cookie.getDescription(),
                 cookie.getFileData(), cookie.getCookieAddingStatus());
     }

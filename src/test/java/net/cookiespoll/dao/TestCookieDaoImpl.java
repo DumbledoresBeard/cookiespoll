@@ -1,3 +1,4 @@
+/*
 package net.cookiespoll.dao;
 
 import net.cookiespoll.daoimpl.CookieDaoImpl;
@@ -156,3 +157,4 @@ public class TestCookieDaoImpl {
 
 
 }
+*/

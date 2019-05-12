@@ -1,9 +1,10 @@
+/*
 package net.cookiespoll.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import net.cookiespoll.dto.*;
-import net.cookiespoll.dto.mapper.DtoMapper;
+import net.cookiespoll.dto.mapper.CookieDtoMapper;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.model.user.Role;
@@ -42,7 +43,7 @@ public class TestCookieController {
     private MockMvc mockMvc;
     private CookieService cookieService = mock(CookieService.class);
     private FileValidator fileValidator = new FileValidator();
-    private DtoMapper dtoMapper = new DtoMapper();
+    private CookieDtoMapper dtoMapper = new CookieDtoMapper();
     private CookieUserRatingService cookieUserRatingService = mock(CookieUserRatingService.class);
     private CookiesController cookiesController;
     private byte [] byteArray = "Photo".getBytes();
@@ -223,7 +224,9 @@ public class TestCookieController {
                 .file(cookieExceededMaxFileSize)
                 .file(addCookieDtoRequest)
         ).andExpect(status().is(500));
-    /*            .andExpect((ResultMatcher) jsonPath("$.message", is("Maximum upload size exceeded; nested exception is java.lang.IllegalStateException: org.apache.tomcat.util.http.fileupload.FileUploadBase$SizeLimitExceededException: the request was rejected because its size (8055342) exceeds the configured maximum (5242880)")));*/
+    */
+/*            .andExpect((ResultMatcher) jsonPath("$.message", is("Maximum upload size exceeded; nested exception is java.lang.IllegalStateException: org.apache.tomcat.util.http.fileupload.FileUploadBase$SizeLimitExceededException: the request was rejected because its size (8055342) exceeds the configured maximum (5242880)")));*//*
+
 
     }
 
@@ -481,3 +484,4 @@ public class TestCookieController {
 
 }
 
+*/
