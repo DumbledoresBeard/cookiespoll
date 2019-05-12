@@ -174,12 +174,4 @@ public class CookiesController {
 
         return cookieService.getUnratedByUserId(userId);
     }
-
-    @RequestMapping(value = "/users", method = RequestMethod.GET)
-    @ResponseBody
-    public User getUserById (@RequestParam (value = "id") Integer id) {
-        LOGGER.info("Starting processing request for getting cookie by id {} ", id);
-
-        return userService.getById(id);
-    }
 }
