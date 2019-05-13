@@ -2,26 +2,16 @@ package net.cookiespoll.model;
 
 import net.cookiespoll.model.user.User;
 
+import java.util.Objects;
+
 
 public class CookieUserRating {
 
     private User user;
     private Cookie cookie;
     private Integer rating;
-   /* private int userId;
-    private int cookieId;*/
 
-   /* public CookieUserRating(Integer userId, String login, String userName, Role role, Integer rating, Integer cookieId,
-                            String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus,
-                            Float resultRating)
-    {
-        this.user = new User(userId, login, userName, role);
-        this.cookie = new Cookie(cookieId, name, description, fileData, cookieAddingStatus, resultRating);
-        this.rating = rating;
-    }
-*/
-    public CookieUserRating() {
-    }
+    public CookieUserRating() {}
 
     public User getUser() { return user; }
 
@@ -42,4 +32,19 @@ public class CookieUserRating {
     }
 
     public void setRating(Integer rating) { this.rating = rating; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CookieUserRating)) return false;
+        CookieUserRating that = (CookieUserRating) o;
+        return Objects.equals(getUser(), that.getUser()) &&
+                Objects.equals(getCookie(), that.getCookie()) &&
+                Objects.equals(getRating(), that.getRating());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUser(), getCookie(), getRating());
+    }
 }

@@ -2,6 +2,7 @@ package net.cookiespoll.mapper;
 
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
+import net.cookiespoll.model.CookieUserRating;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
@@ -46,10 +47,10 @@ public interface CookieMapper {
             @Result(property = "fileData", column = "file_data", javaType = byte[].class),
             @Result(property = "cookieAddingStatus", column = "cookie_adding_status",
                     javaType = CookieAddingStatus.class),
-            @Result(property = "rating", column = "rating", javaType = Integer.class),
+            @Result(property = "rating", column = "rating", javaType = Float.class),
             @Result(property = "cookieOwner", column = "user_id", javaType = Integer.class,
                     one = @One(select = "net.cookiespoll.mapper.UserMapper.getUserById")),
-            @Result(property = "usersRatings", column = "id", javaType = Integer.class,
+            @Result(property = "usersRatings", column = "id", javaType = List.class,
                     many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByCookieId")),
     })
     List<Cookie> getByParam(@Param("name") String name, @Param("description") String description,
@@ -83,19 +84,16 @@ public interface CookieMapper {
             @Result(property = "cookieAddingStatus", column = "cookie_adding_status",
                     javaType = CookieAddingStatus.class),
             @Result(property = "rating", column = "rating", javaType = Float.class),
-            @Result(property = "cookieAddingStatus", column = "cookie_adding_status",
-                    javaType = CookieAddingStatus.class),
-            @Result(property = "rating", column = "rating", javaType = Integer.class),
             @Result(property = "cookieOwner", column = "user_id", javaType = Integer.class,
                     one = @One(select = "net.cookiespoll.mapper.UserMapper.getUserById")),
-            @Result(property = "usersRatings", column = "id", javaType = Integer.class,
+            @Result(property = "usersRatings", column = "id", javaType = List.class,
                     many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByCookieId")),
     })
     Cookie getById (Integer id);
 
-  /*  @Select("SELECT id, name, description, file_data, cookie_adding_status, rating, user_id " +
+    @Select("SELECT id, name, description, file_data, cookie_adding_status, rating, user_id " +
             "FROM cookies " +
-            "WHERE id = #{id}")
+            "WHERE user_id = #{id}")
     @Results({
             @Result(property = "id", column = "id", javaType = Integer.class),
             @Result(property = "name", column = "name", javaType = String.class),
@@ -104,14 +102,12 @@ public interface CookieMapper {
             @Result(property = "cookieAddingStatus", column = "cookie_adding_status",
                     javaType = CookieAddingStatus.class),
             @Result(property = "rating", column = "rating", javaType = Float.class),
-            @Result(property = "cookieAddingStatus", column = "cookie_adding_status",
-                    javaType = CookieAddingStatus.class),
-            @Result(property = "rating", column = "rating", javaType = Integer.class),
-            @Result(property = "cookieOwner", column = "user_id", javaType = Integer.class),
+            @Result(property = "cookieOwner", column = "user_id", javaType = Integer.class,
+                    one = @One(select = "net.cookiespoll.mapper.UserMapper.getUserById")),
+            @Result(property = "usersRatings", column = "id", javaType = List.class,
+                    many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByCookieId")),
     })
-    Cookie get (Integer id);
-*/
-
+    Cookie getByUserId (Integer id);
 
     @Update("UPDATE cookies " +
             "SET name = #{cookie.name}, description = #{cookie.description}, file_data = #{cookie.fileData}," +

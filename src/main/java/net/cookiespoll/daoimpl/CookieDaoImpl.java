@@ -4,6 +4,7 @@ import net.cookiespoll.dao.CookieDao;
 import net.cookiespoll.dto.CookiesByParameterRequest;
 import net.cookiespoll.mapper.CookieMapper;
 import net.cookiespoll.model.Cookie;
+import net.cookiespoll.model.CookieAddingStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,13 +42,12 @@ public class CookieDaoImpl implements CookieDao {
     }
 
     @Override
+    public List<Cookie> getByParam(String name, String description, CookieAddingStatus cookieAddingStatus, Float rating,
+                                   Integer userId) {
+        LOGGER.info("Extract list of cookies by given parameters {} {} {} {} {} ", name, description, cookieAddingStatus, rating,
+                    userId);
 
-    public List<Cookie> getByParam(CookiesByParameterRequest cookiesByParameterRequest) {
-        LOGGER.info("Extract list of cookies by given parameters {} ", cookiesByParameterRequest);
-
-        return cookieMapper.getByParam(cookiesByParameterRequest.getName(), cookiesByParameterRequest.getDescription(),
-                                        cookiesByParameterRequest.getCookieAddingStatus(), cookiesByParameterRequest.getRating(),
-                                        cookiesByParameterRequest.getUserId());
+        return cookieMapper.getByParam(name, description, cookieAddingStatus, rating, userId);
     }
 
     @Override

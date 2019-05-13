@@ -9,6 +9,7 @@ import net.cookiespoll.dto.mapper.CookieDtoMapper;
 import net.cookiespoll.exception.CookieRateException;
 import net.cookiespoll.exception.FileValidationException;
 import net.cookiespoll.model.Cookie;
+import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.model.CookieUserRating;
 import net.cookiespoll.model.user.User;
 import net.cookiespoll.service.CookieService;
@@ -26,6 +27,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @Api
@@ -83,7 +85,9 @@ public class CookiesController {
 
        LOGGER.info("Starting processing request for getting cookies by parameters {} ", cookiesByParameterRequest);
 
-       return cookieService.getByParam(cookiesByParameterRequest);
+       return cookieService.getByParam(cookiesByParameterRequest.getName(), cookiesByParameterRequest.getDescription(),
+               cookiesByParameterRequest.getCookieAddingStatus(), cookiesByParameterRequest.getRating(),
+               cookiesByParameterRequest.getUserId());
     }
 
     @ApiOperation(value = "Get cookie by id", response = ArrayList.class)
@@ -129,35 +133,20 @@ public class CookiesController {
     public RateCookieResponse rateCookie (@RequestBody @Valid RateCookieRequest rateCookieRequest) throws CookieRateException {
         int userId = 1; // temporary decision until getting userId from session will be implemented
 
-//        if (cookieUserRatingService.getRatingByUserAndCookie(userId, rateCookieRequest.getId()) != null) {
-//          throw new CookieRateException("This cookie already has been rated by user");
-//        }
-//
-//        cookieUserRatingService.setRatingToCookie(userId, rateCookieRequest.getId(), rateCookieRequest.getRating());
-//
-//        Float cookieRatingSum = cookieUserRatingService.getRatingSumByCookieId(rateCookieRequest.getId());
-//
-//        Integer usersQuantity = cookieUserRatingService.getUserQuantity(rateCookieRequest.getId());
-//
-//        Cookie cookie = cookieDtoMapper.convertDto(rateCookieRequest);
-//
-//        cookie.setRating(cookieService.countRating(usersQuantity, cookieRatingSum));
-//
-//        return new RateCookieResponse(cookieService.update(cookie), rateCookieRequest.getRating());
         Cookie cookie = cookieDtoMapper.convertDto(rateCookieRequest);
 
         List<CookieUserRating> cookieUserRatings = userService.getById(userId).getRatedCookies();
         for (CookieUserRating cookieUserRating: cookieUserRatings) {
-            if (cookieUserRating.getCookie().equals(cookie)) {
+            if (cookieUserRating.getCookie().getId() == cookie.getId()) {
                 throw new CookieRateException("This cookie already has been rated by user");
             }
         }
 
-        cookieUserRatingService.setRatingToCookie(userId, rateCookieRequest.getId(), rateCookieRequest.getRating());
+        cookieUserRatingService.setRatingToCookie(userId, cookie.getId(), rateCookieRequest.getRating());
 
         cookie.setRating(cookieService.countRating(cookie));
 
-        return new RateCookieResponse(cookieService.update(cookie), rateCookieRequest.getRating());
+        return cookieDtoMapper.convertToRateCookieResponse(cookieService.update(cookie), rateCookieRequest.getRating());
 
     }
 
@@ -172,6 +161,20 @@ public class CookiesController {
     public List<Cookie> getUnratedCookies () {
         int userId = 1; // temporary decision until getting userId from session will be implemented
 
-        return cookieService.getUnratedByUserId(userId);
+        CookieAddingStatus cookieAddingStatus = CookieAddingStatus.APPROVED;
+        User user = userService.getById(userId);
+        List<Cookie> allApprovedCookies = cookieService.getByParam(null, null, cookieAddingStatus, null,
+                null);
+        List<Cookie> ratedCookies = user.getRatedCookies()
+                                    .stream()
+                                    .map(CookieUserRating::getCookie)
+                                    .collect(Collectors.toList());
+        List<Cookie> unratedCookies = allApprovedCookies.stream()
+                                        .filter(ratedCookies::contains)
+                                        .collect(Collectors.toList());
+        return unratedCookies;
+      /*  allApprovedCookies.remove(ratedCookies);
+        return allApprovedCookies;*/
+        /*return cookieService.getUnratedByUserId(userId);*/
     }
 }

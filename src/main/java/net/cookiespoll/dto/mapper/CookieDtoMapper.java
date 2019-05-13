@@ -1,9 +1,7 @@
 package net.cookiespoll.dto.mapper;
 
-import net.cookiespoll.dto.AddCookieResponse;
-import net.cookiespoll.dto.RateCookieRequest;
-import net.cookiespoll.dto.UpdateCookieRequest;
-import net.cookiespoll.dto.UpdateCookieResponse;
+import io.swagger.models.auth.In;
+import net.cookiespoll.dto.*;
 import net.cookiespoll.model.Cookie;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +31,12 @@ public class CookieDtoMapper {
     public AddCookieResponse convertToAddCookieResponse(Cookie cookie) {
         return new AddCookieResponse(cookie.getId(), cookie.getName(), cookie.getDescription(),
                 cookie.getFileData(), cookie.getCookieAddingStatus());
+    }
+
+    public RateCookieResponse convertToRateCookieResponse (Cookie cookie, Integer rating) {
+        return new RateCookieResponse(cookie.getId(), cookie.getName(), cookie.getDescription(),
+                cookie.getFileData(), cookie.getCookieAddingStatus(), cookie.getRating(), cookie.getCookieOwner(),
+                rating);
     }
 
 

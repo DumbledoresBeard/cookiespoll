@@ -25,20 +25,10 @@ public interface UserMapper {
             @Result(property = "role", column = "role", javaType = Role.class),
             @Result(property = "ratedCookies", column = "id", javaType = List.class,
                     many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByUserId")),
-//            @Result(property = "addedCookies", column = "id", javaType = List.class,
-//                    many = @Many(select = "net.cookiespoll.mapper.CookieMapper.getByParam")),
+           @Result(property = "addedCookies", column = "id", javaType = List.class,
+                   many = @Many(select = "net.cookiespoll.mapper.CookieMapper.getByUserId")),
     })
     User getUserById(int id);
 
-   /* @Select("SELECT id, login, name, role " +
-            "FROM users " +
-            "WHERE id = #{id}")
-    @Results({
-            @Result(property = "id", column = "id", javaType = Integer.class),
-            @Result(property = "login", column = "login", javaType = String.class),
-            @Result(property = "name", column = "name", javaType = String.class),
-            @Result(property = "role", column = "role", javaType = Role.class),
-    })
 
-    User getUser(int id);*/
 }

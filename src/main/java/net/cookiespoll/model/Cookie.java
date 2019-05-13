@@ -32,24 +32,7 @@ public class Cookie {
 
     public Cookie(String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus, Float rating,
                   User cookieOwner, List<CookieUserRating> usersRatings) {
-        this.name = name;
-        this.description = description;
-        this.fileData = fileData;
-        this.cookieAddingStatus = cookieAddingStatus;
-        this.rating = rating;
-        this.cookieOwner = cookieOwner;
-        this.usersRatings = usersRatings;
-    }
-
-    public Cookie(int id, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus, Float rating,
-                  User cookieOwner) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.fileData = fileData;
-        this.cookieAddingStatus = cookieAddingStatus;
-        this.rating = rating;
-        this.cookieOwner = cookieOwner;
+        this(0, name, description, fileData, cookieAddingStatus, rating, cookieOwner, usersRatings);
     }
 
     public Cookie(int id, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus, Float rating) {
@@ -61,8 +44,9 @@ public class Cookie {
         this.rating = rating;
     }
 
-    public Cookie(String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus,
+    public Cookie(int id, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus,
                   Float rating, User cookieOwner) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.fileData = fileData;
@@ -70,6 +54,12 @@ public class Cookie {
         this.rating = rating;
         this.cookieOwner = cookieOwner;
     }
+
+    public Cookie(String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus,
+                   Float rating, User cookieOwner) {
+        this(0, name, description, fileData, cookieAddingStatus, rating, cookieOwner);
+    }
+
 
     public int getId() {
         return id;

@@ -16,7 +16,7 @@ name VARCHAR (30) UNIQUE NOT NULL,
 description VARCHAR (150),
 file_data BYTEA,
 cookie_adding_status VARCHAR (20),
-rating NUMERIC(5,2),
+rating REAL,
 user_id INT,
 FOREiGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

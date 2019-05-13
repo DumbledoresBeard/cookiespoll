@@ -2,7 +2,6 @@ package net.cookiespoll.service;
 
 import net.cookiespoll.dao.CookieDao;
 import net.cookiespoll.dto.AddCookieRequest;
-import net.cookiespoll.dto.CookiesByParameterRequest;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.model.CookieUserRating;
@@ -37,8 +36,9 @@ public class CookieService {
                                 multipartFile.getBytes(), CookieAddingStatus.WAITING, rating, cookieOwner));
     }
 
-    public List<Cookie> getByParam(CookiesByParameterRequest cookiesByParameterRequest) {
-        return cookieDao.getByParam(cookiesByParameterRequest);
+    public List<Cookie> getByParam(String name, String description, CookieAddingStatus cookieAddingStatus, Float rating,
+                                   Integer userId) {
+        return cookieDao.getByParam(name, description, cookieAddingStatus, rating, userId);
     }
 
     public Cookie update(Cookie cookie) {

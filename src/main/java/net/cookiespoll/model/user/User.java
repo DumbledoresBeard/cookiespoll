@@ -26,11 +26,7 @@ public class User {
     }
 
     public User(String login, String name, Role role, List<CookieUserRating> ratedCookies, List<Cookie> addedCookies) {
-        this.login = login;
-        this.name = name;
-        this.role = role;
-        this.ratedCookies = ratedCookies;
-        this.addedCookies = addedCookies;
+        this(0 , login, name, role, ratedCookies, addedCookies);
     }
 
     public User(int id, String login, String name, Role role) {
@@ -38,14 +34,6 @@ public class User {
         this.login = login;
         this.name = name;
         this.role = role;
-    }
-
-    public User(int id, String login, String name, Role role, List<CookieUserRating> ratedCookies) {
-        this.id = id;
-        this.login = login;
-        this.name = name;
-        this.role = role;
-        this.ratedCookies = ratedCookies;
     }
 
     public int getId() {
