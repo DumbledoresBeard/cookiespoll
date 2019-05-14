@@ -42,7 +42,8 @@ public class CookiesController {
 
     @Autowired
     public CookiesController(CookieService cookieService, FileValidator fileValidator,
-                             CookieUserRatingService cookieUserRatingService, CookieDtoMapper cookieDtoMapper, UserService userService) {
+                             CookieUserRatingService cookieUserRatingService, CookieDtoMapper cookieDtoMapper,
+                             UserService userService) {
         this.cookieService = cookieService;
         this.fileValidator = fileValidator;
         this.cookieUserRatingService = cookieUserRatingService;
@@ -160,21 +161,18 @@ public class CookiesController {
     @ResponseBody
     public List<Cookie> getUnratedCookies () {
         int userId = 1; // temporary decision until getting userId from session will be implemented
-
         CookieAddingStatus cookieAddingStatus = CookieAddingStatus.APPROVED;
+
         User user = userService.getById(userId);
         List<Cookie> allApprovedCookies = cookieService.getByParam(null, null, cookieAddingStatus, null,
                 null);
+
         List<Cookie> ratedCookies = user.getRatedCookies()
                                     .stream()
                                     .map(CookieUserRating::getCookie)
                                     .collect(Collectors.toList());
-        List<Cookie> unratedCookies = allApprovedCookies.stream()
-                                        .filter(ratedCookies::contains)
-                                        .collect(Collectors.toList());
-        return unratedCookies;
-      /*  allApprovedCookies.remove(ratedCookies);
-        return allApprovedCookies;*/
-        /*return cookieService.getUnratedByUserId(userId);*/
+        allApprovedCookies.removeAll(ratedCookies);
+
+        return allApprovedCookies;
     }
 }

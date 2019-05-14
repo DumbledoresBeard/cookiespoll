@@ -25,7 +25,7 @@ public interface UserMapper {
             @Result(property = "role", column = "role", javaType = Role.class),
             @Result(property = "ratedCookies", column = "id", javaType = List.class,
                     many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByUserId")),
-           @Result(property = "addedCookies", column = "id", javaType = List.class,
+            @Result(property = "addedCookies", column = "id", javaType = List.class,
                    many = @Many(select = "net.cookiespoll.mapper.CookieMapper.getByUserId")),
     })
     User getUserById(int id);

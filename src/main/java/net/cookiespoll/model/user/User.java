@@ -5,6 +5,7 @@ import net.cookiespoll.model.CookieUserRating;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class User {
     private int id;
@@ -89,16 +90,62 @@ public class User {
         if (this == o) return true;
         if (!(o instanceof User)) return false;
         User user = (User) o;
+        List<Integer> ids = this.getRatedCookies()
+                .stream()
+                .map(CookieUserRating::getUser)
+                .map(User::getId)
+                .collect(Collectors.toList());
+        List<Integer> userIds = user.getRatedCookies()
+                .stream()
+                .map(CookieUserRating::getUser)
+                .map(User::getId)
+                .collect(Collectors.toList());
+        List<Integer> ratedCookiesIds = this.getRatedCookies()
+                .stream()
+                .map(CookieUserRating::getCookie)
+                .map(Cookie::getId)
+                .collect(Collectors.toList());
+        List<Integer> userRatedCookiesIds = user.getRatedCookies()
+                .stream()
+                .map(CookieUserRating::getCookie)
+                .map(Cookie::getId)
+                .collect(Collectors.toList());
+        List<Integer> addedCookiesIds = this.getAddedCookies()
+                .stream()
+                .map(Cookie::getId)
+                .collect(Collectors.toList());
+        List<Integer> userAddedCookiesIds = user.getAddedCookies()
+                .stream()
+                .map(Cookie::getId)
+                .collect(Collectors.toList());
+
         return getId() == user.getId() &&
-                Objects.equals(getLogin(), user.getLogin()) &&
+                ids.containsAll(userIds)&&
+                ratedCookiesIds.containsAll(userRatedCookiesIds) &&
+                addedCookiesIds.containsAll(userAddedCookiesIds);
+               /* Objects.equals(getLogin(), user.getLogin()) &&
                 Objects.equals(getName(), user.getName()) &&
                 getRole() == user.getRole() &&
                 Objects.equals(getRatedCookies(), user.getRatedCookies()) &&
-                Objects.equals(getAddedCookies(), user.getAddedCookies());
+                Objects.equals(getAddedCookies(), user.getAddedCookies());*/
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getLogin(), getName(), getRole(), getRatedCookies(), getAddedCookies());
+        List<Integer> ids = this.getRatedCookies()
+                .stream()
+                .map(CookieUserRating::getUser)
+                .map(User::getId)
+                .collect(Collectors.toList());
+        List<Integer> ratedCookiesIds = this.getRatedCookies()
+                .stream()
+                .map(CookieUserRating::getCookie)
+                .map(Cookie::getId)
+                .collect(Collectors.toList());
+        List<Integer> addedCookiesIds = this.getAddedCookies()
+                .stream()
+                .map(Cookie::getId)
+                .collect(Collectors.toList());
+        return Objects.hash(getId(), ids, ratedCookiesIds, addedCookiesIds);
     }
 }

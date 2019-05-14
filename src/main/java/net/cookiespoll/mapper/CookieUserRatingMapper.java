@@ -40,7 +40,7 @@ public interface CookieUserRatingMapper {
     @Results({
             @Result(property = "user", column = "user_id", javaType = User.class,
                     one = @One(select = "net.cookiespoll.mapper.UserMapper.getUserById")),
-            @Result(property = "cookie", column = "id", javaType = Cookie.class,
+            @Result(property = "cookie", column = "cookie_id", javaType = Cookie.class,
                     one = @One(select = "net.cookiespoll.mapper.CookieMapper.getById")),
             @Result(property = "rating", column = "rating", javaType = Integer.class),
     })
