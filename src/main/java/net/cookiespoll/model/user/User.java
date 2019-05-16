@@ -1,5 +1,6 @@
 package net.cookiespoll.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieUserRating;
 
@@ -69,18 +70,22 @@ public class User {
         this.role = role;
     }
 
+    @JsonIgnore
     public List<CookieUserRating> getRatedCookies() {
         return ratedCookies;
     }
 
+    @JsonIgnore
     public void setRatedCookies(List<CookieUserRating> ratedCookies) {
         this.ratedCookies = ratedCookies;
     }
 
+    @JsonIgnore
     public List<Cookie> getAddedCookies() {
         return addedCookies;
     }
 
+    @JsonIgnore
     public void setAddedCookies(List<Cookie> addedCookies) {
         this.addedCookies = addedCookies;
     }

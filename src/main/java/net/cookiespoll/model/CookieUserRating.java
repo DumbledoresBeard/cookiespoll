@@ -1,6 +1,7 @@
 package net.cookiespoll.model;
 
 import net.cookiespoll.model.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Objects;
 
@@ -19,10 +20,12 @@ public class CookieUserRating {
         this.user = user;
     }
 
+    @JsonIgnoreProperties("usersRatings")
     public Cookie getCookie() {
         return cookie;
     }
 
+    @JsonIgnoreProperties("usersRatings")
     public void setCookie(Cookie cookie) {
         this.cookie = cookie;
     }
