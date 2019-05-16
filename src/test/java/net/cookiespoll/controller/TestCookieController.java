@@ -326,7 +326,7 @@ public class TestCookieController {
                 .param("description", cookiesByParameterRequest.getDescription())
                 .param("cookieAddingStatus", cookiesByParameterRequest.getCookieAddingStatus().toString())
                 .param("rating", cookiesByParameterRequest.getRating().toString())
-                .param("userId", cookiesByParameterRequest.getUserId().toString())
+                .param("userId", cookiesByParameterRequest.getCookieId().toString())
         ).andExpect(status().isOk())
                 .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}}]"));
 
@@ -439,7 +439,7 @@ public class TestCookieController {
 
         Cookie resultCookie = new ObjectMapper().readValue(response, Cookie.class);
 
-        Assert.assertEquals(cookie.getId(), resultCookie.getId());
+        Assert.assertEquals(cookie.getCookieId(), resultCookie.getCookieId());
         Assert.assertEquals(cookie.getName(), resultCookie.getName());
         Assert.assertEquals(cookie.getDescription(), resultCookie.getDescription());
         Assert.assertArrayEquals(cookie.getFileData(), resultCookie.getFileData());
@@ -472,7 +472,7 @@ public class TestCookieController {
         UpdateCookieResponse resultResponse = new ObjectMapper().readValue(response,
                                                             UpdateCookieResponse.class);
 
-        assert updateCookieRequest.getId() == resultResponse.getId();
+        assert updateCookieRequest.getCookieId() == resultResponse.getCookieId();
         Assert.assertEquals(updateCookieResponse.getName(), resultResponse.getName());
         Assert.assertEquals(updateCookieResponse.getDescription(), resultResponse.getDescription());
         Assert.assertArrayEquals(updateCookieResponse.getFileData(), resultResponse.getFileData());

@@ -135,15 +135,21 @@ public class CookiesController {
         int userId = 1; // temporary decision until getting userId from session will be implemented
 
         Cookie cookie = cookieDtoMapper.convertDto(rateCookieRequest);
+        User user = userService.getById(userId);
 
-        List<CookieUserRating> cookieUserRatings = userService.getById(userId).getRatedCookies();
+        List<CookieUserRating> cookieUserRatings = user.getRatedCookies();
         for (CookieUserRating cookieUserRating: cookieUserRatings) {
-            if (cookieUserRating.getCookie().getId() == cookie.getId()) {
+            if (cookieUserRating.getCookie().getCookieId() == cookie.getCookieId()) {
                 throw new CookieRateException("This cookie already has been rated by user");
             }
         }
 
-        cookieUserRatingService.setRatingToCookie(userId, cookie.getId(), rateCookieRequest.getRating());
+        cookieUserRatings.add(new CookieUserRating(user, cookie, rateCookieRequest.getRating()));
+        user.setRatedCookies(cookieUserRatings);
+
+        userService.update(user, new CookieUserRating());
+
+        cookieUserRatingService.setRatingToCookie(userId, cookie.getCookieId(), rateCookieRequest.getRating());
 
         cookie.setRating(cookieService.countRating(cookie));
 

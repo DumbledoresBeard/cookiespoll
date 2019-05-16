@@ -54,7 +54,7 @@ public class CookieService {
     }
 
     public Float countRating(Cookie cookie) {
-        List<CookieUserRating> cookieUserRatingList = this.getById(cookie.getId()).getUsersRatings();
+        List<CookieUserRating> cookieUserRatingList = this.getById(cookie.getCookieId()).getUsersRatings();
         Long usersQuantity = cookieUserRatingList.stream().count();
         Integer cookieRatingSum = cookieUserRatingList.stream()
                 .mapToInt(cookieUserRating -> cookieUserRating.getRating()).sum();

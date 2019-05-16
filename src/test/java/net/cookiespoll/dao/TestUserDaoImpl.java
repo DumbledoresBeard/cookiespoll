@@ -38,7 +38,7 @@ public class TestUserDaoImpl {
 
         User resultUser = userDaoImpl.getById(id);
 
-        Assert.assertEquals(userAdmin.getId(), resultUser.getId());
+        Assert.assertEquals(userAdmin.getCookieId(), resultUser.getCookieId());
         Assert.assertEquals(userAdmin.getLogin(), resultUser.getLogin());
         Assert.assertEquals(userAdmin.getName(), resultUser.getName());
         Assert.assertEquals(userAdmin.getRole(), resultUser.getRole());

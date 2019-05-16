@@ -1,6 +1,5 @@
 package net.cookiespoll.dto.mapper;
 
-import io.swagger.models.auth.In;
 import net.cookiespoll.dto.*;
 import net.cookiespoll.model.Cookie;
 import org.springframework.stereotype.Component;
@@ -24,17 +23,17 @@ public class CookieDtoMapper {
     }
 
     public UpdateCookieResponse convertToUpdateResponse(Cookie cookie) {
-        return new UpdateCookieResponse(cookie.getId(), cookie.getName(), cookie.getDescription(), cookie.getFileData(),
+        return new UpdateCookieResponse(cookie.getCookieId(), cookie.getName(), cookie.getDescription(), cookie.getFileData(),
                 cookie.getCookieAddingStatus(), cookie.getRating(), cookie.getCookieOwner());
     }
 
     public AddCookieResponse convertToAddCookieResponse(Cookie cookie) {
-        return new AddCookieResponse(cookie.getId(), cookie.getName(), cookie.getDescription(),
+        return new AddCookieResponse(cookie.getCookieId(), cookie.getName(), cookie.getDescription(),
                 cookie.getFileData(), cookie.getCookieAddingStatus());
     }
 
     public RateCookieResponse convertToRateCookieResponse (Cookie cookie, Integer rating) {
-        return new RateCookieResponse(cookie.getId(), cookie.getName(), cookie.getDescription(),
+        return new RateCookieResponse(cookie.getCookieId(), cookie.getName(), cookie.getDescription(),
                 cookie.getFileData(), cookie.getCookieAddingStatus(), cookie.getRating(), cookie.getCookieOwner(),
                 rating);
     }

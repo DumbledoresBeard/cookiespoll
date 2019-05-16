@@ -1,6 +1,7 @@
 package net.cookiespoll.model.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieUserRating;
 
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User {
     private int id;
     private String login;
@@ -70,22 +72,22 @@ public class User {
         this.role = role;
     }
 
-    @JsonIgnore
+    /*@JsonIgnore*/
     public List<CookieUserRating> getRatedCookies() {
         return ratedCookies;
     }
 
-    @JsonIgnore
+   /* @JsonIgnore*/
     public void setRatedCookies(List<CookieUserRating> ratedCookies) {
         this.ratedCookies = ratedCookies;
     }
-
-    @JsonIgnore
+/*
+    @JsonIgnore*/
     public List<Cookie> getAddedCookies() {
         return addedCookies;
     }
 
-    @JsonIgnore
+  /*  @JsonIgnore*/
     public void setAddedCookies(List<Cookie> addedCookies) {
         this.addedCookies = addedCookies;
     }
@@ -108,20 +110,20 @@ public class User {
         List<Integer> ratedCookiesIds = this.getRatedCookies()
                 .stream()
                 .map(CookieUserRating::getCookie)
-                .map(Cookie::getId)
+                .map(Cookie::getCookieId)
                 .collect(Collectors.toList());
         List<Integer> userRatedCookiesIds = user.getRatedCookies()
                 .stream()
                 .map(CookieUserRating::getCookie)
-                .map(Cookie::getId)
+                .map(Cookie::getCookieId)
                 .collect(Collectors.toList());
         List<Integer> addedCookiesIds = this.getAddedCookies()
                 .stream()
-                .map(Cookie::getId)
+                .map(Cookie::getCookieId)
                 .collect(Collectors.toList());
         List<Integer> userAddedCookiesIds = user.getAddedCookies()
                 .stream()
-                .map(Cookie::getId)
+                .map(Cookie::getCookieId)
                 .collect(Collectors.toList());
 
         return getId() == user.getId() &&
@@ -145,11 +147,11 @@ public class User {
         List<Integer> ratedCookiesIds = this.getRatedCookies()
                 .stream()
                 .map(CookieUserRating::getCookie)
-                .map(Cookie::getId)
+                .map(Cookie::getCookieId)
                 .collect(Collectors.toList());
         List<Integer> addedCookiesIds = this.getAddedCookies()
                 .stream()
-                .map(Cookie::getId)
+                .map(Cookie::getCookieId)
                 .collect(Collectors.toList());
         return Objects.hash(getId(), ids, ratedCookiesIds, addedCookiesIds);
     }

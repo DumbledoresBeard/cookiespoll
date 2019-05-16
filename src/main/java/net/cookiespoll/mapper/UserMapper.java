@@ -1,5 +1,6 @@
 package net.cookiespoll.mapper;
 
+import net.cookiespoll.model.CookieUserRating;
 import net.cookiespoll.model.user.Role;
 import net.cookiespoll.model.user.User;
 import org.apache.ibatis.annotations.*;
@@ -30,5 +31,19 @@ public interface UserMapper {
     })
     User getUserById(int id);
 
+
+    @Update({"<script>",
+            "UPDATE users SET login = #{user.login}, name = #{user.name}, role = #{user.role}" +
+            "WHERE id = #{user.id}; ",
+            "INSERT INTO cookie_user_rating (user_id, cookie_id, rating) " +
+            "VALUES " +
+            "<foreach item='cookieUserRating' collection='user.ratedCookies' separator=','>",
+            "(#{cookieUserRating.user.id}, #{cookieUserRating.cookie.cookieId}, #{cookieUserRating.rating}) ",
+            "ON CONFLICT (user_id, cookie_id) " +
+                    "DO UPDATE SET (user_id, cookie_id, rating) = (#{cookieUserRating.user.id}, #{cookieUserRating.cookie.cookieId}, " +
+                    "#{cookieUserRating.rating})",
+            "</foreach>",
+            "</script>"})
+    void update(@Param("user") User user, @Param("cookieUserRating") CookieUserRating cookieUserRating);
 
 }

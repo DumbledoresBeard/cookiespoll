@@ -2,11 +2,9 @@ package net.cookiespoll.mapper;
 
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
-import net.cookiespoll.model.CookieUserRating;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -41,7 +39,7 @@ public interface CookieMapper {
             "</where>" +
             "</script>"})
     @Results({
-            @Result(property = "id", column = "id", javaType = Integer.class),
+            @Result(property = "cookieId", column = "id", javaType = Integer.class),
             @Result(property = "name", column = "name", javaType = String.class),
             @Result(property = "description", column = "description", javaType = String.class),
             @Result(property = "fileData", column = "file_data", javaType = byte[].class),
@@ -62,7 +60,7 @@ public interface CookieMapper {
             "WHERE cookie_user_rating.user_id = #{userId})")
 
     @Results({
-            @Result(property = "id", column = "id", javaType = Integer.class),
+            @Result(property = "cookieId", column = "id", javaType = Integer.class),
             @Result(property = "name", column = "name", javaType = String.class),
             @Result(property = "description", column = "description", javaType = String.class),
             @Result(property = "fileData", column = "file_data", javaType = byte[].class),
@@ -77,7 +75,7 @@ public interface CookieMapper {
             "FROM cookies " +
             "WHERE id = #{id}")
     @Results({
-            @Result(property = "id", column = "id", javaType = Integer.class),
+            @Result(property = "cookieId", column = "id", javaType = Integer.class),
             @Result(property = "name", column = "name", javaType = String.class),
             @Result(property = "description", column = "description", javaType = String.class),
             @Result(property = "fileData", column = "file_data", javaType = byte[].class),
@@ -95,7 +93,7 @@ public interface CookieMapper {
             "FROM cookies " +
             "WHERE user_id = #{id}")
     @Results({
-            @Result(property = "id", column = "id", javaType = Integer.class),
+            @Result(property = "cookieId", column = "id", javaType = Integer.class),
             @Result(property = "name", column = "name", javaType = String.class),
             @Result(property = "description", column = "description", javaType = String.class),
             @Result(property = "fileData", column = "file_data", javaType = byte[].class),

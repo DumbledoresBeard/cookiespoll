@@ -38,11 +38,11 @@ public class TestCookieMapper {
 
     @Test
     public void testCookieMapperInsert() {
-        when(cookieMapper.insert(cookie, cookieOwner.getId())).thenReturn(1);
+        when(cookieMapper.insert(cookie, cookieOwner.getCookieId())).thenReturn(1);
 
-        assert cookieMapper.insert(cookie, cookieOwner.getId()) == 1;
+        assert cookieMapper.insert(cookie, cookieOwner.getCookieId()) == 1;
 
-        verify(cookieMapper).insert(cookie, cookieOwner.getId());
+        verify(cookieMapper).insert(cookie, cookieOwner.getCookieId());
 
     }
 
@@ -64,7 +64,7 @@ public class TestCookieMapper {
                 cookieRating, 1)).thenReturn(cookies);
 
         Assert.assertEquals(cookieMapper.getByParam("cookie", "tasty cookie", CookieAddingStatus.WAITING,
-                cookieRating, 1).get(0).getId(), cookie.getId());
+                cookieRating, 1).get(0).getCookieId(), cookie.getCookieId());
 
         verify(cookieMapper).getByParam("cookie", "tasty cookie", CookieAddingStatus.WAITING,
                 cookieRating, 1);
@@ -74,7 +74,7 @@ public class TestCookieMapper {
     public void testCookieMapperGetById () {
         when(cookieMapper.getById(1)).thenReturn(cookie);
 
-        Assert.assertEquals(cookieMapper.getById(1).getId(), cookie.getId());
+        Assert.assertEquals(cookieMapper.getById(1).getCookieId(), cookie.getCookieId());
 
         verify(cookieMapper).getById(1);
     }

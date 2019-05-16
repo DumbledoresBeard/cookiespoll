@@ -1,5 +1,6 @@
 package net.cookiespoll.dao;
 
+import net.cookiespoll.model.CookieUserRating;
 import net.cookiespoll.model.user.User;
 
 public interface UserDao {
@@ -8,6 +9,6 @@ public interface UserDao {
 
     User getById(int id);
 
-    User update (User user);
+    User update(User user, CookieUserRating cookieUserRating);
 
 }

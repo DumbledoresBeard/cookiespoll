@@ -1,14 +1,17 @@
 package net.cookiespoll.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import net.cookiespoll.model.user.User;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "cookieId")
 public class Cookie {
-    private int id;
+    private int cookieId;
     private String name;
     private String description;
     private byte[] fileData;
@@ -19,9 +22,9 @@ public class Cookie {
 
     public Cookie() {}
 
-    public Cookie(int id, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus,
+    public Cookie(int cookieId, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus,
                   Float rating, User cookieOwner, List<CookieUserRating> usersRatings) {
-        this.id = id;
+        this.cookieId = cookieId;
         this.name = name;
         this.description = description;
         this.fileData = fileData;
@@ -36,8 +39,8 @@ public class Cookie {
         this(0, name, description, fileData, cookieAddingStatus, rating, cookieOwner, usersRatings);
     }
 
-    public Cookie(int id, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus, Float rating) {
-        this.id = id;
+    public Cookie(int cookieId, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus, Float rating) {
+        this.cookieId = cookieId;
         this.name = name;
         this.description = description;
         this.fileData = fileData;
@@ -45,9 +48,9 @@ public class Cookie {
         this.rating = rating;
     }
 
-    public Cookie(int id, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus,
+    public Cookie(int cookieId, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus,
                   Float rating, User cookieOwner) {
-        this.id = id;
+        this.cookieId = cookieId;
         this.name = name;
         this.description = description;
         this.fileData = fileData;
@@ -62,12 +65,12 @@ public class Cookie {
     }
 
 
-    public int getId() {
-        return id;
+    public int getCookieId() {
+        return cookieId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setCookieId(int cookieId) {
+        this.cookieId = cookieId;
     }
 
     public String getName() {
@@ -144,14 +147,14 @@ public class Cookie {
         List<Integer> cookiesIdsThis = this.getUsersRatings()
                 .stream()
                 .map(CookieUserRating::getCookie)
-                .map(Cookie::getId)
+                .map(Cookie::getCookieId)
                 .collect(Collectors.toList());
         List<Integer> cookiesIds = cookie.getUsersRatings()
                 .stream()
                 .map(CookieUserRating::getCookie)
-                .map(Cookie::getId)
+                .map(Cookie::getCookieId)
                 .collect(Collectors.toList());
-        return getId() == cookie.getId() &&
+        return getCookieId() == cookie.getCookieId() &&
                 cookiesIdsThis.containsAll(cookiesIds) &&
                 ids.containsAll(userIds);
                 /*Objects.equals(getName(), cookie.getName()) &&
@@ -173,9 +176,9 @@ public class Cookie {
         List<Integer> cookiesIdsThis = this.getUsersRatings()
                 .stream()
                 .map(CookieUserRating::getCookie)
-                .map(Cookie::getId)
+                .map(Cookie::getCookieId)
                 .collect(Collectors.toList());
-        int result = Objects.hash(getId(), ids, cookiesIdsThis);
+        int result = Objects.hash(getCookieId(), ids, cookiesIdsThis);
         result = 31 * result;
         return result;
     }

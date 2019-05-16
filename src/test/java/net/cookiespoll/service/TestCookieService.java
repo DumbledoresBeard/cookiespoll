@@ -54,13 +54,13 @@ public class TestCookieService {
 
         Cookie resultCookie = cookieService.insert(addCookieRequest, mockMultipartFile, cookieOwner);
 
-        Assert.assertEquals(1, resultCookie.getId());
+        Assert.assertEquals(1, resultCookie.getCookieId());
         Assert.assertEquals(addCookieRequest.getName(), resultCookie.getName());
         Assert.assertEquals(addCookieRequest.getDescription(), resultCookie.getDescription());
         Assert.assertArrayEquals(mockMultipartFile.getBytes(), resultCookie.getFileData());
         Assert.assertEquals(cookie.getCookieAddingStatus(), resultCookie.getCookieAddingStatus());
         Assert.assertEquals(0, resultCookie.getRating(), 0.0f);
-        Assert.assertEquals(1, resultCookie.getCookieOwner().getId());
+        Assert.assertEquals(1, resultCookie.getCookieOwner().getCookieId());
 
         verify(cookieDao).insert(cookie);
     }
@@ -77,7 +77,7 @@ public class TestCookieService {
 
         List<Cookie> resultCookieList = cookieService.getByParam(cookiesByParameterRequest);
 
-        Assert.assertEquals(resultCookieList.get(0).getId(), cookieWithId.getId());
+        Assert.assertEquals(resultCookieList.get(0).getCookieId(), cookieWithId.getCookieId());
         Assert.assertEquals(resultCookieList.get(0).getName(), cookieWithId.getName());
         Assert.assertEquals(resultCookieList.get(0).getDescription(), cookieWithId.getDescription());
         Assert.assertArrayEquals(resultCookieList.get(0).getFileData(), cookieWithId.getFileData());
@@ -86,7 +86,7 @@ public class TestCookieService {
         Assert.assertEquals(resultCookieList.get(0).getRating(), cookieWithId.getRating());
         Assert.assertEquals(resultCookieList.get(0).getCookieOwner(), cookieWithId.getCookieOwner());
 
-        Assert.assertEquals(resultCookieList.get(1).getId(), cookieWith2Id.getId());
+        Assert.assertEquals(resultCookieList.get(1).getCookieId(), cookieWith2Id.getCookieId());
         Assert.assertEquals(resultCookieList.get(1).getName(), cookieWith2Id.getName());
         Assert.assertEquals(resultCookieList.get(1).getDescription(), cookieWith2Id.getDescription());
         Assert.assertArrayEquals(resultCookieList.get(1).getFileData(), cookieWith2Id.getFileData());
@@ -116,7 +116,7 @@ public class TestCookieService {
 
         Cookie resultCookie = cookieService.getById(1);
 
-        Assert.assertEquals(resultCookie.getId(), cookieWithId.getId());
+        Assert.assertEquals(resultCookie.getCookieId(), cookieWithId.getCookieId());
         Assert.assertEquals(resultCookie.getName(), cookieWithId.getName());
         Assert.assertEquals(resultCookie.getDescription(), cookieWithId.getDescription());
         Assert.assertArrayEquals(resultCookie.getFileData(), cookieWithId.getFileData());
@@ -136,7 +136,7 @@ public class TestCookieService {
 
         List<Cookie> resultCookieList = cookieService.getUnratedByUserId(userId);
 
-        Assert.assertEquals(resultCookieList.get(0).getId(), cookieWithId.getId());
+        Assert.assertEquals(resultCookieList.get(0).getCookieId(), cookieWithId.getCookieId());
         Assert.assertEquals(resultCookieList.get(0).getName(), cookieWithId.getName());
         Assert.assertEquals(resultCookieList.get(0).getDescription(), cookieWithId.getDescription());
         Assert.assertArrayEquals(resultCookieList.get(0).getFileData(), cookieWithId.getFileData());
@@ -144,7 +144,7 @@ public class TestCookieService {
                 cookieWithId.getCookieAddingStatus());
         Assert.assertEquals(resultCookieList.get(0).getRating(), cookieWithId.getRating());
 
-        Assert.assertEquals(resultCookieList.get(1).getId(), cookieWith2Id.getId());
+        Assert.assertEquals(resultCookieList.get(1).getCookieId(), cookieWith2Id.getCookieId());
         Assert.assertEquals(resultCookieList.get(1).getName(), cookieWith2Id.getName());
         Assert.assertEquals(resultCookieList.get(1).getDescription(), cookieWith2Id.getDescription());
         Assert.assertArrayEquals(resultCookieList.get(1).getFileData(), cookieWith2Id.getFileData());
