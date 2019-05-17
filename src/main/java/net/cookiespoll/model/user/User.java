@@ -72,22 +72,18 @@ public class User {
         this.role = role;
     }
 
-    /*@JsonIgnore*/
     public List<CookieUserRating> getRatedCookies() {
         return ratedCookies;
     }
 
-   /* @JsonIgnore*/
     public void setRatedCookies(List<CookieUserRating> ratedCookies) {
         this.ratedCookies = ratedCookies;
     }
-/*
-    @JsonIgnore*/
+
     public List<Cookie> getAddedCookies() {
         return addedCookies;
     }
 
-  /*  @JsonIgnore*/
     public void setAddedCookies(List<Cookie> addedCookies) {
         this.addedCookies = addedCookies;
     }
@@ -97,44 +93,39 @@ public class User {
         if (this == o) return true;
         if (!(o instanceof User)) return false;
         User user = (User) o;
-        List<Integer> ids = this.getRatedCookies()
+        String ids = this.getRatedCookies()
                 .stream()
                 .map(CookieUserRating::getUser)
                 .map(User::getId)
-                .collect(Collectors.toList());
-        List<Integer> userIds = user.getRatedCookies()
+                .collect(Collectors.toList()).toString();
+        String userIds = user.getRatedCookies()
                 .stream()
                 .map(CookieUserRating::getUser)
                 .map(User::getId)
-                .collect(Collectors.toList());
-        List<Integer> ratedCookiesIds = this.getRatedCookies()
+                .collect(Collectors.toList()).toString();
+        String ratedCookiesIds = this.getRatedCookies()
                 .stream()
                 .map(CookieUserRating::getCookie)
                 .map(Cookie::getCookieId)
-                .collect(Collectors.toList());
-        List<Integer> userRatedCookiesIds = user.getRatedCookies()
+                .collect(Collectors.toList()).toString();
+        String userRatedCookiesIds = user.getRatedCookies()
                 .stream()
                 .map(CookieUserRating::getCookie)
                 .map(Cookie::getCookieId)
-                .collect(Collectors.toList());
-        List<Integer> addedCookiesIds = this.getAddedCookies()
+                .collect(Collectors.toList()).toString();
+        String addedCookiesIds = this.getAddedCookies()
                 .stream()
                 .map(Cookie::getCookieId)
-                .collect(Collectors.toList());
-        List<Integer> userAddedCookiesIds = user.getAddedCookies()
+                .collect(Collectors.toList()).toString();
+        String userAddedCookiesIds = user.getAddedCookies()
                 .stream()
                 .map(Cookie::getCookieId)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()).toString();
 
         return getId() == user.getId() &&
-                ids.containsAll(userIds)&&
-                ratedCookiesIds.containsAll(userRatedCookiesIds) &&
-                addedCookiesIds.containsAll(userAddedCookiesIds);
-               /* Objects.equals(getLogin(), user.getLogin()) &&
-                Objects.equals(getName(), user.getName()) &&
-                getRole() == user.getRole() &&
-                Objects.equals(getRatedCookies(), user.getRatedCookies()) &&
-                Objects.equals(getAddedCookies(), user.getAddedCookies());*/
+                ids.equals(userIds)&&
+                ratedCookiesIds.equals(userRatedCookiesIds) &&
+                addedCookiesIds.equals(userAddedCookiesIds);
     }
 
     @Override

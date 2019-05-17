@@ -51,7 +51,7 @@ public class CookieDaoImpl implements CookieDao {
 
     @Override
     public List<Cookie> getUnratedCookiesByUserId(int userId) {
-        return cookieMapper.getUnratedCookiesByUserId(userId);
+        return cookieMapper.getUnratedByUserId(userId);
     }
 
     @Override

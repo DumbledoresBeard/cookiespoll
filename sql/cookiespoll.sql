@@ -3,7 +3,7 @@ CREATE DATABASE `cookiespoll`;
 USE `cookiespoll`;
 
 CREATE TABLE users(
-cookieId SERIAL PRIMARY KEY,
+id SERIAL PRIMARY KEY,
 login VARCHAR (30) UNIQUE NOT NULL,
 name VARCHAR (20),
 role VARCHAR (20)
@@ -11,7 +11,7 @@ role VARCHAR (20)
 
 
 CREATE TABLE cookies(
-cookieId SERIAL PRIMARY KEY,
+id SERIAL PRIMARY KEY,
 name VARCHAR (30) UNIQUE NOT NULL,
 description VARCHAR (150),
 file_data BYTEA,

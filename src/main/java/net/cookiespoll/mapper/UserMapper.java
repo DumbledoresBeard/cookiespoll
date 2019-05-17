@@ -35,6 +35,7 @@ public interface UserMapper {
     @Update({"<script>",
             "UPDATE users SET login = #{user.login}, name = #{user.name}, role = #{user.role}" +
             " WHERE id = #{user.id}; ",
+
             "INSERT INTO cookie_user_rating (user_id, cookie_id, rating) " +
             "VALUES " +
             "<foreach item='cookieUserRating' collection='user.ratedCookies' separator=','>",

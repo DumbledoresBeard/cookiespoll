@@ -149,8 +149,6 @@ public class CookiesController {
 
         userService.update(user, new CookieUserRating());
 
-//        cookieUserRatingService.setRatingToCookie(userId, cookie.getCookieId(), rateCookieRequest.getRating());
-
         cookie.setRating(cookieService.countRating(cookie));
 
         return cookieDtoMapper.convertToRateCookieResponse(cookieService.update(cookie), rateCookieRequest.getRating());

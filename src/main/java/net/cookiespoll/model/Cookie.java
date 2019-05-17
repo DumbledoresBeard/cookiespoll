@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "cookieId")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "cookieId")
 public class Cookie {
     private int cookieId;
     private String name;
@@ -134,36 +133,29 @@ public class Cookie {
         if (this == o) return true;
         if (!(o instanceof Cookie)) return false;
         Cookie cookie = (Cookie) o;
-        List<Integer> ids = this.getUsersRatings()
+        String ids = this.getUsersRatings()
                 .stream()
                 .map(CookieUserRating::getUser)
                 .map(User::getId)
-                .collect(Collectors.toList());
-        List<Integer> userIds = cookie.getUsersRatings()
+                .collect(Collectors.toList()).toString();
+        String userIds = cookie.getUsersRatings()
                 .stream()
                 .map(CookieUserRating::getUser)
                 .map(User::getId)
-                .collect(Collectors.toList());
-        List<Integer> cookiesIdsThis = this.getUsersRatings()
+                .collect(Collectors.toList()).toString();
+        String cookiesIdsThis = this.getUsersRatings()
                 .stream()
                 .map(CookieUserRating::getCookie)
                 .map(Cookie::getCookieId)
-                .collect(Collectors.toList());
-        List<Integer> cookiesIds = cookie.getUsersRatings()
+                .collect(Collectors.toList()).toString();
+        String cookiesIds = cookie.getUsersRatings()
                 .stream()
                 .map(CookieUserRating::getCookie)
                 .map(Cookie::getCookieId)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()).toString();
         return getCookieId() == cookie.getCookieId() &&
-                cookiesIdsThis.containsAll(cookiesIds) &&
-                ids.containsAll(userIds);
-                /*Objects.equals(getName(), cookie.getName()) &&
-                Objects.equals(getDescription(), cookie.getDescription()) &&
-                Arrays.equals(getFileData(), cookie.getFileData()) &&
-                getCookieAddingStatus() == cookie.getCookieAddingStatus() &&
-                Objects.equals(getRating(), cookie.getRating()) &&
-                Objects.equals(getCookieOwner(), cookie.getCookieOwner()) &&
-                Objects.equals(getUsersRatings(), cookie.getUsersRatings());*/
+                cookiesIdsThis.equals(cookiesIds) &&
+                ids.equals(userIds);
     }
 
     @Override

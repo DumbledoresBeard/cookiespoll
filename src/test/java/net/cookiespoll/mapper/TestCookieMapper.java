@@ -89,11 +89,11 @@ public class TestCookieMapper {
         cookies.add(cookieWith1Id);
         cookies.add(cookieWith2Id);
 
-        when(cookieMapper.getUnratedCookiesByUserId(1)).thenReturn(cookies);
+        when(cookieMapper.getUnratedByUserId(1)).thenReturn(cookies);
 
-        Assert.assertEquals(cookies, cookieMapper.getUnratedCookiesByUserId(1));
+        Assert.assertEquals(cookies, cookieMapper.getUnratedByUserId(1));
 
-        verify(cookieMapper).getUnratedCookiesByUserId(1);
+        verify(cookieMapper).getUnratedByUserId(1);
     }
 }
 */

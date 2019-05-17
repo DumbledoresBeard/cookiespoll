@@ -124,9 +124,9 @@ public class TestCookieDaoImpl {
         cookies.add(cookieWith1Id);
         cookies.add(cookieWith2Id);
 
-        when(cookieMapper.getUnratedCookiesByUserId(1)).thenReturn(cookies);
+        when(cookieMapper.getUnratedByUserId(1)).thenReturn(cookies);
 
-        List<Cookie> resultList = cookieDaoImpl.getUnratedCookiesByUserId(1);
+        List<Cookie> resultList = cookieDaoImpl.getUnratedByUserId(1);
 
         Assert.assertEquals(resultList.get(0).getCookieId(), cookieWith1Id.getCookieId());
         Assert.assertEquals(resultList.get(0).getName(), cookieWith1Id.getName());
@@ -146,7 +146,7 @@ public class TestCookieDaoImpl {
         Assert.assertEquals(resultList.get(1).getRating(), cookieWith2Id.getRating());
         Assert.assertEquals(resultList.get(1).getCookieOwner(), cookieWith2Id.getCookieOwner());
 
-        verify(cookieMapper).getUnratedCookiesByUserId(1);
+        verify(cookieMapper).getUnratedByUserId(1);
 
     }
 

@@ -132,7 +132,7 @@ public class TestCookieService {
         cookies.add(cookieWithId);
         cookies.add(cookieWith2Id);
 
-        when(cookieDao.getUnratedCookiesByUserId(userId)).thenReturn(cookies);
+        when(cookieDao.getUnratedByUserId(userId)).thenReturn(cookies);
 
         List<Cookie> resultCookieList = cookieService.getUnratedByUserId(userId);
 
@@ -152,7 +152,7 @@ public class TestCookieService {
                 cookieWith2Id.getCookieAddingStatus());
         Assert.assertEquals(resultCookieList.get(1).getRating(), cookieWith2Id.getRating());
 
-        verify(cookieDao).getUnratedCookiesByUserId(userId);
+        verify(cookieDao).getUnratedByUserId(userId);
     }
 
     @Test
