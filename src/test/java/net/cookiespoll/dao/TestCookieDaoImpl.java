@@ -1,4 +1,4 @@
-/*
+
 package net.cookiespoll.dao;
 
 import net.cookiespoll.daoimpl.CookieDaoImpl;
@@ -6,6 +6,7 @@ import net.cookiespoll.dto.CookiesByParameterRequest;
 import net.cookiespoll.mapper.CookieMapper;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
+import net.cookiespoll.model.CookieUserRating;
 import net.cookiespoll.model.user.Role;
 import net.cookiespoll.model.user.User;
 import org.junit.Assert;
@@ -18,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -35,6 +37,8 @@ public class TestCookieDaoImpl {
     private Float cookieRating = new Float(0);
     private Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2],
             CookieAddingStatus.WAITING, cookieRating, cookieOwner);
+    private User userAdmin = new User(1, "login", "name", Role.ADMIN);
+    private List<CookieUserRating> usersRatings = Arrays.asList(new CookieUserRating(userAdmin, cookie, 1));
 
     @Before
     public void setUp() throws Exception {
@@ -43,7 +47,7 @@ public class TestCookieDaoImpl {
 
     @Test
     public void testCookieDaoInsert() {
-        when(cookieMapper.insert(cookie, cookieOwner.getCookieId())).thenReturn(1);
+        when(cookieMapper.insert(cookie)).thenReturn(1);
 
         Cookie resultCookie = cookieDaoImpl.insert(cookie);
 
@@ -55,7 +59,7 @@ public class TestCookieDaoImpl {
         Assert.assertEquals(cookie.getRating(), resultCookie.getRating());
         Assert.assertEquals(cookie.getCookieOwner(), resultCookie.getCookieOwner());
 
-        verify(cookieMapper).insert(cookie, cookieOwner.getCookieId());
+        verify(cookieMapper).insert(cookie);
     }
 
     @Test
@@ -73,15 +77,17 @@ public class TestCookieDaoImpl {
                 "description", CookieAddingStatus.WAITING, cookieRating);
         List<Cookie> cookies = new ArrayList<>();
         Cookie tastyCookie = new Cookie(1,"cookie", "tasty cookie", new byte[2],
-                CookieAddingStatus.WAITING, cookieRating, cookieOwner);
+                CookieAddingStatus.WAITING, cookieRating, cookieOwner, usersRatings);
 
         cookies.add(tastyCookie);
 
         when(cookieMapper.getByParam(cookiesByParameterRequest.getName(), cookiesByParameterRequest.getDescription(),
                                     cookiesByParameterRequest.getCookieAddingStatus(), cookiesByParameterRequest.getRating(),
-                                    cookiesByParameterRequest.getCookieId())).thenReturn(cookies);
+                                    cookiesByParameterRequest.getUserId())).thenReturn(cookies);
 
-        List<Cookie> resultList = cookieDaoImpl.getByParam(cookiesByParameterRequest);
+        List<Cookie> resultList = cookieDaoImpl.getByParam(cookiesByParameterRequest.getName(),
+                cookiesByParameterRequest.getDescription(), cookiesByParameterRequest.getCookieAddingStatus(),
+                cookiesByParameterRequest.getRating(), cookiesByParameterRequest.getUserId());
 
         Assert.assertEquals(resultList.get(0).getCookieId(), tastyCookie.getCookieId());
         Assert.assertEquals(resultList.get(0).getName(), tastyCookie.getName());
@@ -91,15 +97,17 @@ public class TestCookieDaoImpl {
                             tastyCookie.getCookieAddingStatus());
         Assert.assertEquals(resultList.get(0).getRating(), tastyCookie.getRating());
         Assert.assertEquals(resultList.get(0).getCookieOwner(), tastyCookie.getCookieOwner());
+        Assert.assertEquals(resultList.get(0).getUsersRatings(), tastyCookie.getUsersRatings());
 
         verify(cookieMapper).getByParam(cookiesByParameterRequest.getName(), cookiesByParameterRequest.getDescription(),
                 cookiesByParameterRequest.getCookieAddingStatus(), cookiesByParameterRequest.getRating(),
-                cookiesByParameterRequest.getCookieId());
+                cookiesByParameterRequest.getUserId());
     }
 
     @Test
     public void testCookieDaoGetById () {
         when(cookieMapper.getById(1)).thenReturn(cookie);
+        cookie.setUsersRatings(usersRatings);
 
         Cookie resultCookie = cookieDaoImpl.getById(1);
 
@@ -110,6 +118,7 @@ public class TestCookieDaoImpl {
         Assert.assertEquals(resultCookie.getCookieAddingStatus(), cookie.getCookieAddingStatus());
         Assert.assertEquals(resultCookie.getRating(), cookie.getRating());
         Assert.assertEquals(resultCookie.getCookieOwner(), cookie.getCookieOwner());
+        Assert.assertEquals(resultCookie.getUsersRatings(), cookie.getUsersRatings());
 
         verify(cookieMapper).getById(1);
     }
@@ -147,14 +156,6 @@ public class TestCookieDaoImpl {
         Assert.assertEquals(resultList.get(1).getCookieOwner(), cookieWith2Id.getCookieOwner());
 
         verify(cookieMapper).getUnratedByUserId(1);
-
     }
-
-
-
-
-
-
-
 }
-*/
+

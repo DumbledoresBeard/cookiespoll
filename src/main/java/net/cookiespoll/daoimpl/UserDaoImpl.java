@@ -2,7 +2,6 @@ package net.cookiespoll.daoimpl;
 
 import net.cookiespoll.dao.UserDao;
 import net.cookiespoll.mapper.UserMapper;
-import net.cookiespoll.model.CookieUserRating;
 import net.cookiespoll.model.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,14 +26,14 @@ public class UserDaoImpl implements UserDao {
     @Override
     @Transactional
     public User getById(int id) {
-        User user = userMapper.getUserById(id);
+        User user = userMapper.getById(id);
 
         return user;
     }
 
     @Override
-    public User update(User user, CookieUserRating cookieUserRating) {
-        userMapper.update(user, cookieUserRating);
+    public User update(User user) {
+        userMapper.update(user);
         return user;
     }
 

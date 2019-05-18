@@ -47,7 +47,7 @@ public interface CookieMapper {
                     javaType = CookieAddingStatus.class),
             @Result(property = "rating", column = "rating", javaType = Float.class),
             @Result(property = "cookieOwner", column = "user_id", javaType = Integer.class,
-                    one = @One(select = "net.cookiespoll.mapper.UserMapper.getUserById")),
+                    one = @One(select = "net.cookiespoll.mapper.UserMapper.getById")),
             @Result(property = "usersRatings", column = "id", javaType = List.class,
                     many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByCookieId")),
     })
@@ -83,7 +83,7 @@ public interface CookieMapper {
                     javaType = CookieAddingStatus.class),
             @Result(property = "rating", column = "rating", javaType = Float.class),
             @Result(property = "cookieOwner", column = "user_id", javaType = Integer.class,
-                    one = @One(select = "net.cookiespoll.mapper.UserMapper.getUserById")),
+                    one = @One(select = "net.cookiespoll.mapper.UserMapper.getById")),
             @Result(property = "usersRatings", column = "id", javaType = List.class,
                     many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByCookieId")),
     })
@@ -101,7 +101,7 @@ public interface CookieMapper {
                     javaType = CookieAddingStatus.class),
             @Result(property = "rating", column = "rating", javaType = Float.class),
             @Result(property = "cookieOwner", column = "user_id", javaType = Integer.class,
-                    one = @One(select = "net.cookiespoll.mapper.UserMapper.getUserById")),
+                    one = @One(select = "net.cookiespoll.mapper.UserMapper.getById")),
             @Result(property = "usersRatings", column = "id", javaType = List.class,
                     many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByCookieId")),
     })

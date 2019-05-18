@@ -1,8 +1,9 @@
-/*
+
 package net.cookiespoll.mapper;
 
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
+import net.cookiespoll.model.CookieUserRating;
 import net.cookiespoll.model.user.Role;
 import net.cookiespoll.model.user.User;
 import org.junit.Assert;
@@ -28,6 +29,7 @@ public class TestCookieMapper {
     private Float cookieRating = new Float(0);
     private Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING,
             cookieRating, cookieOwner);
+    private CookieUserRating cookieUserRating = new CookieUserRating(cookieOwner, cookie, 4);
 
 
     @Before
@@ -38,11 +40,11 @@ public class TestCookieMapper {
 
     @Test
     public void testCookieMapperInsert() {
-        when(cookieMapper.insert(cookie, cookieOwner.getCookieId())).thenReturn(1);
+        when(cookieMapper.insert(cookie)).thenReturn(1);
 
-        assert cookieMapper.insert(cookie, cookieOwner.getCookieId()) == 1;
+        assert cookieMapper.insert(cookie) == 1;
 
-        verify(cookieMapper).insert(cookie, cookieOwner.getCookieId());
+        verify(cookieMapper).insert(cookie);
 
     }
 
@@ -96,4 +98,4 @@ public class TestCookieMapper {
         verify(cookieMapper).getUnratedByUserId(1);
     }
 }
-*/
+

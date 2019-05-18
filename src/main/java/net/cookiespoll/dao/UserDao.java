@@ -9,6 +9,6 @@ public interface UserDao {
 
     User getById(int id);
 
-    User update(User user, CookieUserRating cookieUserRating);
+    User update(User user);
 
 }

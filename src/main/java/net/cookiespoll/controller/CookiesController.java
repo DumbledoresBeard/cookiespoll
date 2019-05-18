@@ -13,7 +13,6 @@ import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.model.CookieUserRating;
 import net.cookiespoll.model.user.User;
 import net.cookiespoll.service.CookieService;
-import net.cookiespoll.service.CookieUserRatingService;
 import net.cookiespoll.service.UserService;
 import net.cookiespoll.validation.FileValidator;
 import org.slf4j.Logger;
@@ -36,17 +35,14 @@ public class CookiesController {
 
     private CookieService cookieService;
     private FileValidator fileValidator;
-    private CookieUserRatingService cookieUserRatingService;
     private CookieDtoMapper cookieDtoMapper;
     private UserService userService;
 
     @Autowired
-    public CookiesController(CookieService cookieService, FileValidator fileValidator,
-                             CookieUserRatingService cookieUserRatingService, CookieDtoMapper cookieDtoMapper,
+    public CookiesController(CookieService cookieService, FileValidator fileValidator, CookieDtoMapper cookieDtoMapper,
                              UserService userService) {
         this.cookieService = cookieService;
         this.fileValidator = fileValidator;
-        this.cookieUserRatingService = cookieUserRatingService;
         this.cookieDtoMapper = cookieDtoMapper;
         this.userService = userService;
     }
@@ -139,7 +135,7 @@ public class CookiesController {
 
         List<CookieUserRating> cookieUserRatings = user.getRatedCookies();
         for (CookieUserRating cookieUserRating: cookieUserRatings) {
-            if (cookieUserRating.getCookie().getCookieId() == cookie.getCookieId()) {
+            if (cookieUserRating.getCookie().equals(cookie)) {
                 throw new CookieRateException("This cookie already has been rated by user");
             }
         }
@@ -147,7 +143,7 @@ public class CookiesController {
         cookieUserRatings.add(new CookieUserRating(user, cookie, rateCookieRequest.getRating()));
         user.setRatedCookies(cookieUserRatings);
 
-        userService.update(user, new CookieUserRating());
+        userService.update(user);
 
         cookie.setRating(cookieService.countRating(cookie));
 

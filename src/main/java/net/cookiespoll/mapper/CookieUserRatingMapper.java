@@ -1,4 +1,4 @@
-package net.cookiespoll.mapper;
+/*package net.cookiespoll.mapper;
 
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
@@ -28,7 +28,7 @@ public interface CookieUserRatingMapper {
             "WHERE user_id = #{userId}")
     @Results({
             @Result(property = "user", column = "user_id", javaType = User.class,
-                    one = @One(select = "net.cookiespoll.mapper.UserMapper.getUserById")),
+                    one = @One(select = "net.cookiespoll.mapper.UserMapper.getById")),
             @Result(property = "cookie", column = "cookie_id", javaType = Cookie.class,
                     one = @One(select = "net.cookiespoll.mapper.CookieMapper.getById")),
             @Result(property = "rating", column = "rating", javaType = Integer.class),
@@ -39,10 +39,10 @@ public interface CookieUserRatingMapper {
             "WHERE cookie_id = #{cookieId}")
     @Results({
             @Result(property = "user", column = "user_id", javaType = User.class,
-                    one = @One(select = "net.cookiespoll.mapper.UserMapper.getUserById")),
+                    one = @One(select = "net.cookiespoll.mapper.UserMapper.getById")),
             @Result(property = "cookie", column = "cookie_id", javaType = Cookie.class,
                     one = @One(select = "net.cookiespoll.mapper.CookieMapper.getById")),
             @Result(property = "rating", column = "rating", javaType = Integer.class),
     })
     List<CookieUserRating> getListByCookieId(Integer cookieId);
-}
+}*/

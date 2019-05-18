@@ -1,3 +1,4 @@
+/*
 package net.cookiespoll.dao;
 
 
@@ -15,3 +16,4 @@ public interface CookieUserRatingDao {
 
 
 }
+*/

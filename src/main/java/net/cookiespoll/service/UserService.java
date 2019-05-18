@@ -25,7 +25,7 @@ public class UserService {
         return userDao.getById(id);
     }
 
-    public User update(User user, CookieUserRating cookieUserRating) {
-        return userDao.update(user, cookieUserRating);
+    public User update(User user) {
+        return userDao.update(user);
     }
 }

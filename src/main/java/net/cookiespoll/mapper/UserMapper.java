@@ -29,7 +29,7 @@ public interface UserMapper {
             @Result(property = "addedCookies", column = "id", javaType = List.class,
                    many = @Many(select = "net.cookiespoll.mapper.CookieMapper.getByUserId")),
     })
-    User getUserById(int id);
+    User getById(int id);
 
 
     @Update({"<script>",
@@ -41,10 +41,10 @@ public interface UserMapper {
             "<foreach item='cookieUserRating' collection='user.ratedCookies' separator=','>",
             "(#{cookieUserRating.user.id}, #{cookieUserRating.cookie.cookieId}, #{cookieUserRating.rating}) ",
             "ON CONFLICT (user_id, cookie_id) " +
-                    "DO UPDATE SET (user_id, cookie_id, rating) = (#{cookieUserRating.user.id}, #{cookieUserRating.cookie.cookieId}, " +
-                    "#{cookieUserRating.rating})",
+                    "DO UPDATE SET (user_id, cookie_id, rating) = (#{cookieUserRating.user.id}, " +
+                    "#{cookieUserRating.cookie.cookieId}, #{cookieUserRating.rating})",
             "</foreach>",
             "</script>"})
-    void update(@Param("user") User user, @Param("cookieUserRating") CookieUserRating cookieUserRating);
+    void update(@Param("user") User user);
 
 }

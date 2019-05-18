@@ -16,7 +16,7 @@ public interface CookieDao {
     List<Cookie> getByParam(String name, String description, CookieAddingStatus cookieAddingStatus, Float rating,
                             Integer userId);
 
-    List<Cookie> getUnratedCookiesByUserId (int userId);
+    List<Cookie> getUnratedByUserId (int userId);
 
     Cookie update(Cookie cookie);
 

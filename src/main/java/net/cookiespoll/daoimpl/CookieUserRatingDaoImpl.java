@@ -1,4 +1,4 @@
-package net.cookiespoll.daoimpl;
+/*package net.cookiespoll.daoimpl;
 
 import net.cookiespoll.dao.CookieUserRatingDao;
 import net.cookiespoll.mapper.CookieUserRatingMapper;
@@ -43,4 +43,4 @@ public class CookieUserRatingDaoImpl implements CookieUserRatingDao {
     public List<Integer> getRatingsByCookieId(Integer cookieId) {
         return cookieUserRatingMapper.getRatingByCookieId(cookieId);
     }
-}
+}*/

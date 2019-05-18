@@ -50,7 +50,7 @@ public class CookieService {
     }
 
     public List<Cookie> getUnratedByUserId(int userId) {
-        return cookieDao.getUnratedCookiesByUserId(userId);
+        return cookieDao.getUnratedByUserId(userId);
     }
 
     public Float countRating(Cookie cookie) {

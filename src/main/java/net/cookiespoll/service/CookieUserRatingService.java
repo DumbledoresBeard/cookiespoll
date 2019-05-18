@@ -1,4 +1,4 @@
-package net.cookiespoll.service;
+/*package net.cookiespoll.service;
 
 import net.cookiespoll.dao.CookieUserRatingDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +33,5 @@ public class CookieUserRatingService {
                 .summaryStatistics()
                 .getSum();
     }
-    }
+    }*/
 

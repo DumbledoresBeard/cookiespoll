@@ -14,14 +14,15 @@ public class RateCookieResponse {
     private byte[] fileData;
     private CookieAddingStatus approvalStatus;
     private Float overallRating;
-    private User cookieOwner;
+    private CookieOwnerResponse cookieOwner;
     private Integer ratingGivenByUser;
 
     public RateCookieResponse() {
     }
 
     public RateCookieResponse(Integer id, String name, String description, byte[] fileData,
-                              CookieAddingStatus approvalStatus, Float overallRating, User cookieOwner, Integer ratingGivenByUser) {
+                              CookieAddingStatus approvalStatus, Float overallRating, CookieOwnerResponse cookieOwner,
+                              Integer ratingGivenByUser) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -81,11 +82,11 @@ public class RateCookieResponse {
         this.overallRating = overallRating;
     }
 
-    public User getCookieOwner() {
+    public CookieOwnerResponse getCookieOwner() {
         return cookieOwner;
     }
 
-    public void setCookieOwner(User cookieOwner) {
+    public void setCookieOwner(CookieOwnerResponse cookieOwner) {
         this.cookieOwner = cookieOwner;
     }
 

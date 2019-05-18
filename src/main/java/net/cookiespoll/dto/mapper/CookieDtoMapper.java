@@ -33,8 +33,10 @@ public class CookieDtoMapper {
     }
 
     public RateCookieResponse convertToRateCookieResponse (Cookie cookie, Integer rating) {
+        CookieOwnerResponse cookieOwnerResponse = new CookieOwnerResponse(cookie.getCookieOwner().getId(),
+                cookie.getCookieOwner().getLogin(),cookie.getCookieOwner().getName(), cookie.getCookieOwner().getRole());
         return new RateCookieResponse(cookie.getCookieId(), cookie.getName(), cookie.getDescription(),
-                cookie.getFileData(), cookie.getCookieAddingStatus(), cookie.getRating(), cookie.getCookieOwner(),
+                cookie.getFileData(), cookie.getCookieAddingStatus(), cookie.getRating(), cookieOwnerResponse,
                 rating);
     }
 
