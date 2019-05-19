@@ -4,23 +4,23 @@ import net.cookiespoll.model.user.Role;
 
 public class CookieOwnerResponse {
 
-    private int id;
+    private String id;
     private String login;
     private String name;
     private Role role;
 
-    public CookieOwnerResponse(int id, String login, String name, Role role) {
+    public CookieOwnerResponse(String id, String login, String name, Role role) {
         this.id = id;
         this.login = login;
         this.name = name;
         this.role = role;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
