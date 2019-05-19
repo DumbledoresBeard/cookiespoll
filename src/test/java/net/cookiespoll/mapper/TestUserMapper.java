@@ -1,4 +1,4 @@
-/*package net.cookiespoll.mapper;
+package net.cookiespoll.mapper;
 
 import net.cookiespoll.model.user.Role;
 import net.cookiespoll.model.user.User;
@@ -9,8 +9,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestUserMapper {
@@ -18,8 +17,8 @@ public class TestUserMapper {
     @Mock
     UserMapper userMapper;
 
-    User userAdmin = new User (1, "login", "name", Role.ADMIN);
-    int id = 1;
+    private User userAdmin = new User ("1", "login", "name", Role.ADMIN);
+    private String id = "1";
 
     @Before
     public void setUp() throws Exception {
@@ -27,7 +26,7 @@ public class TestUserMapper {
     }
 
     @Test
-    public void testUserMapperGetUserById () {
+    public void testGetUserById() {
         when(userMapper.getById(id)).thenReturn(userAdmin);
 
         userMapper.getById(id);
@@ -35,4 +34,13 @@ public class TestUserMapper {
         verify(userMapper).getById(id);
     }
 
-}*/
+    @Test
+    public void testUpdateUser() {
+        doNothing().when(userMapper).update(userAdmin);
+
+        userMapper.update(userAdmin);
+
+        verify(userMapper).update(userAdmin);
+    }
+
+}

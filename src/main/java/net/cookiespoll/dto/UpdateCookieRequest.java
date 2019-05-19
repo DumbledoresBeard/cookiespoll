@@ -20,7 +20,10 @@ public class UpdateCookieRequest {
     private Float rating;
     private User cookieOwner;
 
-    public UpdateCookieRequest() {}
+    public UpdateCookieRequest () {}
+
+    public UpdateCookieRequest(int id, String cookie, String tasty_cookie, byte[] byteArray, Float cookieRating,
+                               User cookieOwner) {}
 
     public UpdateCookieRequest(int id, String name, String description, byte[] fileData,
                                CookieAddingStatus approvalStatus, Float rating, User cookieOwner) {

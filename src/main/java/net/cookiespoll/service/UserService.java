@@ -1,6 +1,7 @@
 package net.cookiespoll.service;
 
 import net.cookiespoll.dao.UserDao;
+import net.cookiespoll.model.CookieUserRating;
 import net.cookiespoll.model.user.Role;
 import net.cookiespoll.model.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,5 +54,13 @@ public class UserService extends OidcUserService {
     public Role getRole (String id) {
         User user = userDao.getById(id);
         return user.getRole();
+    }
+
+    public User getById (String id) {
+        return userDao.getById(id);
+    }
+
+    public User update(User user) {
+        return userDao.update(user);
     }
 }

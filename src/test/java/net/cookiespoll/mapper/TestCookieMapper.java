@@ -1,7 +1,9 @@
+
 package net.cookiespoll.mapper;
 
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
+import net.cookiespoll.model.CookieUserRating;
 import net.cookiespoll.model.user.Role;
 import net.cookiespoll.model.user.User;
 import org.junit.Assert;
@@ -27,6 +29,7 @@ public class TestCookieMapper {
     private Float cookieRating = new Float(0);
     private Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING,
             cookieRating, cookieOwner);
+    private CookieUserRating cookieUserRating = new CookieUserRating(cookieOwner, cookie, 4);
 
     @Before
     public void setUp() throws Exception {
@@ -56,13 +59,14 @@ public class TestCookieMapper {
     @Test
     public void testCookieMapperGetByParam () {
         List<Cookie> cookies = new ArrayList<>();
+        cookie.setCookieId(1);
         cookies.add(cookie);
 
         when(cookieMapper.getByParam("cookie", "tasty cookie", CookieAddingStatus.WAITING,
                 cookieRating, "1")).thenReturn(cookies);
 
         Assert.assertEquals(cookieMapper.getByParam("cookie", "tasty cookie", CookieAddingStatus.WAITING,
-                cookieRating, "1").get(0).getId(), cookie.getId());
+                cookieRating, "1").get(0).getCookieId(), cookie.getCookieId());
 
         verify(cookieMapper).getByParam("cookie", "tasty cookie", CookieAddingStatus.WAITING,
                 cookieRating, "1");
@@ -72,7 +76,7 @@ public class TestCookieMapper {
     public void testCookieMapperGetById () {
         when(cookieMapper.getById(1)).thenReturn(cookie);
 
-        Assert.assertEquals(cookieMapper.getById(1).getId(), cookie.getId());
+        Assert.assertEquals(cookieMapper.getById(1).getCookieId(), cookie.getCookieId());
 
         verify(cookieMapper).getById(1);
     }
@@ -82,16 +86,18 @@ public class TestCookieMapper {
         List<Cookie> cookies = new ArrayList<>();
         Cookie cookieWith1Id = new Cookie(1, "cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING,
                 cookieRating, cookieOwner);
-        Cookie cookieWith2Id = new Cookie(2,"name", "description", new byte[2],
+        Cookie cookieWith2Id = new Cookie(2, "name", "description", new byte[2],
                 CookieAddingStatus.WAITING, cookieRating, cookieOwner);
         cookies.add(cookieWith1Id);
         cookies.add(cookieWith2Id);
         String userId = "1";
 
-        when(cookieMapper.getUnratedCookiesByUserId(userId)).thenReturn(cookies);
+        when(cookieMapper.getUnratedByUserId(userId)).thenReturn(cookies);
 
-        Assert.assertEquals(cookies, cookieMapper.getUnratedCookiesByUserId(userId));
+        Assert.assertEquals(cookies, cookieMapper.getUnratedByUserId(userId));
 
-        verify(cookieMapper).getUnratedCookiesByUserId(userId);
+        verify(cookieMapper).getUnratedByUserId(userId);
     }
+
 }
+

@@ -26,15 +26,14 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     @Transactional
-
     public User getById(String id) {
         return userMapper.getById(id);
     }
 
     @Override
     public User update(User user) {
-        /*TODO update given user*/
-        return new User();
+        userMapper.update(user);
+        return user;
     }
 
 }

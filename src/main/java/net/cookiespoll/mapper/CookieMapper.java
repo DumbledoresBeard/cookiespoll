@@ -39,15 +39,17 @@ public interface CookieMapper {
             "</where>" +
             "</script>"})
     @Results({
-            @Result(property = "id", column = "id", javaType = Integer.class),
+            @Result(property = "cookieId", column = "id", javaType = Integer.class),
             @Result(property = "name", column = "name", javaType = String.class),
             @Result(property = "description", column = "description", javaType = String.class),
             @Result(property = "fileData", column = "file_data", javaType = byte[].class),
             @Result(property = "cookieAddingStatus", column = "cookie_adding_status",
                     javaType = CookieAddingStatus.class),
-            @Result(property = "rating", column = "rating", javaType = Integer.class),
-            @Result(property = "cookieOwner", column = "user_id", javaType = Integer.class,
+            @Result(property = "rating", column = "rating", javaType = Float.class),
+            @Result(property = "cookieOwner", column = "user_id", javaType = String.class,
                     one = @One(select = "net.cookiespoll.mapper.UserMapper.getById")),
+            @Result(property = "usersRatings", column = "id", javaType = List.class,
+                    many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByCookieId")),
     })
     List<Cookie> getByParam(@Param("name") String name, @Param("description") String description,
                             @Param("cookieAddingStatus") CookieAddingStatus cookieAddingStatus,
@@ -58,45 +60,61 @@ public interface CookieMapper {
             "WHERE cookie_user_rating.user_id = #{userId})")
 
     @Results({
-            @Result(property = "id", column = "id", javaType = Integer.class),
-            @Result(property = "name", column = "name", javaType = String.class),
-            @Result(property = "description", column = "description", javaType = String.class),
-            @Result(property = "fileData", column = "file_data", javaType = byte[].class),
-            @Result(property = "cookieAddingStatus", column = "cookie_adding_status", javaType =
-                    CookieAddingStatus.class),
-            @Result(property = "rating", column = "rating", javaType = Float.class),
-            @Result(property = "userId", column = "user_id", javaType = String.class),
-    })
-    List<Cookie> getUnratedCookiesByUserId(@Param("userId") String userId);
-
-    @Select("SELECT id, name, description, file_data, cookie_adding_status, rating, user_id " +
-            "FROM cookies " +
-            "WHERE id = #{id}")
-    @Results({
-            @Result(property = "id", column = "id", javaType = Integer.class),
+            @Result(property = "cookieId", column = "id", javaType = Integer.class),
             @Result(property = "name", column = "name", javaType = String.class),
             @Result(property = "description", column = "description", javaType = String.class),
             @Result(property = "fileData", column = "file_data", javaType = byte[].class),
             @Result(property = "cookieAddingStatus", column = "cookie_adding_status",
                     javaType = CookieAddingStatus.class),
             @Result(property = "rating", column = "rating", javaType = Float.class),
-            @Result(property = "cookieOwner", column = "user_id", javaType = Integer.class,
-                    one=@One(select = "net.cookiespoll.mapper.UserMapper.getById")),
+            @Result(property = "userId", column = "user_id", javaType = String.class),
+    })
+    List<Cookie> getUnratedByUserId(@Param("userId") String userId);
+
+    @Select("SELECT id, name, description, file_data, cookie_adding_status, rating, user_id " +
+            "FROM cookies " +
+            "WHERE id = #{id}")
+    @Results({
+            @Result(property = "cookieId", column = "id", javaType = Integer.class),
+            @Result(property = "name", column = "name", javaType = String.class),
+            @Result(property = "description", column = "description", javaType = String.class),
+            @Result(property = "fileData", column = "file_data", javaType = byte[].class),
+            @Result(property = "cookieAddingStatus", column = "cookie_adding_status",
+                    javaType = CookieAddingStatus.class),
+            @Result(property = "rating", column = "rating", javaType = Float.class),
+            @Result(property = "cookieOwner", column = "user_id", javaType = String.class,
+                    one = @One(select = "net.cookiespoll.mapper.UserMapper.getById")),
+            @Result(property = "usersRatings", column = "id", javaType = List.class,
+                    many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByCookieId")),
     })
     Cookie getById (Integer id);
+
+    @Select("SELECT id, name, description, file_data, cookie_adding_status, rating, user_id " +
+            "FROM cookies " +
+            "WHERE user_id = #{id}")
+    @Results({
+            @Result(property = "cookieId", column = "id", javaType = Integer.class),
+            @Result(property = "name", column = "name", javaType = String.class),
+            @Result(property = "description", column = "description", javaType = String.class),
+            @Result(property = "fileData", column = "file_data", javaType = byte[].class),
+            @Result(property = "cookieAddingStatus", column = "cookie_adding_status",
+                    javaType = CookieAddingStatus.class),
+            @Result(property = "rating", column = "rating", javaType = Float.class),
+            @Result(property = "cookieOwner", column = "user_id", javaType = String.class,
+                    one = @One(select = "net.cookiespoll.mapper.UserMapper.getById")),
+            @Result(property = "usersRatings", column = "id", javaType = List.class,
+                    many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByCookieId")),
+    })
+    Cookie getByUserId (String id);
 
     @Update("UPDATE cookies " +
             "SET name = #{cookie.name}, description = #{cookie.description}, file_data = #{cookie.fileData}," +
             "cookie_adding_status = #{cookie.cookieAddingStatus}, rating = #{cookie.rating}, user_id = #{cookie.cookieOwner.id}" +
-            " WHERE id = #{cookie.id} ")
+            " WHERE id = #{cookie.cookieId} ")
     void update(@Param("cookie") Cookie cookie);
-
 
     @Delete("DELETE FROM cookies " +
             "WHERE cookie_id = #{id}")
     Integer delete(@Param("id") Integer id);
-
-
-
 }
 

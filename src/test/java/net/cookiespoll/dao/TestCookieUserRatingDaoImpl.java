@@ -1,4 +1,4 @@
-package net.cookiespoll.dao;
+/*package net.cookiespoll.dao;
 
 import net.cookiespoll.daoimpl.CookieUserRatingDaoImpl;
 import net.cookiespoll.mapper.CookieUserRatingMapper;
@@ -63,4 +63,4 @@ public class TestCookieUserRatingDaoImpl {
 
         verify(cookieUserRatingMapper).getRatingByCookieId(cookieId);
     }
-}
+}*/

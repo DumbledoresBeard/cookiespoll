@@ -1,3 +1,4 @@
+/*
 package net.cookiespoll.mapper;
 
 import org.junit.Assert;
@@ -57,3 +58,4 @@ public class TestCookieUserRatingMapper {
         verify(cookieUserRatingMapper).getRatingByCookieId(cookieId);
     }
 }
+*/

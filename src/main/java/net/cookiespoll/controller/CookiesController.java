@@ -5,15 +5,16 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import net.cookiespoll.dto.*;
-import net.cookiespoll.dto.mapper.DtoMapper;
+import net.cookiespoll.dto.mapper.CookieDtoMapper;
 import net.cookiespoll.exception.CookieRateException;
 import net.cookiespoll.exception.FileValidationException;
 import net.cookiespoll.exception.UserRoleValidationException;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
+import net.cookiespoll.model.CookieUserRating;
 import net.cookiespoll.model.user.User;
 import net.cookiespoll.service.CookieService;
-import net.cookiespoll.service.CookieUserRatingService;
+import net.cookiespoll.service.UserService;
 import net.cookiespoll.validation.FileValidator;
 import net.cookiespoll.validation.UserRoleValidator;
 import org.slf4j.Logger;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @Api
@@ -38,19 +40,18 @@ public class CookiesController {
 
     private CookieService cookieService;
     private FileValidator fileValidator;
-    private CookieUserRatingService cookieUserRatingService;
     private UserRoleValidator userRoleValidator;
-    private DtoMapper dtoMapper;
+    private CookieDtoMapper cookieDtoMapper;
+    private UserService userService;
 
     @Autowired
-    public CookiesController(CookieService cookieService, FileValidator fileValidator,
-                             CookieUserRatingService cookieUserRatingService, DtoMapper dtoMapper,
-                             UserRoleValidator userRoleValidator) {
+    public CookiesController(CookieService cookieService, FileValidator fileValidator, CookieDtoMapper cookieDtoMapper,
+                             UserRoleValidator userRoleValidator, UserService userService) {
         this.cookieService = cookieService;
         this.fileValidator = fileValidator;
-        this.cookieUserRatingService = cookieUserRatingService;
-        this.dtoMapper = dtoMapper;
+        this.cookieDtoMapper = cookieDtoMapper;
         this.userRoleValidator = userRoleValidator;
+        this.userService = userService;
     }
 
     private String getUserIdFromSession() {
@@ -82,7 +83,7 @@ public class CookiesController {
 
         fileValidator.validate(multipartFile);
 
-        return dtoMapper.convertCookieToAddCookieResponse(cookieService.insert(addCookieRequest, multipartFile, user));
+        return cookieDtoMapper.convertToAddCookieResponse(cookieService.insert(addCookieRequest, multipartFile, user));
     }
 
     @ApiOperation(value = "Get list of cookies by parameter", response = ArrayList.class)
@@ -96,7 +97,9 @@ public class CookiesController {
     public List<Cookie> getCookiesByParameter (@Valid CookiesByParameterRequest cookiesByParameterRequest) {
         LOGGER.info("Starting processing request for getting cookies by parameters {} ", cookiesByParameterRequest);
 
-       return cookieService.getByParam(cookiesByParameterRequest);
+       return cookieService.getByParam(cookiesByParameterRequest.getName(), cookiesByParameterRequest.getDescription(),
+               cookiesByParameterRequest.getCookieAddingStatus(), cookiesByParameterRequest.getRating(),
+               cookiesByParameterRequest.getUserId());
     }
 
     @ApiOperation(value = "Get cookie by id", response = ArrayList.class)
@@ -132,7 +135,7 @@ public class CookiesController {
 
         LOGGER.info("Starting processing request {} ", updateCookieRequest);
 
-        return dtoMapper.convertCookieToUpdateResponse(cookieService.update(dtoMapper.convertDtoToCookie(updateCookieRequest)));
+        return cookieDtoMapper.convertToUpdateResponse(cookieService.update(cookieDtoMapper.convertDto(updateCookieRequest)));
     }
 
 
@@ -147,21 +150,25 @@ public class CookiesController {
     public RateCookieResponse rateCookie (@RequestBody @Valid RateCookieRequest rateCookieRequest) throws CookieRateException {
         String userId = getUserIdFromSession();
 
-        if (cookieUserRatingService.getRatingByUserAndCookie(userId, rateCookieRequest.getId()) != null) {
-            throw new CookieRateException("This cookie already has been rated by user");
+        Cookie cookie = cookieDtoMapper.convertDto(rateCookieRequest);
+        User user = userService.getById(userId);
+
+        List<CookieUserRating> cookieUserRatings = user.getRatedCookies();
+        for (CookieUserRating cookieUserRating: cookieUserRatings) {
+            if (cookieUserRating.getCookie().equals(cookie)) {
+                throw new CookieRateException("This cookie already has been rated by user");
+            }
         }
 
-        cookieUserRatingService.setRatingToCookie(userId, rateCookieRequest.getId(), rateCookieRequest.getRating());
+        cookieUserRatings.add(new CookieUserRating(user, cookie, rateCookieRequest.getRating()));
+        user.setRatedCookies(cookieUserRatings);
 
-        Float cookieRatingSum = cookieUserRatingService.getRatingSumByCookieId(rateCookieRequest.getId());
+        userService.update(user);
 
-        Integer usersQuantity = cookieUserRatingService.getUserQuantity(rateCookieRequest.getId());
+        cookie.setRating(cookieService.countRating(cookie));
 
-        Cookie cookie = dtoMapper.convertDtoToCookie(rateCookieRequest);
+        return cookieDtoMapper.convertToRateCookieResponse(cookieService.update(cookie), rateCookieRequest.getRating());
 
-        cookie.setRating(cookieService.countRating(usersQuantity, cookieRatingSum));
-
-        return new RateCookieResponse(cookieService.update(cookie), rateCookieRequest.getRating());
     }
 
     @ApiOperation(value = "Get cookies unrated yet by user", response = Cookie.class)
@@ -175,7 +182,19 @@ public class CookiesController {
     public List<Cookie> getUnratedCookies () {
         String userId = getUserIdFromSession();
 
-        return cookieService.getUnratedByUserId(userId);
+        CookieAddingStatus cookieAddingStatus = CookieAddingStatus.APPROVED;
+
+        User user = userService.getById(userId);
+        List<Cookie> allApprovedCookies = cookieService.getByParam(null, null, cookieAddingStatus, null,
+                null);
+
+        List<Cookie> ratedCookies = user.getRatedCookies()
+                                    .stream()
+                                    .map(CookieUserRating::getCookie)
+                                    .collect(Collectors.toList());
+        allApprovedCookies.removeAll(ratedCookies);
+
+        return allApprovedCookies;
     }
 
     @RequestMapping(value = "/cookies", method = RequestMethod.DELETE)

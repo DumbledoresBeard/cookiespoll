@@ -1,3 +1,4 @@
+/*
 package net.cookiespoll.service;
 
 import net.cookiespoll.dao.CookieUserRatingDao;
@@ -69,3 +70,4 @@ public class TestCookieUserRatingService {
 
     }
 }
+*/
