@@ -133,6 +133,12 @@ public class Cookie {
         if (this == o) return true;
         if (!(o instanceof Cookie)) return false;
         Cookie cookie = (Cookie) o;
+        if (this.getUsersRatings() == null && cookie.getUsersRatings() == null && getCookieId() == cookie.getCookieId()) {
+            return true;
+        }
+        if (this.getUsersRatings() == null && cookie.getUsersRatings() == null && getCookieId() != cookie.getCookieId()) {
+            return false;
+        }
         String ids = this.getUsersRatings()
                 .stream()
                 .map(CookieUserRating::getUser)
@@ -160,16 +166,20 @@ public class Cookie {
 
     @Override
     public int hashCode() {
-        List<Integer> ids = this.getUsersRatings()
-                .stream()
-                .map(CookieUserRating::getUser)
-                .map(User::getId)
-                .collect(Collectors.toList());
-        List<Integer> cookiesIdsThis = this.getUsersRatings()
-                .stream()
-                .map(CookieUserRating::getCookie)
-                .map(Cookie::getCookieId)
-                .collect(Collectors.toList());
+        List<Integer> ids = null;
+        List<Integer> cookiesIdsThis = null;
+        if (this.getUsersRatings() != null) {
+            ids = this.getUsersRatings()
+                    .stream()
+                    .map(CookieUserRating::getUser)
+                    .map(User::getId)
+                    .collect(Collectors.toList());
+            cookiesIdsThis = this.getUsersRatings()
+                    .stream()
+                    .map(CookieUserRating::getCookie)
+                    .map(Cookie::getCookieId)
+                    .collect(Collectors.toList());
+        }
         int result = Objects.hash(getCookieId(), ids, cookiesIdsThis);
         result = 31 * result;
         return result;
