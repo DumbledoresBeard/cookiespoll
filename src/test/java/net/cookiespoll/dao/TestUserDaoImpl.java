@@ -5,6 +5,7 @@ import net.cookiespoll.mapper.UserMapper;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.model.CookieUserRating;
+import net.cookiespoll.model.user.Admin;
 import net.cookiespoll.model.user.Role;
 import net.cookiespoll.model.user.User;
 import org.junit.Assert;
@@ -77,6 +78,19 @@ public class TestUserDaoImpl {
         Assert.assertEquals(userAdmin.getAddedCookies(), resultUser.getAddedCookies());
 
         verify(userMapper).update(userAdmin);
+    }
+
+    @Test
+    public void testGetAdmins() {
+        List<Admin> admins = Arrays.asList(new Admin(1, "some@mail.com"));
+        when(userMapper.getAdmins()).thenReturn(admins);
+
+        List<Admin> resultAdmins = userMapper.getAdmins();
+
+        Assert.assertEquals(admins.get(0).getId(), resultAdmins.get(0).getId());
+        Assert.assertEquals(admins.get(0).getLogin(), admins.get(0).getLogin());
+
+        verify(userMapper).getAdmins();
     }
 
 }

@@ -1,13 +1,18 @@
 package net.cookiespoll.mapper;
 
+import net.cookiespoll.model.user.Admin;
 import net.cookiespoll.model.user.Role;
 import net.cookiespoll.model.user.User;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 
@@ -41,6 +46,18 @@ public class TestUserMapper {
         userMapper.update(userAdmin);
 
         verify(userMapper).update(userAdmin);
+    }
+
+    @Test
+    public void testGetAdmins() {
+        List<Admin> admins = Arrays.asList(new Admin(1, "some@mail.com"));
+        when(userMapper.getAdmins()).thenReturn(admins);
+
+        List<Admin> resultAdmins = userMapper.getAdmins();
+
+        Assert.assertEquals(admins.get(0).getId(), resultAdmins.get(0).getId());
+
+        verify(userMapper).getAdmins();
     }
 
 }

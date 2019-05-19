@@ -1,5 +1,6 @@
 package net.cookiespoll.mapper;
 
+import net.cookiespoll.model.user.Admin;
 import net.cookiespoll.model.user.Role;
 import net.cookiespoll.model.user.User;
 import org.apache.ibatis.annotations.*;
@@ -44,5 +45,13 @@ public interface UserMapper {
             "</foreach>",
             "</script>"})
     void update(@Param("user") User user);
+
+    @Select("SELECT id, login " +
+            "FROM admins")
+    @Results({
+            @Result(property = "id", column = "id", javaType = Integer.class),
+            @Result(property = "login", column = "login", javaType = String.class),
+    })
+    List<Admin> getAdmins();
 
 }
