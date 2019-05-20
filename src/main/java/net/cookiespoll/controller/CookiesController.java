@@ -15,6 +15,7 @@ import net.cookiespoll.model.user.User;
 import net.cookiespoll.service.CookieService;
 import net.cookiespoll.service.UserService;
 import net.cookiespoll.validation.FileValidator;
+import net.cookiespoll.validation.RatingValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,14 +38,16 @@ public class CookiesController {
     private FileValidator fileValidator;
     private CookieDtoMapper cookieDtoMapper;
     private UserService userService;
+    private RatingValidator ratingValidator;
 
     @Autowired
     public CookiesController(CookieService cookieService, FileValidator fileValidator, CookieDtoMapper cookieDtoMapper,
-                             UserService userService) {
+                             UserService userService, RatingValidator ratingValidator) {
         this.cookieService = cookieService;
         this.fileValidator = fileValidator;
         this.cookieDtoMapper = cookieDtoMapper;
         this.userService = userService;
+        this.ratingValidator = ratingValidator;
     }
 
     @ApiOperation(value = "Add new cookie to store in database", response = AddCookieResponse.class)
@@ -119,7 +122,8 @@ public class CookiesController {
     }
 
 
-    @ApiOperation(value = "Set rating from user to cookie and count overall cookie rating", response = Cookie.class)
+    @ApiOperation(value = "Set rating from user to cookie and count overall cookie rating",
+            response = RateCookieResponse.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Cookie got rating and overall rating has been counted"),
             @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
@@ -132,13 +136,9 @@ public class CookiesController {
 
         Cookie cookie = cookieDtoMapper.convertDto(rateCookieRequest);
         User user = userService.getById(userId);
-
         List<CookieUserRating> cookieUserRatings = user.getRatedCookies();
-        for (CookieUserRating cookieUserRating: cookieUserRatings) {
-            if (cookieUserRating.getCookie().equals(cookie)) {
-                throw new CookieRateException("This cookie already has been rated by user");
-            }
-        }
+
+        ratingValidator.validate(cookieUserRatings, cookie);
 
         cookieUserRatings.add(new CookieUserRating(user, cookie, rateCookieRequest.getRating()));
         user.setRatedCookies(cookieUserRatings);

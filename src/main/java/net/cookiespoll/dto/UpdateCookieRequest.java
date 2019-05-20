@@ -22,7 +22,7 @@ public class UpdateCookieRequest {
 
     public UpdateCookieRequest () {}
 
-    public UpdateCookieRequest(int i, String cookie, String tasty_cookie, byte[] byteArray, Float cookieRating, User cookieOwner) {}
+    public UpdateCookieRequest(int id, String cookie, String tasty_cookie, byte[] byteArray, Float cookieRating, User cookieOwner) {}
 
     public UpdateCookieRequest(int id, String name, String description, byte[] fileData,
                                CookieAddingStatus approvalStatus, Float rating, User cookieOwner) {
