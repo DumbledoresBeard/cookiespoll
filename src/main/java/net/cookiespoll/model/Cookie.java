@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import net.cookiespoll.model.user.User;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -128,60 +129,81 @@ public class Cookie {
         this.usersRatings = usersRatings;
     }
 
-    @Override
+   @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Cookie)) return false;
         Cookie cookie = (Cookie) o;
-        if (this.getUsersRatings() == null && cookie.getUsersRatings() == null && getCookieId() == cookie.getCookieId()) {
-            return true;
-        }
-        if (this.getUsersRatings() == null && cookie.getUsersRatings() == null && getCookieId() != cookie.getCookieId()) {
-            return false;
-        }
-        String ids = this.getUsersRatings()
-                .stream()
-                .map(CookieUserRating::getUser)
-                .map(User::getId)
-                .collect(Collectors.toList()).toString();
-        String userIds = cookie.getUsersRatings()
-                .stream()
-                .map(CookieUserRating::getUser)
-                .map(User::getId)
-                .collect(Collectors.toList()).toString();
-        String cookiesIdsThis = this.getUsersRatings()
-                .stream()
-                .map(CookieUserRating::getCookie)
-                .map(Cookie::getCookieId)
-                .collect(Collectors.toList()).toString();
-        String cookiesIds = cookie.getUsersRatings()
-                .stream()
-                .map(CookieUserRating::getCookie)
-                .map(Cookie::getCookieId)
-                .collect(Collectors.toList()).toString();
-        return getCookieId() == cookie.getCookieId() &&
-                cookiesIdsThis.equals(cookiesIds) &&
-                ids.equals(userIds);
-    }
+        String ids = "";
+        String userIds = "";
+        String cookiesIdsThis = "";
+        String cookiesIds = "";
 
-    @Override
-    public int hashCode() {
-        List<Integer> ids = null;
-        List<Integer> cookiesIdsThis = null;
-        if (this.getUsersRatings() != null) {
+
+        if(this.getUsersRatings() != null) {
             ids = this.getUsersRatings()
                     .stream()
                     .map(CookieUserRating::getUser)
                     .map(User::getId)
+                    .collect(Collectors.toList()).toString();
+        }
+
+        if(cookie.getUsersRatings() != null) {
+            userIds = cookie.getUsersRatings()
+                    .stream()
+                    .map(CookieUserRating::getUser)
+                    .map(User::getId)
+                    .collect(Collectors.toList()).toString();
+        }
+
+       if(this.getUsersRatings() != null) {
+           cookiesIdsThis = this.getUsersRatings()
+                   .stream()
+                   .map(CookieUserRating::getCookie)
+                   .map(Cookie::getCookieId)
+                   .collect(Collectors.toList()).toString();
+       }
+
+       if(cookie.getUsersRatings() != null) {
+           cookiesIds = cookie.getUsersRatings()
+                   .stream()
+                   .map(CookieUserRating::getCookie)
+                   .map(Cookie::getCookieId)
+                   .collect(Collectors.toList()).toString();
+       }
+
+           return getCookieId() == cookie.getCookieId() &&
+                   this.getName().equals(cookie.getName()) &&
+                   this.getDescription().equals(cookie.getDescription()) &&
+                   Arrays.equals(this.getFileData(), cookie.getFileData()) &&
+                   this.getCookieAddingStatus().equals(cookie.getCookieAddingStatus()) &&
+                   this.getRating().equals(cookie.getRating()) &&
+                   this.getCookieOwner().equals(cookie.getCookieOwner()) &&
+                   cookiesIdsThis.equals(cookiesIds) &&
+                   ids.equals(userIds);
+       }
+
+
+        @Override
+        public int hashCode() {
+            List<Integer> ids = null;
+            List<Integer> cookiesIdsThis = null;
+
+            if (this.getUsersRatings() != null) {
+                ids = this.getUsersRatings()
+                    .stream()
+                    .map(CookieUserRating::getUser)
+                    .map(User::getId)
                     .collect(Collectors.toList());
-            cookiesIdsThis = this.getUsersRatings()
+                cookiesIdsThis = this.getUsersRatings()
                     .stream()
                     .map(CookieUserRating::getCookie)
                     .map(Cookie::getCookieId)
                     .collect(Collectors.toList());
-        }
-        int result = Objects.hash(getCookieId(), ids, cookiesIdsThis);
-        result = 31 * result;
-        return result;
+            }
+            int result = Objects.hash(getCookieId(), name, description, cookieAddingStatus, rating, cookieOwner, ids, cookiesIdsThis);
+            result = 31 * result + Arrays.hashCode(fileData);
+            return result;
     }
+
 }

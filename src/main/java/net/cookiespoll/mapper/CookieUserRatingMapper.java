@@ -1,4 +1,4 @@
-/*package net.cookiespoll.mapper;
+package net.cookiespoll.mapper;
 
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
@@ -45,4 +45,4 @@ public interface CookieUserRatingMapper {
             @Result(property = "rating", column = "rating", javaType = Integer.class),
     })
     List<CookieUserRating> getListByCookieId(Integer cookieId);
-}*/
+}

@@ -38,12 +38,16 @@ public interface UserMapper {
 
             "INSERT INTO cookie_user_rating (user_id, cookie_id, rating) " +
             "VALUES " +
+
             "<foreach item='cookieUserRating' collection='user.ratedCookies' separator=','>",
+
             "(#{cookieUserRating.user.id}, #{cookieUserRating.cookie.cookieId}, #{cookieUserRating.rating}) ",
             "ON CONFLICT (user_id, cookie_id) " +
                     "DO UPDATE SET (user_id, cookie_id, rating) = (#{cookieUserRating.user.id}, " +
                     "#{cookieUserRating.cookie.cookieId}, #{cookieUserRating.rating})",
+
             "</foreach>",
+
             "</script>"})
     void update(@Param("user") User user);
 

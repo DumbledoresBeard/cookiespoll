@@ -2,12 +2,17 @@ package net.cookiespoll.dto;
 
 import net.cookiespoll.model.user.Role;
 
+import java.util.Objects;
+
 public class CookieOwnerResponse {
 
     private int id;
     private String login;
     private String name;
     private Role role;
+
+    public CookieOwnerResponse() {
+    }
 
     public CookieOwnerResponse(int id, String login, String name, Role role) {
         this.id = id;
@@ -46,5 +51,21 @@ public class CookieOwnerResponse {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CookieOwnerResponse)) return false;
+        CookieOwnerResponse that = (CookieOwnerResponse) o;
+        return id == that.id &&
+                Objects.equals(login, that.login) &&
+                Objects.equals(name, that.name) &&
+                role == that.role;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, login, name, role);
     }
 }

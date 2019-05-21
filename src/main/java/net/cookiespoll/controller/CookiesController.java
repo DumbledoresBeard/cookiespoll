@@ -148,7 +148,6 @@ public class CookiesController {
         cookie.setRating(cookieService.countRating(cookie));
 
         return cookieDtoMapper.convertToRateCookieResponse(cookieService.update(cookie), rateCookieRequest.getRating());
-
     }
 
     @ApiOperation(value = "Get cookies unrated yet by user", response = Cookie.class)
