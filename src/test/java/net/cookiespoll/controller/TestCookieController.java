@@ -54,9 +54,9 @@ public class TestCookieController {
     private User cookieOwner = new User(1, "login", "name", Role.USER);
     private Cookie cookie = new Cookie(1, "cookie", "tasty cookie", byteArray,
             CookieAddingStatus.WAITING, cookieRating, cookieOwner);
-    Cookie cookieWith1Id = new Cookie(1, "cookie", "tasty cookie",
+    private Cookie cookieWith1Id = new Cookie(1, "cookie", "tasty cookie",
             new byte[2], CookieAddingStatus.APPROVED, cookieRating, cookieOwner);
-    Cookie cookieWith2Id = new Cookie(2,"name", "description", new byte[2],
+    private Cookie cookieWith2Id = new Cookie(2,"name", "description", new byte[2],
             CookieAddingStatus.APPROVED, cookieRating, cookieOwner);
     private MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "testcookie",
             "image/jpg", byteArray);
