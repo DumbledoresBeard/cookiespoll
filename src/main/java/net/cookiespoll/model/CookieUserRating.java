@@ -6,7 +6,7 @@ import net.cookiespoll.model.user.User;
 
 import java.util.Objects;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = CookieUserRating.class)
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = CookieUserRating.class)
 public class CookieUserRating {
     private int id;
     private User user;

@@ -437,7 +437,7 @@ public class TestCookieController {
     }
 
     @Test
-    public void testGetCookieById () throws Exception {
+    public void testGetCookieById() throws Exception {
         Integer id = 1;
 
         when(cookieService.getById(id)).thenReturn(cookie);
@@ -465,7 +465,7 @@ public class TestCookieController {
 
 
     @Test
-    public void testUpdateCookie () throws Exception {
+    public void testUpdateCookie() throws Exception {
         UpdateCookieRequest updateCookieRequest = new UpdateCookieRequest(1, "cookie", "tasty cookie",
                 new byte[2], CookieAddingStatus.APPROVED, cookieRating, cookieOwner);
         String request = gson.toJson(updateCookieRequest);
@@ -499,18 +499,19 @@ public class TestCookieController {
     @Test
     public void testRateCookie() throws Exception {
         RateCookieRequest rateCookieRequest = new RateCookieRequest(3, "cookie", "tasty cookie",
-                byteArray, CookieAddingStatus.APPROVED, cookieRating, cookieOwner, 3);
+                byteArray, CookieAddingStatus.APPROVED, cookieRating, new CookieOwner(1, "login", "name", Role.USER), 3);
         String request = gson.toJson(rateCookieRequest);
-        Cookie cookie = dtoMapper.convertDto(rateCookieRequest);
+        Cookie cookie = new Cookie(3, "cookie", "tasty cookie", byteArray, CookieAddingStatus.APPROVED, cookieRating, cookieOwner);
         List<CookieUserRating> ratedCookies = new ArrayList<CookieUserRating>();
         ratedCookies.add(new CookieUserRating(cookieOwner, cookieWith1Id, 5));
         cookieOwner.setRatedCookies(ratedCookies);
         int userId = 1;
-        CookieOwnerResponse cookieOwnerResponse = new CookieOwnerResponse(cookieOwner.getId(),cookieOwner.getLogin(), cookieOwner.getName(), cookieOwner.getRole());
+        CookieOwner cookieOwnerResponse = new CookieOwner(cookieOwner.getId(),cookieOwner.getLogin(), cookieOwner.getName(), cookieOwner.getRole());
         RateCookieResponse rateCookieResponse = new RateCookieResponse(3, "cookie", "tasty cookie", byteArray, CookieAddingStatus.APPROVED,
                 (float) 5.5, cookieOwnerResponse, 3);
 
         when(userService.getById(userId)).thenReturn(cookieOwner);
+        when(cookieService.getById(3)).thenReturn(cookie);
         when(userService.update(cookieOwner)).thenReturn(user);
         when(cookieService.countRating(cookie)).thenReturn((float) 5.5);
         cookie.setRating((float) 5.5);
@@ -525,7 +526,7 @@ public class TestCookieController {
                 .getContentAsString();
 
         RateCookieResponse resultResponse = new ObjectMapper().readValue(response, RateCookieResponse.class);
-        CookieOwnerResponse owner = resultResponse.getCookieOwner();
+        CookieOwner owner = resultResponse.getCookieOwner();
 
         assert rateCookieResponse.getId() == resultResponse.getId();
         Assert.assertEquals(rateCookieResponse.getName(), resultResponse.getName());
@@ -537,18 +538,18 @@ public class TestCookieController {
         assert rateCookieResponse.getRatingGivenByUser() == resultResponse.getRatingGivenByUser();
     }
 
-    @Ignore
     @Test
     public void testRateAlreadyRatedCookie() throws Exception {
         RateCookieRequest rateCookieRequest = new RateCookieRequest(1, "cookie", "tasty cookie",
-                new byte[2], CookieAddingStatus.APPROVED, cookieRating, cookieOwner, 3);
+                new byte[2], CookieAddingStatus.APPROVED, cookieRating, new CookieOwner(1, "login", "name", Role.USER), 3);
         Cookie cookie = dtoMapper.convertDto(rateCookieRequest);
         List<CookieUserRating> cookieUserRatings = new ArrayList<>();
         cookieOwner.setRatedCookies(usersRatings);
-        String request = gson.toJson(rateCookieRequest);
+        String request = new ObjectMapper().writeValueAsString(rateCookieRequest);
         int userId = 1;
 
         when(userService.getById(userId)).thenReturn(cookieOwner);
+        when(cookieService.getById(1)).thenReturn(cookieWith1Id);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/cookies/poll")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -4,17 +4,17 @@ import net.cookiespoll.model.user.Role;
 
 import java.util.Objects;
 
-public class CookieOwnerResponse {
+public class CookieOwner {
 
     private int id;
     private String login;
     private String name;
     private Role role;
 
-    public CookieOwnerResponse() {
+    public CookieOwner() {
     }
 
-    public CookieOwnerResponse(int id, String login, String name, Role role) {
+    public CookieOwner(int id, String login, String name, Role role) {
         this.id = id;
         this.login = login;
         this.name = name;
@@ -56,8 +56,8 @@ public class CookieOwnerResponse {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof CookieOwnerResponse)) return false;
-        CookieOwnerResponse that = (CookieOwnerResponse) o;
+        if (!(o instanceof CookieOwner)) return false;
+        CookieOwner that = (CookieOwner) o;
         return id == that.id &&
                 Objects.equals(login, that.login) &&
                 Objects.equals(name, that.name) &&

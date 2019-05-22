@@ -134,7 +134,7 @@ public class CookiesController {
     public RateCookieResponse rateCookie (@RequestBody @Valid RateCookieRequest rateCookieRequest) throws CookieRateException {
         int userId = 1; // temporary decision until getting userId from session will be implemented
 
-        Cookie cookie = cookieDtoMapper.convertDto(rateCookieRequest);
+        Cookie cookie = cookieService.getById(rateCookieRequest.getId());
         User user = userService.getById(userId);
         List<CookieUserRating> cookieUserRatings = user.getRatedCookies();
 

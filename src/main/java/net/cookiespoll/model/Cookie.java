@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "cookieId")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "cookieId", scope = Cookie.class)
 public class Cookie {
     private int cookieId;
     private String name;
