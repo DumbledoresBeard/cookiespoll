@@ -3,7 +3,6 @@ package net.cookiespoll.configuration;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +15,7 @@ public class DataBaseConfig {
 
     @Bean
     public DataSource getDataSource(@Value("${spring.datasource.driver-class-name}") String driver,
-                                    @Value ("${spring.datasource.url}") String url,
+                                    @Value("${spring.datasource.url}") String url,
                                     @Value("${spring.datasource.username}") String username,
                                     @Value("${spring.datasource.password}") String password) {
         BasicDataSource dataSource = new BasicDataSource();
@@ -28,17 +27,14 @@ public class DataBaseConfig {
     }
 
     @Bean
-    @Autowired
     DataSourceTransactionManager transactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
+
     @Bean
-    @Autowired
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
         return sessionFactory.getObject();
     }
-
-
 }

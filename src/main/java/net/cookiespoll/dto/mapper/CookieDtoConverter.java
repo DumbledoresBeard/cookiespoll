@@ -6,9 +6,9 @@ import net.cookiespoll.model.user.User;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CookieDtoMapper {
+public class CookieDtoConverter {
 
-    public CookieDtoMapper() {
+    public CookieDtoConverter() {
     }
 
     public Cookie convertDto(UpdateCookieRequest updateCookieRequest) {

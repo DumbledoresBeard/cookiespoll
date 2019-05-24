@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import net.cookiespoll.dto.*;
-import net.cookiespoll.dto.mapper.CookieDtoMapper;
+import net.cookiespoll.dto.mapper.CookieDtoConverter;
 import net.cookiespoll.exception.CookieRateException;
 import net.cookiespoll.exception.FileValidationException;
 import net.cookiespoll.model.Cookie;
@@ -36,16 +36,16 @@ public class CookiesController {
 
     private CookieService cookieService;
     private FileValidator fileValidator;
-    private CookieDtoMapper cookieDtoMapper;
+    private CookieDtoConverter cookieDtoConverter;
     private UserService userService;
     private RatingValidator ratingValidator;
 
     @Autowired
-    public CookiesController(CookieService cookieService, FileValidator fileValidator, CookieDtoMapper cookieDtoMapper,
+    public CookiesController(CookieService cookieService, FileValidator fileValidator, CookieDtoConverter cookieDtoConverter,
                              UserService userService, RatingValidator ratingValidator) {
         this.cookieService = cookieService;
         this.fileValidator = fileValidator;
-        this.cookieDtoMapper = cookieDtoMapper;
+        this.cookieDtoConverter = cookieDtoConverter;
         this.userService = userService;
         this.ratingValidator = ratingValidator;
     }
@@ -61,14 +61,14 @@ public class CookiesController {
     public AddCookieResponse addCookie(@RequestPart("file") MultipartFile multipartFile,
                                        @Valid @RequestPart("data") AddCookieRequest addCookieRequest)
                                         throws IOException, FileValidationException {
-        LOGGER.info("Start processing AddCookieRequest {} ", addCookieRequest, multipartFile);
+        LOGGER.info("Start processing AddCookieRequest {}, {} ", addCookieRequest, multipartFile);
 
         fileValidator.validate(multipartFile);
 
         User user = new User();
         user.setId(1); // temporary decision until getting userId from session will be implemented
 
-        return cookieDtoMapper.convertToAddCookieResponse(cookieService.insert(addCookieRequest, multipartFile, user));
+        return cookieDtoConverter.convertToAddCookieResponse(cookieService.insert(addCookieRequest, multipartFile, user));
     }
 
     @ApiOperation(value = "Get list of cookies by parameter", response = ArrayList.class)
@@ -96,9 +96,9 @@ public class CookiesController {
             @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
             @ApiResponse(code = 500, message = "Internal server error"),
     })
-    @RequestMapping(value = "/cookies", method = RequestMethod.GET)
+    @RequestMapping(value = "/cookies/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public Cookie getCookieById (@RequestParam (value = "id") Integer id) {
+    public Cookie getCookieById (@PathVariable Integer id) {
         LOGGER.info("Starting processing request for getting cookie by id {} ", id);
 
         return cookieService.getById(id);
@@ -118,7 +118,7 @@ public class CookiesController {
 
         LOGGER.info("Starting processing request {} ", updateCookieRequest);
 
-        return cookieDtoMapper.convertToUpdateResponse(cookieService.update(cookieDtoMapper.convertDto(updateCookieRequest)));
+        return cookieDtoConverter.convertToUpdateResponse(cookieService.update(cookieDtoConverter.convertDto(updateCookieRequest)));
     }
 
 
@@ -147,7 +147,7 @@ public class CookiesController {
 
         cookie.setRating(cookieService.countRating(cookie));
 
-        return cookieDtoMapper.convertToRateCookieResponse(cookieService.update(cookie), rateCookieRequest.getRating());
+        return cookieDtoConverter.convertToRateCookieResponse(cookieService.update(cookie), rateCookieRequest.getRating());
     }
 
     @ApiOperation(value = "Get cookies unrated yet by user", response = Cookie.class)

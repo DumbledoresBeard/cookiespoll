@@ -3,7 +3,7 @@ package net.cookiespoll.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import net.cookiespoll.dto.*;
-import net.cookiespoll.dto.mapper.CookieDtoMapper;
+import net.cookiespoll.dto.mapper.CookieDtoConverter;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.model.CookieUserRating;
@@ -45,7 +45,7 @@ public class TestCookieController {
     private MockMvc mockMvc;
     private CookieService cookieService = mock(CookieService.class);
     private FileValidator fileValidator = new FileValidator();
-    private CookieDtoMapper dtoMapper = new CookieDtoMapper();
+    private CookieDtoConverter dtoConverter = new CookieDtoConverter();
     private RatingValidator ratingValidator = new RatingValidator();
     private UserService userService = mock(UserService.class);
     private CookiesController cookiesController;
@@ -69,7 +69,7 @@ public class TestCookieController {
 
     @Before
     public void init() {
-        cookiesController = new CookiesController(cookieService, fileValidator, dtoMapper, userService, ratingValidator);
+        cookiesController = new CookiesController(cookieService, fileValidator, dtoConverter, userService, ratingValidator);
         mockMvc = MockMvcBuilders.standaloneSetup(cookiesController).setControllerAdvice
                   (new ControllerExceptionHandler()).build();
         MockitoAnnotations.initMocks(this);
@@ -443,8 +443,7 @@ public class TestCookieController {
         when(cookieService.getById(id)).thenReturn(cookie);
 
 
-        String response = mockMvc.perform(MockMvcRequestBuilders.get("/cookies")
-                .param("id", String.valueOf(id))
+        String response = mockMvc.perform(MockMvcRequestBuilders.get("/cookies/1")
         ).andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -542,7 +541,7 @@ public class TestCookieController {
     public void testRateAlreadyRatedCookie() throws Exception {
         RateCookieRequest rateCookieRequest = new RateCookieRequest(1, "cookie", "tasty cookie",
                 new byte[2], CookieAddingStatus.APPROVED, cookieRating, new CookieOwner(1, "login", "name", Role.USER), 3);
-        Cookie cookie = dtoMapper.convertDto(rateCookieRequest);
+        Cookie cookie = dtoConverter.convertDto(rateCookieRequest);
         List<CookieUserRating> cookieUserRatings = new ArrayList<>();
         cookieOwner.setRatedCookies(usersRatings);
         String request = new ObjectMapper().writeValueAsString(rateCookieRequest);

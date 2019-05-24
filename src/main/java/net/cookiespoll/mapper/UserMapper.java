@@ -1,6 +1,5 @@
 package net.cookiespoll.mapper;
 
-import net.cookiespoll.model.CookieUserRating;
 import net.cookiespoll.model.user.Role;
 import net.cookiespoll.model.user.User;
 import org.apache.ibatis.annotations.*;
@@ -27,7 +26,7 @@ public interface UserMapper {
             @Result(property = "ratedCookies", column = "id", javaType = List.class,
                     many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByUserId")),
             @Result(property = "addedCookies", column = "id", javaType = List.class,
-                   many = @Many(select = "net.cookiespoll.mapper.CookieMapper.getByUserId")),
+                    many = @Many(select = "net.cookiespoll.mapper.CookieMapper.getByUserId")),
     })
     User getById(int id);
 
@@ -40,12 +39,10 @@ public interface UserMapper {
             "VALUES " +
 
             "<foreach item='cookieUserRating' collection='user.ratedCookies' separator=','>",
-
-            "(#{cookieUserRating.user.id}, #{cookieUserRating.cookie.cookieId}, #{cookieUserRating.rating}) ",
-            "ON CONFLICT (user_id, cookie_id) " +
-                    "DO UPDATE SET (user_id, cookie_id, rating) = (#{cookieUserRating.user.id}, " +
-                    "#{cookieUserRating.cookie.cookieId}, #{cookieUserRating.rating})",
-
+                "(#{cookieUserRating.user.id}, #{cookieUserRating.cookie.cookieId}, #{cookieUserRating.rating}) ",
+                "ON CONFLICT (user_id, cookie_id) " +
+                "DO UPDATE SET (user_id, cookie_id, rating) = (#{cookieUserRating.user.id}, " +
+                "#{cookieUserRating.cookie.cookieId}, #{cookieUserRating.rating})",
             "</foreach>",
 
             "</script>"})

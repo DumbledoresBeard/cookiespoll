@@ -26,9 +26,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     @Transactional
     public User getById(int id) {
-        User user = userMapper.getById(id);
-
-        return user;
+        return userMapper.getById(id);
     }
 
     @Override

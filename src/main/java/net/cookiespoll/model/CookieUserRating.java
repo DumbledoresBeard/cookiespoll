@@ -1,12 +1,9 @@
 package net.cookiespoll.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import net.cookiespoll.model.user.User;
 
 import java.util.Objects;
 
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = CookieUserRating.class)
 public class CookieUserRating {
     private int id;
     private User user;

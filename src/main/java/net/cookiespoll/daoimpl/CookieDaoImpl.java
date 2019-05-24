@@ -62,9 +62,4 @@ public class CookieDaoImpl implements CookieDao {
 
         return cookie;
     }
-
-    @Override
-    public void delete (Cookie cookie) {
-        /*TODO delete given cookie*/
-    }
 }
