@@ -8,6 +8,6 @@ public interface UserDao {
 
     User getById(int id);
 
-    User update (User user);
+    User update(User user);
 
 }

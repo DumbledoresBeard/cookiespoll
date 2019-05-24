@@ -5,11 +5,17 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import net.cookiespoll.dto.*;
+import net.cookiespoll.dto.mapper.CookieDtoConverter;
+import net.cookiespoll.exception.CookieRateException;
 import net.cookiespoll.exception.FileValidationException;
 import net.cookiespoll.model.Cookie;
+import net.cookiespoll.model.CookieAddingStatus;
+import net.cookiespoll.model.CookieUserRating;
 import net.cookiespoll.model.user.User;
 import net.cookiespoll.service.CookieService;
+import net.cookiespoll.service.UserService;
 import net.cookiespoll.validation.FileValidator;
+import net.cookiespoll.validation.RatingValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,19 +27,27 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
-@Api(description = "Operations related to cookie adding")
+@Api
 public class CookiesController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CookiesController.class);
 
     private CookieService cookieService;
     private FileValidator fileValidator;
+    private CookieDtoConverter cookieDtoConverter;
+    private UserService userService;
+    private RatingValidator ratingValidator;
 
     @Autowired
-    public CookiesController(CookieService cookieService, FileValidator fileValidator) {
+    public CookiesController(CookieService cookieService, FileValidator fileValidator, CookieDtoConverter cookieDtoConverter,
+                             UserService userService, RatingValidator ratingValidator) {
         this.cookieService = cookieService;
         this.fileValidator = fileValidator;
+        this.cookieDtoConverter = cookieDtoConverter;
+        this.userService = userService;
+        this.ratingValidator = ratingValidator;
     }
 
     @ApiOperation(value = "Add new cookie to store in database", response = AddCookieResponse.class)
@@ -47,19 +61,14 @@ public class CookiesController {
     public AddCookieResponse addCookie(@RequestPart("file") MultipartFile multipartFile,
                                        @Valid @RequestPart("data") AddCookieRequest addCookieRequest)
                                         throws IOException, FileValidationException {
-        LOGGER.info("Start processing AddCookieRequest {} ", addCookieRequest, multipartFile);
+        LOGGER.info("Start processing AddCookieRequest {}, {} ", addCookieRequest, multipartFile);
 
         fileValidator.validate(multipartFile);
 
         User user = new User();
         user.setId(1); // temporary decision until getting userId from session will be implemented
 
-        Cookie cookie = cookieService.insert(addCookieRequest, multipartFile, user);
-
-        LOGGER.info("Done");
-
-        return new AddCookieResponse(cookie.getId(), cookie.getName(), cookie.getDescription(),
-                                    cookie.getFileData(), cookie.getCookieAddingStatus());
+        return cookieDtoConverter.convertToAddCookieResponse(cookieService.insert(addCookieRequest, multipartFile, user));
     }
 
     @ApiOperation(value = "Get list of cookies by parameter", response = ArrayList.class)
@@ -76,7 +85,9 @@ public class CookiesController {
 
        LOGGER.info("Starting processing request for getting cookies by parameters {} ", cookiesByParameterRequest);
 
-       return cookieService.getByParam(cookiesByParameterRequest);
+       return cookieService.getByParam(cookiesByParameterRequest.getName(), cookiesByParameterRequest.getDescription(),
+               cookiesByParameterRequest.getCookieAddingStatus(), cookiesByParameterRequest.getRating(),
+               cookiesByParameterRequest.getUserId());
     }
 
     @ApiOperation(value = "Get cookie by id", response = ArrayList.class)
@@ -85,9 +96,9 @@ public class CookiesController {
             @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
             @ApiResponse(code = 500, message = "Internal server error"),
     })
-    @RequestMapping(value = "/cookies", method = RequestMethod.GET)
+    @RequestMapping(value = "/cookies/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public Cookie getCookieById (@RequestParam (value = "id") Integer id) {
+    public Cookie getCookieById (@PathVariable Integer id) {
         LOGGER.info("Starting processing request for getting cookie by id {} ", id);
 
         return cookieService.getById(id);
@@ -101,17 +112,66 @@ public class CookiesController {
     })
     @RequestMapping(value = "/cookies", method = RequestMethod.PATCH)
     @ResponseBody
-    public UpdateCookieResponse updateCookie(@RequestBody UpdateCookieRequest updateCookieRequest) {
+    public UpdateCookieResponse updateCookie (@RequestBody @Valid UpdateCookieRequest updateCookieRequest) {
         /* TODO if(!cookieService.getUserRole(id).equals(Role.ADMIN))
         { return new ArrayList<Cookie>() ; }*/
 
         LOGGER.info("Starting processing request {} ", updateCookieRequest);
 
-        cookieService.update(updateCookieRequest);
+        return cookieDtoConverter.convertToUpdateResponse(cookieService.update(cookieDtoConverter.convertDto(updateCookieRequest)));
+    }
 
-        return new UpdateCookieResponse(updateCookieRequest.getId(),
-                updateCookieRequest.getName(), updateCookieRequest.getDescription(),
-                updateCookieRequest.getFileData(), updateCookieRequest.getApprovalStatus(),
-                updateCookieRequest.getRating(), updateCookieRequest.getCookieOwner());
+
+    @ApiOperation(value = "Set rating from user to cookie and count overall cookie rating",
+            response = RateCookieResponse.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Cookie got rating and overall rating has been counted"),
+            @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
+            @ApiResponse(code = 500, message = "Internal server error"),
+    })
+    @RequestMapping(value = "/cookies/poll", method = RequestMethod.POST)
+    @ResponseBody
+    public RateCookieResponse rateCookie (@RequestBody @Valid RateCookieRequest rateCookieRequest) throws CookieRateException {
+        int userId = 1; // temporary decision until getting userId from session will be implemented
+
+        Cookie cookie = cookieService.getById(rateCookieRequest.getId());
+        User user = userService.getById(userId);
+        List<CookieUserRating> cookieUserRatings = user.getRatedCookies();
+
+        ratingValidator.validate(cookieUserRatings, cookie);
+
+        cookieUserRatings.add(new CookieUserRating(user, cookie, rateCookieRequest.getRating()));
+        user.setRatedCookies(cookieUserRatings);
+
+        userService.update(user);
+
+        cookie.setRating(cookieService.countRating(cookie));
+
+        return cookieDtoConverter.convertToRateCookieResponse(cookieService.update(cookie), rateCookieRequest.getRating());
+    }
+
+    @ApiOperation(value = "Get cookies unrated yet by user", response = Cookie.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Cookies were received"),
+            @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
+            @ApiResponse(code = 500, message = "Internal server error"),
+    })
+    @RequestMapping(value = "/cookies/poll", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Cookie> getUnratedCookies () {
+        int userId = 1; // temporary decision until getting userId from session will be implemented
+        CookieAddingStatus cookieAddingStatus = CookieAddingStatus.APPROVED;
+
+        User user = userService.getById(userId);
+        List<Cookie> allApprovedCookies = cookieService.getByParam(null, null, cookieAddingStatus, null,
+                null);
+
+        List<Cookie> ratedCookies = user.getRatedCookies()
+                                    .stream()
+                                    .map(CookieUserRating::getCookie)
+                                    .collect(Collectors.toList());
+        allApprovedCookies.removeAll(ratedCookies);
+
+        return allApprovedCookies;
     }
 }

@@ -20,13 +20,13 @@ public class CookiesByParameterRequest {
     private CookieAddingStatus cookieAddingStatus;
 
     @Min(value = 0, message = "Rating can not be less than 0")
-    private Integer rating;
+    private Float rating;
 
     public CookiesByParameterRequest() {
     }
 
     public CookiesByParameterRequest(Integer userId, String name, String description,
-                                     CookieAddingStatus cookieAddingStatus, Integer rating) {
+                                     CookieAddingStatus cookieAddingStatus, Float rating) {
         this.userId = userId;
         this.name = name;
         this.description = description;
@@ -66,11 +66,11 @@ public class CookiesByParameterRequest {
         this.cookieAddingStatus = cookieAddingStatus;
     }
 
-    public Integer getRating() {
+    public Float getRating() {
         return rating;
     }
 
-    public void setRating(Integer rating) {
+    public void setRating(Float rating) {
         this.rating = rating;
     }
 

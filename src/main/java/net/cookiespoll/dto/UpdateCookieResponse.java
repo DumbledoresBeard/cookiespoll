@@ -9,13 +9,13 @@ public class UpdateCookieResponse {
     private String description;
     private byte[] fileData;
     private CookieAddingStatus cookieAddingStatus;
-    private int rating;
+    private Float rating;
     private User cookieOwner;
 
     public UpdateCookieResponse() {}
 
     public UpdateCookieResponse(int id, String name, String description, byte[] fileData,
-                                CookieAddingStatus cookieAddingStatus, int rating, User cookieOwner) {
+                                CookieAddingStatus cookieAddingStatus, Float rating, User cookieOwner) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -65,11 +65,11 @@ public class UpdateCookieResponse {
         this.cookieAddingStatus = cookieAddingStatus;
     }
 
-    public int getRating() {
+    public Float getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(Float rating) {
         this.rating = rating;
     }
 
@@ -78,4 +78,6 @@ public class UpdateCookieResponse {
     public void setCookieOwner(User cookieOwner) {
         this.cookieOwner = cookieOwner;
     }
+
+
 }

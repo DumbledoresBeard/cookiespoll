@@ -1,25 +1,56 @@
 package net.cookiespoll.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import net.cookiespoll.model.user.User;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "cookieId", scope = Cookie.class)
 public class Cookie {
-    private int id;
+    private int cookieId;
     private String name;
     private String description;
     private byte[] fileData;
     private CookieAddingStatus cookieAddingStatus;
-    private int rating;
+    private Float rating;
     private User cookieOwner;
+    private List<CookieUserRating> usersRatings;
 
-    public Cookie() {
+    public Cookie() {}
+
+    public Cookie(int cookieId, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus,
+                  Float rating, User cookieOwner, List<CookieUserRating> usersRatings) {
+        this.cookieId = cookieId;
+        this.name = name;
+        this.description = description;
+        this.fileData = fileData;
+        this.cookieAddingStatus = cookieAddingStatus;
+        this.rating = rating;
+        this.cookieOwner = cookieOwner;
+        this.usersRatings = usersRatings;
     }
 
-    public Cookie(int id, String name, String description, byte[] fileData,
-                  CookieAddingStatus cookieAddingStatus, int rating, User cookieOwner) {
-        this.id = id;
+    public Cookie(String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus, Float rating,
+                  User cookieOwner, List<CookieUserRating> usersRatings) {
+        this(0, name, description, fileData, cookieAddingStatus, rating, cookieOwner, usersRatings);
+    }
+
+    public Cookie(int cookieId, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus, Float rating) {
+        this.cookieId = cookieId;
+        this.name = name;
+        this.description = description;
+        this.fileData = fileData;
+        this.cookieAddingStatus = cookieAddingStatus;
+        this.rating = rating;
+    }
+
+    public Cookie(int cookieId, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus,
+                  Float rating, User cookieOwner) {
+        this.cookieId = cookieId;
         this.name = name;
         this.description = description;
         this.fileData = fileData;
@@ -28,17 +59,18 @@ public class Cookie {
         this.cookieOwner = cookieOwner;
     }
 
-    public Cookie (String name, String description, byte[] fileData,
-                   CookieAddingStatus cookieAddingStatus, int rating, User cookieOwner) {
-        this (0, name, description, fileData, cookieAddingStatus, rating, cookieOwner);
+    public Cookie(String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus,
+                   Float rating, User cookieOwner) {
+        this(0, name, description, fileData, cookieAddingStatus, rating, cookieOwner);
     }
 
-    public int getId() {
-        return id;
+
+    public int getCookieId() {
+        return cookieId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setCookieId(int cookieId) {
+        this.cookieId = cookieId;
     }
 
     public String getName() {
@@ -73,11 +105,11 @@ public class Cookie {
         this.cookieAddingStatus = cookieAddingStatus;
     }
 
-    public int getRating() {
+    public Float getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(Float rating) {
         this.rating = rating;
     }
 
@@ -89,24 +121,89 @@ public class Cookie {
         this.cookieOwner = cookieOwner;
     }
 
-    @Override
+    public List<CookieUserRating> getUsersRatings() {
+        return usersRatings;
+    }
+
+    public void setUsersRatings(List<CookieUserRating> usersRatings) {
+        this.usersRatings = usersRatings;
+    }
+
+   @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Cookie)) return false;
         Cookie cookie = (Cookie) o;
-        return getId() == cookie.getId() &&
-                getRating() == cookie.getRating() &&
-                Objects.equals(getName(), cookie.getName()) &&
-                Objects.equals(getDescription(), cookie.getDescription()) &&
-                Arrays.equals(getFileData(), cookie.getFileData()) &&
-                getCookieAddingStatus() == cookie.getCookieAddingStatus() &&
-                Objects.equals(getCookieOwner(), cookie.getCookieOwner());
+        String ids = "";
+        String userIds = "";
+        String cookiesIdsThis = "";
+        String cookiesIds = "";
+
+
+        if(this.getUsersRatings() != null) {
+            ids = this.getUsersRatings()
+                    .stream()
+                    .map(CookieUserRating::getUser)
+                    .map(User::getId)
+                    .collect(Collectors.toList()).toString();
+        }
+
+        if(cookie.getUsersRatings() != null) {
+            userIds = cookie.getUsersRatings()
+                    .stream()
+                    .map(CookieUserRating::getUser)
+                    .map(User::getId)
+                    .collect(Collectors.toList()).toString();
+        }
+
+       if(this.getUsersRatings() != null) {
+           cookiesIdsThis = this.getUsersRatings()
+                   .stream()
+                   .map(CookieUserRating::getCookie)
+                   .map(Cookie::getCookieId)
+                   .collect(Collectors.toList()).toString();
+       }
+
+       if(cookie.getUsersRatings() != null) {
+           cookiesIds = cookie.getUsersRatings()
+                   .stream()
+                   .map(CookieUserRating::getCookie)
+                   .map(Cookie::getCookieId)
+                   .collect(Collectors.toList()).toString();
+       }
+
+           return getCookieId() == cookie.getCookieId() &&
+                   this.getName().equals(cookie.getName()) &&
+                   this.getDescription().equals(cookie.getDescription()) &&
+                   Arrays.equals(this.getFileData(), cookie.getFileData()) &&
+                   this.getCookieAddingStatus().equals(cookie.getCookieAddingStatus()) &&
+                   this.getRating().equals(cookie.getRating()) &&
+                   this.getCookieOwner().equals(cookie.getCookieOwner()) &&
+                   cookiesIdsThis.equals(cookiesIds) &&
+                   ids.equals(userIds);
+       }
+
+
+        @Override
+        public int hashCode() {
+            List<Integer> ids = null;
+            List<Integer> cookiesIdsThis = null;
+
+            if (this.getUsersRatings() != null) {
+                ids = this.getUsersRatings()
+                    .stream()
+                    .map(CookieUserRating::getUser)
+                    .map(User::getId)
+                    .collect(Collectors.toList());
+                cookiesIdsThis = this.getUsersRatings()
+                    .stream()
+                    .map(CookieUserRating::getCookie)
+                    .map(Cookie::getCookieId)
+                    .collect(Collectors.toList());
+            }
+            int result = Objects.hash(getCookieId(), name, description, cookieAddingStatus, rating, cookieOwner, ids, cookiesIdsThis);
+            result = 31 * result + Arrays.hashCode(fileData);
+            return result;
     }
 
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(getId(), getName(), getDescription(), getCookieAddingStatus(), getRating(), getCookieOwner());
-        result = 31 * result + Arrays.hashCode(getFileData());
-        return result;
-    }
 }

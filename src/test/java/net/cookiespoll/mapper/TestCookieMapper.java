@@ -1,7 +1,9 @@
+
 package net.cookiespoll.mapper;
 
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
+import net.cookiespoll.model.CookieUserRating;
 import net.cookiespoll.model.user.Role;
 import net.cookiespoll.model.user.User;
 import org.junit.Assert;
@@ -21,11 +23,13 @@ import static org.mockito.Mockito.*;
 public class TestCookieMapper {
 
     @Mock
-    CookieMapper cookieMapper;
+    private CookieMapper cookieMapper;
 
     private User cookieOwner = new User(1, "login", "name", Role.USER);
-    Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING,
-                                0, cookieOwner);
+    private Float cookieRating = new Float(0);
+    private Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING,
+            cookieRating, cookieOwner);
+    private CookieUserRating cookieUserRating = new CookieUserRating(cookieOwner, cookie, 4);
 
 
     @Before
@@ -36,11 +40,11 @@ public class TestCookieMapper {
 
     @Test
     public void testCookieMapperInsert() {
-        when(cookieMapper.insert(cookie, cookieOwner.getId())).thenReturn(1);
+        when(cookieMapper.insert(cookie)).thenReturn(1);
 
-        assert cookieMapper.insert(cookie, cookieOwner.getId()) == 1;
+        assert cookieMapper.insert(cookie) == 1;
 
-        verify(cookieMapper).insert(cookie, cookieOwner.getId());
+        verify(cookieMapper).insert(cookie);
 
     }
 
@@ -59,21 +63,39 @@ public class TestCookieMapper {
         cookies.add(cookie);
 
         when(cookieMapper.getByParam("cookie", "tasty cookie", CookieAddingStatus.WAITING,
-                0, 1)).thenReturn(cookies);
+                cookieRating, 1)).thenReturn(cookies);
 
         Assert.assertEquals(cookieMapper.getByParam("cookie", "tasty cookie", CookieAddingStatus.WAITING,
-                0, 1).get(0).getId(), cookie.getId());
+                cookieRating, 1).get(0).getCookieId(), cookie.getCookieId());
 
         verify(cookieMapper).getByParam("cookie", "tasty cookie", CookieAddingStatus.WAITING,
-                0, 1);
+                cookieRating, 1);
     }
 
     @Test
     public void testCookieMapperGetById () {
         when(cookieMapper.getById(1)).thenReturn(cookie);
 
-        Assert.assertEquals(cookieMapper.getById(1).getId(), cookie.getId());
+        Assert.assertEquals(cookieMapper.getById(1).getCookieId(), cookie.getCookieId());
 
         verify(cookieMapper).getById(1);
     }
+
+    @Test
+    public void testGetUnratedCookiesByUserId () {
+        List<Cookie> cookies = new ArrayList<>();
+        Cookie cookieWith1Id = new Cookie(1, "cookie", "tasty cookie",
+                new byte[2], CookieAddingStatus.WAITING, cookieRating, cookieOwner);
+        Cookie cookieWith2Id = new Cookie(2,"name", "description", new byte[2],
+                CookieAddingStatus.WAITING, cookieRating, cookieOwner);
+        cookies.add(cookieWith1Id);
+        cookies.add(cookieWith2Id);
+
+        when(cookieMapper.getUnratedByUserId(1)).thenReturn(cookies);
+
+        Assert.assertEquals(cookies, cookieMapper.getUnratedByUserId(1));
+
+        verify(cookieMapper).getUnratedByUserId(1);
+    }
 }
+

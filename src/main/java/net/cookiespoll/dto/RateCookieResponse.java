@@ -1,44 +1,39 @@
 package net.cookiespoll.dto;
-
 import net.cookiespoll.model.CookieAddingStatus;
-import net.cookiespoll.model.user.User;
 
-import javax.validation.constraints.Size;
+public class RateCookieResponse {
 
-public class UpdateCookieRequest {
-    private int id;
-
-    @Size(min = 4, max = 30, message = "Cookie name must be between 4 and 30 characters")
+    private Integer id;
     private String name;
-
-    @Size(min = 1, max = 150, message = "Cookie description must be less then 150 characters and cannot be empty")
     private String description;
-
     private byte[] fileData;
     private CookieAddingStatus approvalStatus;
-    private Float rating;
-    private User cookieOwner;
+    private Float overallRating;
+    private CookieOwner cookieOwner;
+    private Integer ratingGivenByUser;
 
-    public UpdateCookieRequest () {}
+    public RateCookieResponse() {
+    }
 
-    public UpdateCookieRequest(int id, String cookie, String tasty_cookie, byte[] byteArray, Float cookieRating, User cookieOwner) {}
-
-    public UpdateCookieRequest(int id, String name, String description, byte[] fileData,
-                               CookieAddingStatus approvalStatus, Float rating, User cookieOwner) {
+    public RateCookieResponse(Integer id, String name, String description, byte[] fileData,
+                              CookieAddingStatus approvalStatus, Float overallRating, CookieOwner cookieOwner,
+                              Integer ratingGivenByUser) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.fileData = fileData;
         this.approvalStatus = approvalStatus;
-        this.rating = rating;
+        this.overallRating = overallRating;
         this.cookieOwner = cookieOwner;
+        this.ratingGivenByUser = ratingGivenByUser;
+
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -74,20 +69,27 @@ public class UpdateCookieRequest {
         this.approvalStatus = approvalStatus;
     }
 
-    public Float getRating() {
-        return rating;
+    public Float getOverallRating() {
+        return overallRating;
     }
 
-    public void setRating(Float rating) {
-        this.rating = rating;
+    public void setOverallRating(Float overallRating) {
+        this.overallRating = overallRating;
     }
 
-    public User getCookieOwner() { return cookieOwner; }
+    public CookieOwner getCookieOwner() {
+        return cookieOwner;
+    }
 
-    public void setCookieOwner(User cookieOwner) {
+    public void setCookieOwner(CookieOwner cookieOwner) {
         this.cookieOwner = cookieOwner;
     }
 
+    public Integer getRatingGivenByUser() {
+        return ratingGivenByUser;
+    }
 
-
+    public void setRatingGivenByUser(Integer ratingGivenByUser) {
+        this.ratingGivenByUser = ratingGivenByUser;
+    }
 }

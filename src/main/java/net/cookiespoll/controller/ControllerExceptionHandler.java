@@ -1,5 +1,6 @@
 package net.cookiespoll.controller;
 
+import net.cookiespoll.exception.CookieRateException;
 import net.cookiespoll.exception.FileValidationException;
 import net.cookiespoll.model.ErrorResponse;
 import org.slf4j.Logger;
@@ -22,12 +23,12 @@ public class ControllerExceptionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
     private final static String FILE_FIELD = "file";
+    private final static String NO_FIELD = "";
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorResponse handleMethodArgumentNotValidException(HttpServletRequest req,
-                                                               MethodArgumentNotValidException ex) {
+    public ErrorResponse handleMethodArgumentNotValidException(HttpServletRequest req, MethodArgumentNotValidException ex) {
         LOGGER.error("Request: {} raised exception {} ", req.getRequestURL(), ex);
 
         List<FieldError> errors = ex.getBindingResult().getFieldErrors();
@@ -85,6 +86,22 @@ public class ControllerExceptionHandler {
         return errorResponse;
     }
 
+    @ExceptionHandler(CookieRateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponse handleCookieRateException (HttpServletRequest req, CookieRateException ex) {
+        LOGGER.error("Request: " + req.getRequestURL() + " raised exception " + ex);
+
+        List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
+        ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
+        error.setFieldName(NO_FIELD);
+        error.setMessage(ex.getMessage());
+        errorDetails.add(error);
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setErrors(errorDetails);
+
+        return errorResponse;
+    }
     }
 
 

@@ -2,10 +2,9 @@ package net.cookiespoll.service;
 
 import net.cookiespoll.dao.CookieDao;
 import net.cookiespoll.dto.AddCookieRequest;
-import net.cookiespoll.dto.CookiesByParameterRequest;
-import net.cookiespoll.dto.UpdateCookieRequest;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
+import net.cookiespoll.model.CookieUserRating;
 import net.cookiespoll.model.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +27,8 @@ public class CookieService {
     }
 
     public Cookie insert(AddCookieRequest addCookieRequest, MultipartFile multipartFile, User cookieOwner)
-                        throws IOException {
-       int rating = 0;
+            throws IOException {
+       float rating = 0;
 
        LOGGER.info("Set rating={} and cookieAddingStatus={} to cookie ", rating, CookieAddingStatus.WAITING);
 
@@ -37,20 +36,29 @@ public class CookieService {
                                 multipartFile.getBytes(), CookieAddingStatus.WAITING, rating, cookieOwner));
     }
 
-
-    public List<Cookie> getByParam(CookiesByParameterRequest cookiesByParameterRequest) {
-        return cookieDao.getByParam(cookiesByParameterRequest);
+    public List<Cookie> getByParam(String name, String description, CookieAddingStatus cookieAddingStatus, Float rating,
+                                   Integer userId) {
+        return cookieDao.getByParam(name, description, cookieAddingStatus, rating, userId);
     }
 
-
-    public Cookie update(UpdateCookieRequest updateCookieRequest) {
-       return cookieDao.update(new Cookie(updateCookieRequest.getId(),
-                updateCookieRequest.getName(), updateCookieRequest.getDescription(),
-                updateCookieRequest.getFileData(), updateCookieRequest.getApprovalStatus(),
-                updateCookieRequest.getRating(), updateCookieRequest.getCookieOwner()));
+    public Cookie update(Cookie cookie) {
+        return cookieDao.update(cookie);
     }
 
     public Cookie getById(Integer id) {
         return cookieDao.getById(id);
     }
+
+    public List<Cookie> getUnratedByUserId(int userId) {
+        return cookieDao.getUnratedByUserId(userId);
+    }
+
+    public Float countRating(Cookie cookie) {
+        List<CookieUserRating> cookieUserRatingList = this.getById(cookie.getCookieId()).getUsersRatings();
+        float usersQuantity = (float) cookieUserRatingList.size();
+        float cookieRatingSum = cookieUserRatingList.stream()
+                .mapToInt(cookieUserRating -> cookieUserRating.getRating()).sum();
+        return  (cookieRatingSum / usersQuantity);
+    }
+
 }
