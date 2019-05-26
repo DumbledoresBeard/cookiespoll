@@ -14,7 +14,7 @@ public interface CookieMapper {
     @Insert("INSERT INTO cookies (name, description, file_data, cookie_adding_status, rating, user_id) " +
             "VALUES ( #{cookie.name}, #{cookie.description}, #{cookie.fileData}, #{cookie.cookieAddingStatus}," +
             " #{cookie.rating}, #{cookie.cookieOwner.id})")
-    @Options(useGeneratedKeys = true, keyProperty = "cookie.id")
+    @Options(useGeneratedKeys = true, keyProperty = "cookie.cookieId")
     Integer insert(@Param("cookie") Cookie cookie);
 
     @Select({"<script>",
