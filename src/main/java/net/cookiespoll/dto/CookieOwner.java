@@ -59,7 +59,7 @@ public class CookieOwner {
         if (this == o) return true;
         if (!(o instanceof CookieOwner)) return false;
         CookieOwner that = (CookieOwner) o;
-        return id == that.id &&
+        return id.equals(that.id) &&
                 Objects.equals(login, that.login) &&
                 Objects.equals(name, that.name) &&
                 role == that.role;

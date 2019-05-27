@@ -6,25 +6,34 @@ import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.model.CookieUserRating;
 import net.cookiespoll.model.user.Role;
 import net.cookiespoll.model.user.User;
+import net.cookiespoll.validation.EmailDomenValidator;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class TestUserService {
-    @Mock
-    UserDaoImpl userDao;
 
-    @InjectMocks
-    UserService userService;
+    private UserDaoImpl userDao = mock(UserDaoImpl.class);
+    private EmailDomenValidator emailDomenValidator = new EmailDomenValidator();
+    private UserService userService;
+
+
 
     private String id = "1";
     private User userAdmin = new User("1", "login", "name", Role.ADMIN);
@@ -36,6 +45,7 @@ public class TestUserService {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+        userService = new UserService(userDao, emailDomenValidator);
     }
 
     @Test
@@ -85,6 +95,23 @@ public class TestUserService {
         Assert.assertEquals(userAdmin.getAddedCookies(), resultUser.getAddedCookies());
 
         verify(userDao).update(userAdmin);
+    }
+
+    @Test
+    public void testProcessOidcUser() throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
+        Instant issuedAt = Instant.now();
+        Instant expiresAt = Instant.now();
+        OidcIdToken oidcIdToken = new OidcIdToken("token", issuedAt, expiresAt, Map.of("sub", "12345"));
+        OAuth2AccessToken accessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "token", issuedAt, expiresAt);
+        ClientRegistration clientRegistration = null;
+
+        Constructor<ClientRegistration> constructor = ClientRegistration.class.getDeclaredConstructor();
+        if (Modifier.isPrivate(constructor.getModifiers())) {
+            constructor.setAccessible(true);
+            clientRegistration = (ClientRegistration)constructor.newInstance();
+        }
+
+
     }
 
 }

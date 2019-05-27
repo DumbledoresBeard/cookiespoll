@@ -85,11 +85,7 @@ public class CookiesController {
         fileValidator.validate(multipartFile);
 
         String userId = getUserIdFromSession();
-        User user = new User();
-
-        Cookie cookie = cookieService.insert(addCookieRequest, multipartFile, user);
-
-        fileValidator.validate(multipartFile);
+        User user = userService.getById(userId);
 
         return cookieDtoConverter.convertToAddCookieResponse(cookieService.insert(addCookieRequest, multipartFile, user));
     }
@@ -120,7 +116,7 @@ public class CookiesController {
     @ResponseBody
     public Cookie getCookieById (@PathVariable Integer id) {
         LOGGER.info("Starting processing request for getting cookie by id {} ", id);
-        String userId = getUserIdFromSession();
+
         return cookieService.getById(id);
     }
 
