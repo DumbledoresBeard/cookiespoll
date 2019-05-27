@@ -2,12 +2,13 @@ package net.cookiespoll.dto.mapper;
 
 import net.cookiespoll.dto.*;
 import net.cookiespoll.model.Cookie;
+import net.cookiespoll.model.user.User;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CookieDtoMapper {
+public class CookieDtoConverter {
 
-    public CookieDtoMapper() {
+    public CookieDtoConverter() {
     }
 
     public Cookie convertDto(UpdateCookieRequest updateCookieRequest) {
@@ -17,9 +18,11 @@ public class CookieDtoMapper {
     }
 
     public Cookie convertDto(RateCookieRequest rateCookieRequest) {
+        User user = new User(rateCookieRequest.getCookieOwner().getId(), rateCookieRequest.getCookieOwner().getLogin(), rateCookieRequest.getCookieOwner().getName(),
+                rateCookieRequest.getCookieOwner().getRole());
         return new Cookie(rateCookieRequest.getId(), rateCookieRequest.getName(), rateCookieRequest.getDescription(),
                 rateCookieRequest.getFileData(), rateCookieRequest.getApprovalStatus(), rateCookieRequest.getResultRating(),
-                rateCookieRequest.getCookieOwner());
+                user);
     }
 
     public UpdateCookieResponse convertToUpdateResponse(Cookie cookie) {
@@ -33,10 +36,10 @@ public class CookieDtoMapper {
     }
 
     public RateCookieResponse convertToRateCookieResponse (Cookie cookie, Integer rating) {
-        CookieOwnerResponse cookieOwnerResponse = new CookieOwnerResponse(cookie.getCookieOwner().getId(),
+        CookieOwner cookieOwner = new CookieOwner(cookie.getCookieOwner().getId(),
                 cookie.getCookieOwner().getLogin(),cookie.getCookieOwner().getName(), cookie.getCookieOwner().getRole());
         return new RateCookieResponse(cookie.getCookieId(), cookie.getName(), cookie.getDescription(),
-                cookie.getFileData(), cookie.getCookieAddingStatus(), cookie.getRating(), cookieOwnerResponse,
+                cookie.getFileData(), cookie.getCookieAddingStatus(), cookie.getRating(), cookieOwner,
                 rating);
     }
 

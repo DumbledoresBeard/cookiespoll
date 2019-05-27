@@ -1,6 +1,5 @@
 package net.cookiespoll.dao;
 
-import net.cookiespoll.dto.CookiesByParameterRequest;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 

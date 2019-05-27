@@ -55,10 +55,10 @@ public class CookieService {
 
     public Float countRating(Cookie cookie) {
         List<CookieUserRating> cookieUserRatingList = this.getById(cookie.getCookieId()).getUsersRatings();
-        Long usersQuantity = cookieUserRatingList.stream().count();
-        Integer cookieRatingSum = cookieUserRatingList.stream()
+        float usersQuantity = (float) cookieUserRatingList.size();
+        float cookieRatingSum = cookieUserRatingList.stream()
                 .mapToInt(cookieUserRating -> cookieUserRating.getRating()).sum();
-        return  (float)(cookieRatingSum / usersQuantity);
+        return  (cookieRatingSum / usersQuantity);
     }
 
     public Integer delete(Integer id) {

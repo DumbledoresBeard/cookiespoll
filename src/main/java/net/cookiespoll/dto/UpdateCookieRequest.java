@@ -1,6 +1,5 @@
 package net.cookiespoll.dto;
 
-import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.model.user.User;
 
@@ -21,9 +20,6 @@ public class UpdateCookieRequest {
     private User cookieOwner;
 
     public UpdateCookieRequest () {}
-
-    public UpdateCookieRequest(int id, String cookie, String tasty_cookie, byte[] byteArray, Float cookieRating,
-                               User cookieOwner) {}
 
     public UpdateCookieRequest(int id, String name, String description, byte[] fileData,
                                CookieAddingStatus approvalStatus, Float rating, User cookieOwner) {

@@ -1,10 +1,5 @@
 package net.cookiespoll.dto;
-import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
-import net.cookiespoll.model.user.Role;
-import net.cookiespoll.model.user.User;
-
-import javax.validation.constraints.Size;
 
 public class RateCookieResponse {
 
@@ -14,14 +9,14 @@ public class RateCookieResponse {
     private byte[] fileData;
     private CookieAddingStatus approvalStatus;
     private Float overallRating;
-    private CookieOwnerResponse cookieOwner;
+    private CookieOwner cookieOwner;
     private Integer ratingGivenByUser;
 
     public RateCookieResponse() {
     }
 
     public RateCookieResponse(Integer id, String name, String description, byte[] fileData,
-                              CookieAddingStatus approvalStatus, Float overallRating, CookieOwnerResponse cookieOwner,
+                              CookieAddingStatus approvalStatus, Float overallRating, CookieOwner cookieOwner,
                               Integer ratingGivenByUser) {
         this.id = id;
         this.name = name;
@@ -82,11 +77,11 @@ public class RateCookieResponse {
         this.overallRating = overallRating;
     }
 
-    public CookieOwnerResponse getCookieOwner() {
+    public CookieOwner getCookieOwner() {
         return cookieOwner;
     }
 
-    public void setCookieOwner(CookieOwnerResponse cookieOwner) {
+    public void setCookieOwner(CookieOwner cookieOwner) {
         this.cookieOwner = cookieOwner;
     }
 

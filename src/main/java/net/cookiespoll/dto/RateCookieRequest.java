@@ -19,7 +19,7 @@ public class RateCookieRequest {
     private byte[] fileData;
     private CookieAddingStatus approvalStatus;
     private Float resultRating;
-    private User cookieOwner;
+    private CookieOwner cookieOwner;
 
     @Min(value = 1, message = "Rating must be a digit between 1 and 5")
     @Max(value = 5, message = "Rating must be a digit between 1 and 5")
@@ -29,8 +29,7 @@ public class RateCookieRequest {
     }
 
     public RateCookieRequest(Integer id, String name, String description, byte[] fileData,
-                             CookieAddingStatus approvalStatus, Float resultRating, User cookieOwner, Integer rating) {
-
+                             CookieAddingStatus approvalStatus, Float resultRating, CookieOwner cookieOwner, Integer rating) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -49,11 +48,9 @@ public class RateCookieRequest {
         this.id = id;
     }
 
-    public User getCookieOwner() {
-        return cookieOwner;
-    }
+    public CookieOwner getCookieOwner() { return cookieOwner; }
 
-    public void setCookieOwner(User cookieOwner) {
+    public void setCookieOwner(CookieOwner cookieOwner) {
         this.cookieOwner = cookieOwner;
     }
 

@@ -1,5 +1,6 @@
 package net.cookiespoll.mapper;
 
+
 import net.cookiespoll.model.user.Admin;
 import net.cookiespoll.model.user.Role;
 import net.cookiespoll.model.user.User;
@@ -26,7 +27,7 @@ public interface UserMapper {
             @Result(property = "ratedCookies", column = "id", javaType = List.class,
                     many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByUserId")),
             @Result(property = "addedCookies", column = "id", javaType = List.class,
-                   many = @Many(select = "net.cookiespoll.mapper.CookieMapper.getByUserId")),
+                    many = @Many(select = "net.cookiespoll.mapper.CookieMapper.getByUserId")),
     })
     User getById(String id);
 
@@ -37,12 +38,14 @@ public interface UserMapper {
 
             "INSERT INTO cookie_user_rating (user_id, cookie_id, rating) " +
             "VALUES " +
+
             "<foreach item='cookieUserRating' collection='user.ratedCookies' separator=','>",
-            "(#{cookieUserRating.user.id}, #{cookieUserRating.cookie.cookieId}, #{cookieUserRating.rating}) ",
-            "ON CONFLICT (user_id, cookie_id) " +
-                    "DO UPDATE SET (user_id, cookie_id, rating) = (#{cookieUserRating.user.id}, " +
-                    "#{cookieUserRating.cookie.cookieId}, #{cookieUserRating.rating})",
+                "(#{cookieUserRating.user.id}, #{cookieUserRating.cookie.cookieId}, #{cookieUserRating.rating}) ",
+                "ON CONFLICT (user_id, cookie_id) " +
+                "DO UPDATE SET (user_id, cookie_id, rating) = (#{cookieUserRating.user.id}, " +
+                "#{cookieUserRating.cookie.cookieId}, #{cookieUserRating.rating})",
             "</foreach>",
+
             "</script>"})
     void update(@Param("user") User user);
 

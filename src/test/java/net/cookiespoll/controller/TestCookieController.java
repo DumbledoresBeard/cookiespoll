@@ -3,7 +3,7 @@ package net.cookiespoll.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import net.cookiespoll.dto.*;
-import net.cookiespoll.dto.mapper.CookieDtoMapper;
+import net.cookiespoll.dto.mapper.CookieDtoConverter;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.model.CookieUserRating;
@@ -13,6 +13,7 @@ import net.cookiespoll.service.CookieService;
 import net.cookiespoll.service.UserService;
 import net.cookiespoll.validation.FileValidator;
 import net.cookiespoll.validation.UserRoleValidator;
+import net.cookiespoll.validation.RatingValidator;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -45,8 +46,9 @@ public class TestCookieController {
     private MockMvc mockMvc;
     private CookieService cookieService = mock(CookieService.class);
     private FileValidator fileValidator = new FileValidator();
-    private CookieDtoMapper dtoMapper = new CookieDtoMapper();
     private UserRoleValidator userRoleValidator = mock(UserRoleValidator.class);
+    private CookieDtoConverter dtoConverter = new CookieDtoConverter();
+    private RatingValidator ratingValidator = new RatingValidator();
     private UserService userService = mock(UserService.class);
     private CookiesController cookiesController;
     private byte [] byteArray = "Photo".getBytes();
@@ -54,23 +56,23 @@ public class TestCookieController {
     private User cookieOwner = new User("1", "login", "name", Role.USER);
     private Cookie cookie = new Cookie(1, "cookie", "tasty cookie", byteArray,
             CookieAddingStatus.WAITING, cookieRating, cookieOwner);
-    Cookie cookieWith1Id = new Cookie(1, "cookie", "tasty cookie",
-            new byte[2], CookieAddingStatus.WAITING, cookieRating, cookieOwner);
-    Cookie cookieWith2Id = new Cookie(2,"name", "description", new byte[2],
-            CookieAddingStatus.WAITING, cookieRating, cookieOwner);
+    private Cookie cookieWith1Id = new Cookie(1, "cookie", "tasty cookie",
+            new byte[2], CookieAddingStatus.APPROVED, cookieRating, cookieOwner);
+    private Cookie cookieWith2Id = new Cookie(2,"name", "description", new byte[2],
+            CookieAddingStatus.APPROVED, cookieRating, cookieOwner);
     private MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "testcookie",
             "image/jpg", byteArray);
     private MockMultipartFile addCookieDtoRequest = new MockMultipartFile("data", "",
             "application/json", ("{\"name\":\"cookie\", \"description\": \"tasty cookie\"}").getBytes());
     private Gson gson = new Gson();
-    private  List<CookieUserRating> usersRatings = Arrays.asList(new CookieUserRating(cookieOwner, cookieWith1Id, 3));
-    private List<CookieUserRating> userRatings2 = Arrays.asList(new CookieUserRating(cookieOwner, cookieWith2Id, 4));
+    private User user = new User("1", "login", "name", Role.USER);
+    private List<CookieUserRating> usersRatings = Arrays.asList(new CookieUserRating(user, cookieWith1Id, 3));
+    private List<CookieUserRating> userRatings2 = Arrays.asList(new CookieUserRating(user, cookieWith2Id, 4));
 
     @Before
     public void init() {
-        cookiesController = new CookiesController(cookieService, fileValidator, dtoMapper, userRoleValidator, userService);
-
-        mockMvc = MockMvcBuilders.standaloneSetup(cookiesController).setControllerAdvice
+        cookiesController = new CookiesController(cookieService, fileValidator, dtoConverter, userRoleValidator, userService, ratingValidator);
+        MockMvcBuilders.standaloneSetup(cookiesController).setControllerAdvice
                   (new ControllerExceptionHandler()).build();
 
         MockitoAnnotations.initMocks(this);
@@ -243,8 +245,6 @@ public class TestCookieController {
 
     @Test
     public void testGetCookiesByParamName() throws Exception {
-        cookieWith1Id.setUsersRatings(usersRatings);
-        cookieWith2Id.setUsersRatings(userRatings2);
         List<Cookie> cookies = Arrays.asList(cookieWith1Id, cookieWith2Id);
         String name = "cookie";
 
@@ -254,7 +254,7 @@ public class TestCookieController {
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
                 .param("name", name)
         ).andExpect(status().isOk())
-                .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0.0,\"userId\":1},{\"id\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0.0,\"userId\":1}]"));
+                .andExpect(content().string("[{\"cookieId\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"APPROVED\",\"rating\":0.0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\",\"ratedCookies\":null,\"addedCookies\":null},\"usersRatings\":null},{\"cookieId\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"APPROVED\",\"rating\":0.0,\"cookieOwner\":1,\"usersRatings\":null}]"));
 
         verify(cookieService).getByParam(name, null, null, null, null);
 
@@ -272,7 +272,7 @@ public class TestCookieController {
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
                 .param("description", description)
         ).andExpect(status().isOk())
-                .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}},{\"id\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}}]"));
+                .andExpect(content().string("[{\"cookieId\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0.0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\",\"ratedCookies\":null,\"addedCookies\":null},\"usersRatings\":null},{\"cookieId\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0.0,\"cookieOwner\":1,\"usersRatings\":null}]"));
 
         verify(cookieService).getByParam(null, description, null, null, null);
     }
@@ -288,7 +288,7 @@ public class TestCookieController {
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
                 .param("cookieAddingStatus", cookieAddingStatus.toString())
         ).andExpect(status().isOk())
-                .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}},{\"id\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}}]"));
+                .andExpect(content().string("[{\"cookieId\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0.0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\",\"ratedCookies\":null,\"addedCookies\":null},\"usersRatings\":null},{\"cookieId\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0.0,\"cookieOwner\":1,\"usersRatings\":null}]"));
 
         verify(cookieService).getByParam(null, null, cookieAddingStatus, null, null);
     }
@@ -304,7 +304,7 @@ public class TestCookieController {
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
                 .param("rating", String.valueOf(rating))
         ).andExpect(status().isOk())
-                .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}},{\"id\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}}]"));
+                .andExpect(content().string("[{\"cookieId\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0.0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\",\"ratedCookies\":null,\"addedCookies\":null},\"usersRatings\":null},{\"cookieId\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0.0,\"cookieOwner\":1,\"usersRatings\":null}]"));
 
         verify(cookieService).getByParam(null, null, null, rating, null);
     }
@@ -320,7 +320,7 @@ public class TestCookieController {
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
                .param("userId", userId.toString())
         ).andExpect(status().isOk())
-                .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}},{\"id\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}}]"));
+                .andExpect(content().string("[{\"cookieId\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0.0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\",\"ratedCookies\":null,\"addedCookies\":null},\"usersRatings\":null},{\"cookieId\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0.0,\"cookieOwner\":1,\"usersRatings\":null}]"));
 
         verify(cookieService).getByParam(null, null, null, null, userId);
     }
@@ -348,7 +348,7 @@ public class TestCookieController {
                 .param("rating", rating.toString())
                 .param("userId", userId.toString())
         ).andExpect(status().isOk())
-                .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}}]"));
+                .andExpect(content().string("[{\"cookieId\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0.0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\",\"ratedCookies\":null,\"addedCookies\":null},\"usersRatings\":null}]"));
 
         verify(cookieService).getByParam(name, description, cookieAddingStatus, rating, userId);
     }
@@ -362,7 +362,7 @@ public class TestCookieController {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies/lists")
         ).andExpect(status().isOk())
-                .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}},{\"id\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}}]"));
+                .andExpect(content().string("[{\"cookieId\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0.0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\",\"ratedCookies\":null,\"addedCookies\":null},\"usersRatings\":null},{\"cookieId\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0.0,\"cookieOwner\":1,\"usersRatings\":null}]"));
 
         verify(cookieService).getByParam(null, null, null, null, null);
     }
@@ -443,14 +443,13 @@ public class TestCookieController {
     }
 
     @Test
-    public void testGetCookieById () throws Exception {
+    public void testGetCookieById() throws Exception {
         Integer id = 1;
 
         when(cookieService.getById(id)).thenReturn(cookie);
 
 
-        String response = mockMvc.perform(MockMvcRequestBuilders.get("/cookies")
-                .param("id", String.valueOf(id))
+        String response = mockMvc.perform(MockMvcRequestBuilders.get("/cookies/1")
         ).andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -471,14 +470,14 @@ public class TestCookieController {
 
 
     @Test
-    public void testUpdateCookie () throws Exception {
+    public void testUpdateCookie() throws Exception {
         UpdateCookieRequest updateCookieRequest = new UpdateCookieRequest(1, "cookie", "tasty cookie",
-                byteArray, CookieAddingStatus.APPROVED, cookieRating, cookieOwner);
+                new byte[2], CookieAddingStatus.APPROVED, cookieRating, cookieOwner);
         String request = gson.toJson(updateCookieRequest);
         UpdateCookieResponse updateCookieResponse = new UpdateCookieResponse(1, "cookie", "tasty cookie",
-                byteArray, CookieAddingStatus.APPROVED, cookieRating, cookieOwner);
+                new byte[2], CookieAddingStatus.APPROVED, cookieRating, cookieOwner);
 
-        when(cookieService.update(any(Cookie.class))).thenReturn(cookie);
+        when(cookieService.update(any(Cookie.class))).thenReturn(cookieWith1Id);
 
         String response = mockMvc.perform(MockMvcRequestBuilders.patch("/cookies")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -490,8 +489,7 @@ public class TestCookieController {
 
         verify(cookieService).update(any(Cookie.class));
 
-        UpdateCookieResponse resultResponse = new ObjectMapper().readValue(response,
-                                                            UpdateCookieResponse.class);
+        UpdateCookieResponse resultResponse = new ObjectMapper().readValue(response, UpdateCookieResponse.class);
 
         assert updateCookieRequest.getId() == resultResponse.getId();
         Assert.assertEquals(updateCookieResponse.getName(), resultResponse.getName());
@@ -501,6 +499,85 @@ public class TestCookieController {
                                     resultResponse.getCookieAddingStatus());
         Assert.assertEquals(updateCookieResponse.getRating(), resultResponse.getRating());
         Assert.assertEquals(updateCookieRequest.getCookieOwner(), resultResponse.getCookieOwner());
+    }
+
+    @Test
+    public void testRateCookie() throws Exception {
+        RateCookieRequest rateCookieRequest = new RateCookieRequest(3, "cookie", "tasty cookie",
+                byteArray, CookieAddingStatus.APPROVED, cookieRating, new CookieOwner("1", "login", "name", Role.USER), 3);
+        String request = gson.toJson(rateCookieRequest);
+        Cookie cookie = new Cookie(3, "cookie", "tasty cookie", byteArray, CookieAddingStatus.APPROVED, cookieRating, cookieOwner);
+        List<CookieUserRating> ratedCookies = new ArrayList<CookieUserRating>();
+        ratedCookies.add(new CookieUserRating(cookieOwner, cookieWith1Id, 5));
+        cookieOwner.setRatedCookies(ratedCookies);
+        String userId = "1";
+        CookieOwner cookieOwnerResponse = new CookieOwner(cookieOwner.getId(),cookieOwner.getLogin(), cookieOwner.getName(), cookieOwner.getRole());
+        RateCookieResponse rateCookieResponse = new RateCookieResponse(3, "cookie", "tasty cookie", byteArray, CookieAddingStatus.APPROVED,
+                (float) 5.5, cookieOwnerResponse, 3);
+
+        when(userService.getById(userId)).thenReturn(cookieOwner);
+        when(cookieService.getById(3)).thenReturn(cookie);
+        when(userService.update(cookieOwner)).thenReturn(user);
+        when(cookieService.countRating(cookie)).thenReturn((float) 5.5);
+        cookie.setRating((float) 5.5);
+        when(cookieService.update(any(Cookie.class))).thenReturn(cookie);
+
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/cookies/poll")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request)
+        ).andExpect(status().isOk())
+                 .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        RateCookieResponse resultResponse = new ObjectMapper().readValue(response, RateCookieResponse.class);
+        CookieOwner owner = resultResponse.getCookieOwner();
+
+        assert rateCookieResponse.getId() == resultResponse.getId();
+        Assert.assertEquals(rateCookieResponse.getName(), resultResponse.getName());
+        Assert.assertEquals(rateCookieResponse.getDescription(), resultResponse.getDescription());
+        Assert.assertArrayEquals(rateCookieResponse.getFileData(), resultResponse.getFileData());
+        Assert.assertEquals(rateCookieResponse.getApprovalStatus(), resultResponse.getApprovalStatus());
+        Assert.assertEquals(rateCookieResponse.getOverallRating(), resultResponse.getOverallRating());
+        Assert.assertEquals(rateCookieResponse.getCookieOwner(), resultResponse.getCookieOwner());
+        assert rateCookieResponse.getRatingGivenByUser() == resultResponse.getRatingGivenByUser();
+    }
+
+    @Test
+    public void testRateAlreadyRatedCookie() throws Exception {
+        RateCookieRequest rateCookieRequest = new RateCookieRequest(1, "cookie", "tasty cookie",
+                new byte[2], CookieAddingStatus.APPROVED, cookieRating, new CookieOwner("1", "login", "name", Role.USER), 3);
+        Cookie cookie = dtoConverter.convertDto(rateCookieRequest);
+        List<CookieUserRating> cookieUserRatings = new ArrayList<>();
+        cookieOwner.setRatedCookies(usersRatings);
+        String request = new ObjectMapper().writeValueAsString(rateCookieRequest);
+        String userId = "1";
+
+        when(userService.getById(userId)).thenReturn(cookieOwner);
+        when(cookieService.getById(1)).thenReturn(cookieWith1Id);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/cookies/poll")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request)
+        ).andExpect(status().is(400))
+                .andExpect(content().string("{\"errors\":[{\"fieldName\":\"\"," +
+                        "\"message\":\"This cookie already has been rated by user\"}]}"));
+    }
+
+    @Test
+    public void testGetUnratedCookie() throws Exception {
+        user.setRatedCookies(usersRatings);
+        List<Cookie> approvedCookies = new ArrayList<>();
+        approvedCookies.add(cookieWith1Id);
+        approvedCookies.add(cookieWith2Id);
+
+        when(userService.getById("1")).thenReturn(user);
+        when(cookieService.getByParam(null, null, CookieAddingStatus.APPROVED, null,
+                null)).thenReturn(approvedCookies);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/cookies/poll")
+        ).andExpect(status().isOk())
+                .andExpect(content().string("[{\"cookieId\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"APPROVED\",\"rating\":0.0,\"cookieOwner\":{\"id\":1,\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\",\"ratedCookies\":null,\"addedCookies\":null},\"usersRatings\":null}]"));
     }
 
 }

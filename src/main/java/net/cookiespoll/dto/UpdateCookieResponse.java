@@ -1,6 +1,5 @@
 package net.cookiespoll.dto;
 
-import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.model.user.User;
 
