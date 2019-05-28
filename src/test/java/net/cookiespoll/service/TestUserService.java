@@ -9,18 +9,24 @@ import net.cookiespoll.model.user.User;
 import net.cookiespoll.validation.EmailDomenValidator;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +39,8 @@ public class TestUserService {
     private EmailDomenValidator emailDomenValidator = new EmailDomenValidator();
     private UserService userService;
 
-
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     private String id = "1";
     private User userAdmin = new User("1", "login", "name", Role.ADMIN);
@@ -98,10 +105,12 @@ public class TestUserService {
     }
 
     @Test
-    public void testProcessOidcUser() throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
+    public void testProcessOidcUserValidEmailDomen() throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
+        User user = new User("12345", "a@lineate.com", "name", Role.USER);
         Instant issuedAt = Instant.now();
         Instant expiresAt = Instant.now();
-        OidcIdToken oidcIdToken = new OidcIdToken("token", issuedAt, expiresAt, Map.of("sub", "12345"));
+        OidcIdToken oidcIdToken = new OidcIdToken("token", issuedAt, expiresAt, Map.of("sub", "12345", "name", "name",
+                "email", "a@lineate.com"));
         OAuth2AccessToken accessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "token", issuedAt, expiresAt);
         ClientRegistration clientRegistration = null;
 
@@ -111,7 +120,44 @@ public class TestUserService {
             clientRegistration = (ClientRegistration)constructor.newInstance();
         }
 
+        OidcUserRequest oidcUserRequest = new OidcUserRequest(clientRegistration, accessToken, oidcIdToken);
 
+        when(userDao.getById("12345")).thenReturn(null);
+        when(userDao.insert(user)).thenReturn(user);
+        when(userDao.getAdmins()).thenReturn(new ArrayList<>());
+
+        OidcUser oidcUser = userService.loadUser(oidcUserRequest);
+
+        Assert.assertEquals(oidcUser.getClaims().get("sub"), user.getId());
+        Assert.assertEquals(oidcUser.getClaims().get("email"), user.getLogin());
+        Assert.assertEquals(oidcUser.getClaims().get("name"), user.getName());
+
+        verify(userDao).getById("12345");
+        verify(userDao).insert(user);
+        verify(userDao).getAdmins();
     }
 
+    @Test
+    public void testProcessOidcUserInvalidEmailDomen() throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
+        User user = new User("12345", "a@mail.com", "name", Role.USER);
+        Instant issuedAt = Instant.now();
+        Instant expiresAt = Instant.now();
+        OidcIdToken oidcIdToken = new OidcIdToken("token", issuedAt, expiresAt, Map.of("sub", "12345", "name", "name",
+                "email", "a@mail.com"));
+        OAuth2AccessToken accessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "token", issuedAt, expiresAt);
+        ClientRegistration clientRegistration = null;
+
+        Constructor<ClientRegistration> constructor = ClientRegistration.class.getDeclaredConstructor();
+        if (Modifier.isPrivate(constructor.getModifiers())) {
+            constructor.setAccessible(true);
+            clientRegistration = (ClientRegistration)constructor.newInstance();
+        }
+
+        OidcUserRequest oidcUserRequest = new OidcUserRequest(clientRegistration, accessToken, oidcIdToken);
+
+        exception.expect(InternalAuthenticationServiceException.class);
+        exception.expectMessage("Email with this domen cannot be logged in");
+
+        userService.loadUser(oidcUserRequest);
+    }
 }
