@@ -120,10 +120,7 @@ public class ControllerExceptionHandler {
         errorResponse.setErrors(errorDetails);
 
         return errorResponse;
-
-
     }
-
     }
 
 

@@ -28,3 +28,8 @@ PRIMARY KEY (user_id, cookie_id),
 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
 FOREIGN KEY (cookie_id) REFERENCES cookies(id) ON DELETE CASCADE
 );
+
+CREATE TABLE admins(
+id SERIAL PRIMARY KEY,
+login VARCHAR (30) UNIQUE NOT NULL
+);
