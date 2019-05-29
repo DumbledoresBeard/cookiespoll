@@ -106,7 +106,7 @@ public class CookiesController {
                cookiesByParameterRequest.getUserId());
     }
 
-    @ApiOperation(value = "Get cookie by id", response = ArrayList.class)
+    @ApiOperation(value = "Get cookie by id", response = Cookie.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Cookies were received"),
             @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
@@ -118,6 +118,21 @@ public class CookiesController {
         LOGGER.info("Starting processing request for getting cookie by id {} ", id);
 
         return cookieService.getById(id);
+    }
+
+    @ApiOperation(value = "Get cookies added by current user", response = ArrayList.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Cookies were received"),
+            @ApiResponse(code = 500, message = "Internal server error"),
+    })
+    @RequestMapping(value = "/cookies}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Cookie> getCookiesAddedByCurrentUser () {
+        LOGGER.info("Starting processing request for getting cookie added by current user");
+
+        String userId = getUserIdFromSession();
+
+        return cookieService.getByParam(null, null, null, null, userId);
     }
 
     @ApiOperation(value = "Update cookie in database", response = UpdateCookieResponse.class)
@@ -171,7 +186,7 @@ public class CookiesController {
         return cookieDtoConverter.convertToRateCookieResponse(cookieService.update(cookie), rateCookieRequest.getRating());
     }
 
-    @ApiOperation(value = "Get cookies unrated yet by user", response = Cookie.class)
+    @ApiOperation(value = "Get cookies unrated yet by user", response = ArrayList.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Cookies were received"),
             @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
@@ -197,7 +212,13 @@ public class CookiesController {
         return allApprovedCookies;
     }
 
-    @RequestMapping(value = "/cookies", method = RequestMethod.DELETE)
+    @ApiOperation(value = "Delete cookie", response = DeleteCookieResponse.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Cookies were received"),
+            @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
+            @ApiResponse(code = 500, message = "Internal server error"),
+    })
+    @RequestMapping(value = "/cookies/trash/{id}", method = RequestMethod.DELETE)
     @ResponseBody
     public DeleteCookieResponse deleteCookie(@PathVariable ("id") Integer id) throws UserRoleValidationException {
         if(cookieService.getById(id).getCookieAddingStatus().equals(CookieAddingStatus.APPROVED)) {
