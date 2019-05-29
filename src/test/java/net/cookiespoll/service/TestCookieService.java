@@ -183,6 +183,17 @@ public class TestCookieService {
         Assert.assertEquals(rating, resultRating, 0.0f);
     }
 
+    @Test
+    public void testDelete() {
+        Integer id = 1;
 
+        when(cookieDao.delete(id)).thenReturn(id);
+
+        Integer result = cookieDao.delete(id);
+
+        Assert.assertEquals(id, result);
+
+        verify(cookieDao).delete(id);
+    }
 }
 

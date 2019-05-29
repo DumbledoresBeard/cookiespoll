@@ -86,5 +86,4 @@ public class TestUserService {
 
         verify(userDao).update(userAdmin);
     }
-
 }
