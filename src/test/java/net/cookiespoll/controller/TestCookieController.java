@@ -28,7 +28,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -102,7 +101,6 @@ public class TestCookieController {
         return cookies;
     }
 
-    //@WithMockCustomUser
     @WithMockCustomUser
     @Test
     public void testAddCookieValidRequest() throws Exception {
