@@ -157,5 +157,18 @@ public class TestCookieDaoImpl {
 
         verify(cookieMapper).getUnratedByUserId(userId);
     }
+
+    @Test
+    public void testDelete() {
+        Integer id = 1;
+
+        when(cookieMapper.delete(id)).thenReturn(id);
+
+        Integer result = cookieDaoImpl.delete(id);
+
+        Assert.assertEquals(id, result);
+
+        verify(cookieMapper).delete(1);
+    }
 }
 

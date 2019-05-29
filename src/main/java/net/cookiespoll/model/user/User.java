@@ -5,10 +5,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieUserRating;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = User.class)
