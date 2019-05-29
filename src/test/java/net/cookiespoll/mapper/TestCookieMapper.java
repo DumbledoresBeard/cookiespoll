@@ -30,7 +30,6 @@ public class TestCookieMapper {
     private Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING,
             cookieRating, cookieOwner);
     private CookieUserRating cookieUserRating = new CookieUserRating(cookieOwner, cookie, 4);
-    private Integer id = 1;
 
     @Before
     public void setUp() throws Exception {
@@ -102,6 +101,8 @@ public class TestCookieMapper {
 
     @Test
     public void testDelete() {
+        Integer id = 1;
+
         when(cookieMapper.delete(id)).thenReturn(id);
 
         Integer result = cookieMapper.delete(id);
