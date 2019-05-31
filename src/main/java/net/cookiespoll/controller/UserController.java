@@ -1,20 +1,43 @@
 package net.cookiespoll.controller;
 
+import net.cookiespoll.model.user.User;
+import net.cookiespoll.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
+import java.util.Map;
+
 @CrossOrigin(origins = {"http://localhost:3000"})
 @Controller
 public class UserController {
 
+    private UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    private String getUserIdFromSession() {
+        DefaultOidcUser defaultOidcUser = (DefaultOidcUser) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        Map<String, Object> atrr = defaultOidcUser.getClaims();
+        return (String) atrr.get("sub");
+    }
 
     @RequestMapping(value = "/cookiepoll/login",
             method = RequestMethod.GET)
     @ResponseBody
-    public String getLoginPage () {
-        return "login in cookies poll";
+    public User getLoginPage (Principal user) {
+        String userId = getUserIdFromSession();
+
+        return userService.getById(userId);
     }
 
     @RequestMapping(value = "/cookiepoll/logout",
