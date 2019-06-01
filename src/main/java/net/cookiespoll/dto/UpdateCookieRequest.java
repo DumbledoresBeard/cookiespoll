@@ -17,21 +17,19 @@ public class UpdateCookieRequest {
     private byte[] fileData;
     private CookieAddingStatus approvalStatus;
     private Float rating;
-    private User cookieOwner;
 
     public UpdateCookieRequest () {}
 
-    public UpdateCookieRequest(int id, String cookie, String tasty_cookie, byte[] byteArray, Float cookieRating, User cookieOwner) {}
+    public UpdateCookieRequest(int id, String cookie, String tasty_cookie, byte[] byteArray, Float cookieRating) {}
 
     public UpdateCookieRequest(int id, String name, String description, byte[] fileData,
-                               CookieAddingStatus approvalStatus, Float rating, User cookieOwner) {
+                               CookieAddingStatus approvalStatus, Float rating) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.fileData = fileData;
         this.approvalStatus = approvalStatus;
         this.rating = rating;
-        this.cookieOwner = cookieOwner;
     }
 
     public int getId() {
@@ -81,13 +79,4 @@ public class UpdateCookieRequest {
     public void setRating(Float rating) {
         this.rating = rating;
     }
-
-    public User getCookieOwner() { return cookieOwner; }
-
-    public void setCookieOwner(User cookieOwner) {
-        this.cookieOwner = cookieOwner;
-    }
-
-
-
 }

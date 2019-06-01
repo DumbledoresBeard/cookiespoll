@@ -466,7 +466,7 @@ public class TestCookieController {
     @Test
     public void testUpdateCookie() throws Exception {
         UpdateCookieRequest updateCookieRequest = new UpdateCookieRequest(1, "cookie", "tasty cookie",
-                new byte[2], CookieAddingStatus.APPROVED, cookieRating, cookieOwner);
+                new byte[2], CookieAddingStatus.APPROVED, cookieRating);
         String request = gson.toJson(updateCookieRequest);
         UpdateCookieResponse updateCookieResponse = new UpdateCookieResponse(1, "cookie", "tasty cookie",
                 new byte[2], CookieAddingStatus.APPROVED, cookieRating, cookieOwner);
@@ -492,7 +492,7 @@ public class TestCookieController {
         Assert.assertEquals(updateCookieResponse.getCookieAddingStatus(),
                                     resultResponse.getCookieAddingStatus());
         Assert.assertEquals(updateCookieResponse.getRating(), resultResponse.getRating());
-        Assert.assertEquals(updateCookieRequest.getCookieOwner(), resultResponse.getCookieOwner());
+        Assert.assertEquals(cookieWith1Id.getCookieOwner(), resultResponse.getCookieOwner());
     }
 
     @Test
