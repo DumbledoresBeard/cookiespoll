@@ -614,6 +614,44 @@ public class TestCookieController {
         verify(cookieService).getByParam(null, null, CookieAddingStatus.APPROVED, null, null);
     }
 
+    @WithMockCustomUser
+    @Test
+    public void testGetCookiesAddedByCurrentUser() throws Exception {
+        List<Cookie> cookies = createCookiesList();
+        String userId = "12345";
+
+        when(cookieService.getByParam(null, null, null, null,
+                userId)).thenReturn(cookies);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/mycookies")
+        ).andExpect(status().isOk())
+                .andExpect(content().string("[{\"cookieId\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0.0,\"cookieOwner\":{\"id\":\"1\",\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\",\"ratedCookies\":null,\"addedCookies\":null},\"usersRatings\":null},{\"cookieId\":2,\"name\":\"name\",\"description\":\"description\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"WAITING\",\"rating\":0.0,\"cookieOwner\":\"1\",\"usersRatings\":null}]"));
+
+        verify(cookieService).getByParam(null, null, null, null, userId);
+    }
+
+    @WithMockCustomUser
+    @Test
+    public void testDeleteCookie() throws Exception {
+        Integer id = 1;
+        DeleteCookieResponse deleteCookieResponse = new DeleteCookieResponse(id);
+
+        when(cookieService.delete(id)).thenReturn(id);
+        when(cookieService.getById(id)).thenReturn(cookie);
+
+        String response = mockMvc.perform(MockMvcRequestBuilders.get("/cookies/trash/1")
+        ).andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        verify(cookieService).delete(id);
+        verify(cookieService).getById(id);
+
+        DeleteCookieResponse result = new ObjectMapper().readValue(response, DeleteCookieResponse.class);
+
+        Assert.assertEquals(id, deleteCookieResponse.getCookieId());
+    }
 }
 
 
