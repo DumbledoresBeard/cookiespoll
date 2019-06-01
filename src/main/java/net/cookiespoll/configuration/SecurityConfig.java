@@ -1,12 +1,11 @@
 package net.cookiespoll.configuration;
 
-import net.cookiespoll.model.user.OAuth2AuthenticationSuccessHandler;
+import net.cookiespoll.auth.OAuth2AuthenticationSuccessHandler;
 import net.cookiespoll.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
