@@ -1,5 +1,6 @@
 package net.cookiespoll.configuration;
 
+import net.cookiespoll.auth.OAuth2AuthenticationSuccessHandler;
 import net.cookiespoll.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -12,10 +13,12 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private UserService userService;
+    private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
     @Autowired
-    public SecurityConfig(UserService userService) {
+    public SecurityConfig(UserService userService, OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler) {
         this.userService = userService;
+        this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
     }
 
     @Override
@@ -24,9 +27,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
+                .authorizationEndpoint()
+                .baseUri("/oauth2/authorize")
+                .and()
+                .redirectionEndpoint()
+                .baseUri("/oauth2/redirect/*")
+                .and()
                 .userInfoEndpoint()
                 .oidcUserService(userService)
-                .and().defaultSuccessUrl("/cookies?id=1")
+                .and()
+                .successHandler(oAuth2AuthenticationSuccessHandler)
                 .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll().logoutUrl("/cookiepoll/logout")
                 .invalidateHttpSession(true)
                 .clearAuthentication(true).logoutSuccessUrl("/cookiepoll/logout")
