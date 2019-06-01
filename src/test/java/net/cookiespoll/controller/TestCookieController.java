@@ -497,8 +497,7 @@ public class TestCookieController {
 
     @Test
     public void testRateCookie() throws Exception {
-        RateCookieRequest rateCookieRequest = new RateCookieRequest(3, "cookie", "tasty cookie",
-                byteArray, CookieAddingStatus.APPROVED, cookieRating, new CookieOwner(1, "login", "name", Role.USER), 3);
+        RateCookieRequest rateCookieRequest = new RateCookieRequest(3,3);
         String request = gson.toJson(rateCookieRequest);
         Cookie cookie = new Cookie(3, "cookie", "tasty cookie", byteArray, CookieAddingStatus.APPROVED, cookieRating, cookieOwner);
         List<CookieUserRating> ratedCookies = new ArrayList<CookieUserRating>();
@@ -539,9 +538,7 @@ public class TestCookieController {
 
     @Test
     public void testRateAlreadyRatedCookie() throws Exception {
-        RateCookieRequest rateCookieRequest = new RateCookieRequest(1, "cookie", "tasty cookie",
-                new byte[2], CookieAddingStatus.APPROVED, cookieRating, new CookieOwner(1, "login", "name", Role.USER), 3);
-        Cookie cookie = dtoConverter.convertDto(rateCookieRequest);
+        RateCookieRequest rateCookieRequest = new RateCookieRequest(1, 3);
         List<CookieUserRating> cookieUserRatings = new ArrayList<>();
         cookieOwner.setRatedCookies(usersRatings);
         String request = new ObjectMapper().writeValueAsString(rateCookieRequest);

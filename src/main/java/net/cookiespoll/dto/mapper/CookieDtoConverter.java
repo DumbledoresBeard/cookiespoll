@@ -11,14 +11,6 @@ public class CookieDtoConverter {
     public CookieDtoConverter() {
     }
 
-    public Cookie convertDto(RateCookieRequest rateCookieRequest) {
-        User user = new User(rateCookieRequest.getCookieOwner().getId(), rateCookieRequest.getCookieOwner().getLogin(), rateCookieRequest.getCookieOwner().getName(),
-                rateCookieRequest.getCookieOwner().getRole());
-        return new Cookie(rateCookieRequest.getId(), rateCookieRequest.getName(), rateCookieRequest.getDescription(),
-                rateCookieRequest.getFileData(), rateCookieRequest.getApprovalStatus(), rateCookieRequest.getResultRating(),
-                user);
-    }
-
     public UpdateCookieResponse convertToUpdateResponse(Cookie cookie) {
         return new UpdateCookieResponse(cookie.getCookieId(), cookie.getName(), cookie.getDescription(), cookie.getFileData(),
                 cookie.getCookieAddingStatus(), cookie.getRating(), cookie.getCookieOwner());
