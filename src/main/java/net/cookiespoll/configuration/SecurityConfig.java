@@ -18,12 +18,6 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(
-        securedEnabled = true,
-        jsr250Enabled = true,
-        prePostEnabled = true
-)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private UserService userService;
@@ -58,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 .exceptionHandling()
                 .and().authorizeRequests()
-                .antMatchers("/auth/**", "/oauth2/**")
+                .antMatchers( "/auth/**", "/oauth2/**", "https://accounts.google.com/o/oauth2/")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -73,12 +67,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .userInfoEndpoint()
                 .oidcUserService(userService)
                 .and()
-               .successHandler(oAuth2AuthenticationSuccessHandler)
-                .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll().logoutUrl("/cookiepoll/logout")
+               .successHandler(oAuth2AuthenticationSuccessHandler);
+               /* .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll().logoutUrl("/cookiepoll/logout")
                 .invalidateHttpSession(true)
                 .clearAuthentication(true).logoutSuccessUrl("/cookiepoll/logout")
                 .deleteCookies("JSESSIONID")
-                .permitAll().and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+                .permitAll().and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());*/
 
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }

@@ -59,10 +59,13 @@ public class CookiesController {
     }
 
     private String getUserIdFromSession() {
-        DefaultOidcUser defaultOidcUser = (DefaultOidcUser) SecurityContextHolder.getContext()
+        User user = (User) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
-        Map<String, Object> atrr = defaultOidcUser.getClaims();
-        return (String) atrr.get("sub");
+       /* DefaultOidcUser defaultOidcUser = (DefaultOidcUser) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();*/
+        /*Map<String, Object> atrr = defaultOidcUser.getClaims();
+        return (String) atrr.get("sub");*/
+        return user.getId();
     }
 
     @ApiOperation(value = "Add new cookie to store in database", response = AddCookieResponse.class)

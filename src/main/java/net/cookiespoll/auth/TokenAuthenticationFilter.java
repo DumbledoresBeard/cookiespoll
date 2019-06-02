@@ -17,9 +17,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
@@ -36,9 +36,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain)
             throws ServletException, IOException {
         String token = getTokenFromRequest(httpServletRequest);
+        Map<String, String> googleData = tokenProvider.getUserIdFromToken(token);
 
         if (StringUtils.hasText(token)) {
-            User user = userService.getById(tokenProvider.getUserIdFromToken());
+            User user = userService.getById(googleData.get("sub"));
             List<GrantedAuthority> authorities = Collections.
                     singletonList(new SimpleGrantedAuthority(user.getRole().toString()));
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
