@@ -23,6 +23,7 @@
         <cobertura.maven.plugin.version>2.7</cobertura.maven.plugin.version>
         <spring.boot.starter.jdbc.version>2.0.6.RELEASE</spring.boot.starter.jdbc.version>
         <spring.security.test.version>4.0.0.RELEASE</spring.security.test.version>
+        <spring.security.oauth2.version>2.0.12.RELEASE</spring.security.oauth2.version>
         <commons.validator.version>1.4.1</commons.validator.version>
         <javax.validation.version>2.0.0.Final</javax.validation.version>
         <commons.lang.version>3.7</commons.lang.version>
@@ -111,6 +112,11 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-jose</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+            <version>${spring.security.oauth2.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>

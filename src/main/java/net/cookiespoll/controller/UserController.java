@@ -25,16 +25,15 @@ public class UserController {
     }
 
     private String getUserIdFromSession() {
-        DefaultOidcUser defaultOidcUser = (DefaultOidcUser) SecurityContextHolder.getContext()
+        User user = (User) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
-        Map<String, Object> atrr = defaultOidcUser.getClaims();
-        return (String) atrr.get("sub");
+       /* Map<String, Object> atrr = defaultOidcUser.getClaims();*/
+        return user.getId();
     }
 
-    @RequestMapping(value = "/cookiepoll/login",
-            method = RequestMethod.GET)
+    @RequestMapping(value = "/cookiepoll/login", method = RequestMethod.GET)
     @ResponseBody
-    public User getLoginPage (Principal user) {
+    public User getLoginPage () {
         String userId = getUserIdFromSession();
 
         return userService.getById(userId);
