@@ -4,7 +4,6 @@ import net.cookiespoll.model.user.User;
 import net.cookiespoll.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +19,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
@@ -36,10 +36,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain)
             throws ServletException, IOException {
         String token = getTokenFromRequest(httpServletRequest);
-        Map<String, String> googleData = tokenProvider.getUserIdFromToken(token);
+        Optional<Map<String, String>> googleData = tokenProvider.getUserFromToken(token);
 
-        if (StringUtils.hasText(token)) {
-            User user = userService.getById(googleData.get("sub"));
+        if (StringUtils.hasText(token) && googleData.isPresent()) {
+            User user = userService.getById(googleData.get().get("sub"));
             List<GrantedAuthority> authorities = Collections.
                     singletonList(new SimpleGrantedAuthority(user.getRole().toString()));
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);

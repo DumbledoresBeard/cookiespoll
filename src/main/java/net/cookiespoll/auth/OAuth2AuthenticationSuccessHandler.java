@@ -1,13 +1,8 @@
 package net.cookiespoll.auth;;
 
-//import com.example.springsocial.config.AppProperties;
-//import com.example.springsocial.exception.BadRequestException;
-//import com.example.springsocial.security.TokenProvider;
 import net.cookiespoll.utils.CookieUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -21,17 +16,14 @@ import java.util.Optional;
 
 import static net.cookiespoll.auth.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
-//import static com.example.springsocial.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+
 
 @Component
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private TokenProvider tokenProvider;
-//    private AppProperties appProperties;
-//
     private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
-//
-//
+
    @Autowired
     public OAuth2AuthenticationSuccessHandler(TokenProvider tokenProvider,
                                      HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository) {
