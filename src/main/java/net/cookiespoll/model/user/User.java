@@ -5,15 +5,13 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieUserRating;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = User.class)
 public class User {
-    private int id;
+    private String id;
     private String login;
     private String name;
     private Role role;
@@ -22,7 +20,8 @@ public class User {
 
     public User() {}
 
-    public User(int id, String login, String name, Role role, List<CookieUserRating> ratedCookies, List<Cookie> addedCookies) {
+    public User(String id, String login, String name, Role role, List<CookieUserRating> ratedCookies,
+                List<Cookie> addedCookies) {
         this.id = id;
         this.login = login;
         this.name = name;
@@ -32,21 +31,21 @@ public class User {
     }
 
     public User(String login, String name, Role role, List<CookieUserRating> ratedCookies, List<Cookie> addedCookies) {
-        this(0 , login, name, role, ratedCookies, addedCookies);
+        this("0" , login, name, role, ratedCookies, addedCookies);
     }
 
-    public User(int id, String login, String name, Role role) {
+    public User(String id, String login, String name, Role role) {
         this.id = id;
         this.login = login;
         this.name = name;
         this.role = role;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -148,7 +147,7 @@ public class User {
                     .collect(Collectors.toList()).toString();
         }
 
-        return getId() == user.getId() &&
+        return getId().equals(user.getId()) &&
                 ids.equals(userIds)&&
                 ratedCookiesIds.equals(userRatedCookiesIds) &&
                 addedCookiesIds.equals(userAddedCookiesIds);
@@ -156,7 +155,7 @@ public class User {
 
     @Override
     public int hashCode() {
-        List<Integer> ids = null;
+        List<String> ids = null;
         List<Integer> ratedCookiesIds = null;
         List<Integer> addedCookiesIds = null;
 

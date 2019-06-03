@@ -8,6 +8,7 @@ import net.cookiespoll.dto.*;
 import net.cookiespoll.dto.mapper.CookieDtoConverter;
 import net.cookiespoll.exception.CookieRateException;
 import net.cookiespoll.exception.FileValidationException;
+import net.cookiespoll.exception.UserRoleValidationException;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.model.CookieUserRating;
@@ -15,11 +16,13 @@ import net.cookiespoll.model.user.User;
 import net.cookiespoll.service.CookieService;
 import net.cookiespoll.service.UserService;
 import net.cookiespoll.validation.FileValidator;
-import net.cookiespoll.validation.RatingValidator;
+import net.cookiespoll.validation.UserRoleValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import net.cookiespoll.validation.RatingValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +31,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
@@ -38,18 +42,27 @@ public class CookiesController {
 
     private CookieService cookieService;
     private FileValidator fileValidator;
+    private UserRoleValidator userRoleValidator;
     private CookieDtoConverter cookieDtoConverter;
     private UserService userService;
     private RatingValidator ratingValidator;
 
     @Autowired
     public CookiesController(CookieService cookieService, FileValidator fileValidator, CookieDtoConverter cookieDtoConverter,
-                             UserService userService, RatingValidator ratingValidator) {
+                                UserRoleValidator userRoleValidator, UserService userService, RatingValidator ratingValidator) {
         this.cookieService = cookieService;
         this.fileValidator = fileValidator;
+        this.userRoleValidator = userRoleValidator;
         this.cookieDtoConverter = cookieDtoConverter;
         this.userService = userService;
         this.ratingValidator = ratingValidator;
+    }
+
+    private String getUserIdFromSession() {
+        DefaultOidcUser defaultOidcUser = (DefaultOidcUser) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        Map<String, Object> atrr = defaultOidcUser.getClaims();
+        return (String) atrr.get("sub");
     }
 
     @ApiOperation(value = "Add new cookie to store in database", response = AddCookieResponse.class)
@@ -61,14 +74,14 @@ public class CookiesController {
     @RequestMapping(value = "/cookies", method = RequestMethod.POST)
     @ResponseBody
     public AddCookieResponse addCookie(@RequestPart("file") MultipartFile multipartFile,
-                                       @Valid @RequestPart("data") AddCookieRequest addCookieRequest)
-                                        throws IOException, FileValidationException {
+                            @Valid @RequestPart("data") AddCookieRequest addCookieRequest)
+                            throws IOException, FileValidationException {
         LOGGER.info("Start processing AddCookieRequest {}, {} ", addCookieRequest, multipartFile);
 
         fileValidator.validate(multipartFile);
 
-        User user = new User();
-        user.setId(1); // temporary decision until getting userId from session will be implemented
+        String userId = getUserIdFromSession();
+        User user = userService.getById(userId);
 
         return cookieDtoConverter.convertToAddCookieResponse(cookieService.insert(addCookieRequest, multipartFile, user));
     }
@@ -81,18 +94,15 @@ public class CookiesController {
     })
     @RequestMapping(value = "/cookies/lists", method = RequestMethod.GET)
     @ResponseBody
-    public List<Cookie> getCookiesByParameter(@Valid CookiesByParameterRequest cookiesByParameterRequest) {
-       /* TODO if(!cookieService.getUserRole(id).equals(Role.ADMIN))
-        { return new ArrayList<Cookie>() ; }*/
-
-       LOGGER.info("Starting processing request for getting cookies by parameters {} ", cookiesByParameterRequest);
+    public List<Cookie> getCookiesByParameter (@Valid CookiesByParameterRequest cookiesByParameterRequest) {
+        LOGGER.info("Starting processing request for getting cookies by parameters {} ", cookiesByParameterRequest);
 
        return cookieService.getByParam(cookiesByParameterRequest.getName(), cookiesByParameterRequest.getDescription(),
                cookiesByParameterRequest.getCookieAddingStatus(), cookiesByParameterRequest.getRating(),
                cookiesByParameterRequest.getUserId());
     }
 
-    @ApiOperation(value = "Get cookie by id", response = ArrayList.class)
+    @ApiOperation(value = "Get cookie by id", response = Cookie.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Cookies were received"),
             @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
@@ -106,6 +116,21 @@ public class CookiesController {
         return cookieService.getById(id);
     }
 
+    @ApiOperation(value = "Get cookies added by current user", response = ArrayList.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Cookies were received"),
+            @ApiResponse(code = 500, message = "Internal server error"),
+    })
+    @RequestMapping(value = "/cookies}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Cookie> getCookiesAddedByCurrentUser () {
+        LOGGER.info("Starting processing request for getting cookie added by current user");
+
+        String userId = getUserIdFromSession();
+
+        return cookieService.getByParam(null, null, null, null, userId);
+    }
+
     @ApiOperation(value = "Update cookie in database", response = UpdateCookieResponse.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Cookie has been updated"),
@@ -114,9 +139,14 @@ public class CookiesController {
     })
     @RequestMapping(value = "/cookies", method = RequestMethod.PATCH)
     @ResponseBody
-    public UpdateCookieResponse updateCookie (@RequestBody @Valid UpdateCookieRequest updateCookieRequest) {
-        /* TODO if(!cookieService.getUserRole(id).equals(Role.ADMIN))
-        { return new ArrayList<Cookie>() ; }*/
+    public UpdateCookieResponse updateCookie (@RequestBody @Valid UpdateCookieRequest updateCookieRequest)
+                                                throws UserRoleValidationException {
+
+        if (updateCookieRequest.getApprovalStatus().equals(CookieAddingStatus.APPROVED)
+        || updateCookieRequest.getApprovalStatus().equals(CookieAddingStatus.DECLINED))
+        {
+            userRoleValidator.validateUserRole(getUserIdFromSession());
+        }
 
         LOGGER.info("Starting processing request {} ", updateCookieRequest);
 
@@ -136,7 +166,7 @@ public class CookiesController {
     @RequestMapping(value = "/cookies/poll", method = RequestMethod.POST)
     @ResponseBody
     public RateCookieResponse rateCookie (@RequestBody @Valid RateCookieRequest rateCookieRequest) throws CookieRateException {
-        int userId = 1; // temporary decision until getting userId from session will be implemented
+        String userId = getUserIdFromSession();
 
         Cookie cookie = cookieService.getById(rateCookieRequest.getId());
         User user = userService.getById(userId);
@@ -154,7 +184,7 @@ public class CookiesController {
         return cookieDtoConverter.convertToRateCookieResponse(cookieService.update(cookie), rateCookieRequest.getRating());
     }
 
-    @ApiOperation(value = "Get cookies unrated yet by user", response = Cookie.class)
+    @ApiOperation(value = "Get cookies unrated yet by user", response = ArrayList.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Cookies were received"),
             @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
@@ -163,7 +193,8 @@ public class CookiesController {
     @RequestMapping(value = "/cookies/poll", method = RequestMethod.GET)
     @ResponseBody
     public List<Cookie> getUnratedCookies () {
-        int userId = 1; // temporary decision until getting userId from session will be implemented
+        String userId = getUserIdFromSession();
+
         CookieAddingStatus cookieAddingStatus = CookieAddingStatus.APPROVED;
 
         User user = userService.getById(userId);
@@ -177,5 +208,23 @@ public class CookiesController {
         allApprovedCookies.removeAll(ratedCookies);
 
         return allApprovedCookies;
+    }
+
+    @ApiOperation(value = "Delete cookie", response = DeleteCookieResponse.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Cookies were received"),
+            @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
+            @ApiResponse(code = 500, message = "Internal server error"),
+    })
+    @RequestMapping(value = "/cookies/trash/{id}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public DeleteCookieResponse deleteCookie(@PathVariable ("id") Integer id) throws UserRoleValidationException {
+        if(cookieService.getById(id).getCookieAddingStatus().equals(CookieAddingStatus.APPROVED)) {
+            userRoleValidator.validateUserRole(getUserIdFromSession());
+        }
+
+        LOGGER.info("Starting processing request {} ", id);
+
+        return new DeleteCookieResponse(cookieService.delete(id));
     }
 }

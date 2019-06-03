@@ -2,6 +2,7 @@ package net.cookiespoll.controller;
 
 import net.cookiespoll.exception.CookieRateException;
 import net.cookiespoll.exception.FileValidationException;
+import net.cookiespoll.exception.UserRoleValidationException;
 import net.cookiespoll.model.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ public class ControllerExceptionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
     private final static String FILE_FIELD = "file";
+    private final static String USER_ROLE = "user role";
     private final static String NO_FIELD = "";
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -50,7 +52,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(FileValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorResponse handleFileAddingException(HttpServletRequest req, FileValidationException ex) {
+    public ErrorResponse handleFileAddingException (HttpServletRequest req, FileValidationException ex) {
         LOGGER.error("Request: {} raised exception {} ", req.getRequestURL(), ex);
 
         List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
@@ -95,6 +97,23 @@ public class ControllerExceptionHandler {
         List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
         ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
         error.setFieldName(NO_FIELD);
+        error.setMessage(ex.getMessage());
+        errorDetails.add(error);
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setErrors(errorDetails);
+
+        return errorResponse;
+    }
+
+    @ExceptionHandler(UserRoleValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponse handleUserRoleExceptiom(HttpServletRequest req, UserRoleValidationException ex) {
+        LOGGER.error("Request: " + req.getRequestURL() + " raised exception " + ex);
+
+        List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
+        ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
+        error.setFieldName(USER_ROLE);
         error.setMessage(ex.getMessage());
         errorDetails.add(error);
         ErrorResponse errorResponse = new ErrorResponse();

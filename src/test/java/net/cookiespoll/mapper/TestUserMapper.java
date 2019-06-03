@@ -1,11 +1,9 @@
-
 package net.cookiespoll.mapper;
 
-import net.cookiespoll.model.Cookie;
-import net.cookiespoll.model.CookieAddingStatus;
-import net.cookiespoll.model.CookieUserRating;
+import net.cookiespoll.model.user.Admin;
 import net.cookiespoll.model.user.Role;
 import net.cookiespoll.model.user.User;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,8 +22,8 @@ public class TestUserMapper {
     @Mock
     UserMapper userMapper;
 
-    private User userAdmin = new User (1, "login", "name", Role.ADMIN);
-    private int id = 1;
+    private User userAdmin = new User ("1", "login", "name", Role.ADMIN);
+    private String id = "1";
 
     @Before
     public void setUp() throws Exception {
@@ -34,7 +31,7 @@ public class TestUserMapper {
     }
 
     @Test
-    public void testUserMapperGetUserById() {
+    public void testGetUserById() {
         when(userMapper.getById(id)).thenReturn(userAdmin);
 
         userMapper.getById(id);
@@ -49,6 +46,18 @@ public class TestUserMapper {
         userMapper.update(userAdmin);
 
         verify(userMapper).update(userAdmin);
+    }
+
+    @Test
+    public void testGetAdmins() {
+        List<Admin> admins = Arrays.asList(new Admin(1, "some@mail.com"));
+        when(userMapper.getAdmins()).thenReturn(admins);
+
+        List<Admin> resultAdmins = userMapper.getAdmins();
+
+        Assert.assertEquals(admins.get(0).getId(), resultAdmins.get(0).getId());
+
+        verify(userMapper).getAdmins();
     }
 
 }

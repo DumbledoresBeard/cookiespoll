@@ -27,9 +27,9 @@ public class TestCookieUserRatingMapper {
     private CookieUserRatingMapper cookieUserRatingMapper;
 
     private Integer rating = 1;
-    private Integer userId = 1;
+    private String userId = "1";
     private Integer cookieId = 1;
-    private User cookieOwner = new User(1, "login", "name", Role.USER);
+    private User cookieOwner = new User("1", "login", "name", Role.USER);
     private Cookie cookieWith1Id = new Cookie(1, "cookie", "tasty cookie",
             new byte[2], CookieAddingStatus.APPROVED, (float) 0, cookieOwner);
     private List<CookieUserRating> usersRatings = Arrays.asList(new CookieUserRating(cookieOwner, cookieWith1Id, 3));

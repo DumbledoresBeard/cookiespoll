@@ -22,6 +22,7 @@
         <maven.compiler.plugin.version>3.7.0</maven.compiler.plugin.version>
         <cobertura.maven.plugin.version>2.7</cobertura.maven.plugin.version>
         <spring.boot.starter.jdbc.version>2.0.6.RELEASE</spring.boot.starter.jdbc.version>
+        <spring.security.test.version>4.0.0.RELEASE</spring.security.test.version>
         <commons.validator.version>1.4.1</commons.validator.version>
         <javax.validation.version>2.0.0.Final</javax.validation.version>
         <commons.lang.version>3.7</commons.lang.version>
@@ -50,8 +51,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.plugin.version}</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>11</source>
+                    <target>11</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -98,6 +99,24 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
             <version>${spring.boot.starter.jdbc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-client</artifactId>
+        </dependency>
+        <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-jose</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <version>${spring.security.test.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>commons-validator</groupId>

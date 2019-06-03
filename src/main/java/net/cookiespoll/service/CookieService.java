@@ -37,7 +37,7 @@ public class CookieService {
     }
 
     public List<Cookie> getByParam(String name, String description, CookieAddingStatus cookieAddingStatus, Float rating,
-                                   Integer userId) {
+                                   String userId) {
         return cookieDao.getByParam(name, description, cookieAddingStatus, rating, userId);
     }
 
@@ -49,7 +49,7 @@ public class CookieService {
         return cookieDao.getById(id);
     }
 
-    public List<Cookie> getUnratedByUserId(int userId) {
+    public List<Cookie> getUnratedByUserId(String userId) {
         return cookieDao.getUnratedByUserId(userId);
     }
 
@@ -61,4 +61,7 @@ public class CookieService {
         return  (cookieRatingSum / usersQuantity);
     }
 
+    public Integer delete(Integer id) {
+        return cookieDao.delete(id);
+    }
 }

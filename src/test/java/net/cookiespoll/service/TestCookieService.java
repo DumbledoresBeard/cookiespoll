@@ -33,7 +33,7 @@ public class TestCookieService {
     @InjectMocks
     CookieService cookieService;
 
-    private User cookieOwner = new User(1, "login", "name", Role.USER);
+    private User cookieOwner = new User("1", "login", "name", Role.USER);
     private Float cookieRating = new Float(0);
     private Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING,
             cookieRating, cookieOwner);
@@ -41,10 +41,10 @@ public class TestCookieService {
     private Cookie cookieWithId = new Cookie(1, "cookie", "tasty cookie", new byte[2],
             CookieAddingStatus.WAITING, cookieRating, cookieOwner);
     private AddCookieRequest addCookieRequest = new AddCookieRequest("cookie", "tasty cookie");
+    private String userId = "1";
     Cookie cookieWith2Id = new Cookie(2,"cookie", "tasty cookie", new byte[2],
-            CookieAddingStatus.WAITING, cookieRating, new User(2, "login", "name", Role.USER));
-    private Integer userId = 1;
-    private User userAdmin = new User(1, "login", "name", Role.ADMIN);
+            CookieAddingStatus.WAITING, cookieRating, new User("2", "login", "name", Role.USER));
+    private User userAdmin = new User("3", "login", "name", Role.ADMIN);
     private  List<CookieUserRating> usersRatings = Arrays.asList(new CookieUserRating(userAdmin, cookie, 3));
 
     @Before
@@ -72,7 +72,7 @@ public class TestCookieService {
 
     @Test
     public void testGetCookiesByParam () {
-        CookiesByParameterRequest cookiesByParameterRequest = new CookiesByParameterRequest(1, "name",
+        CookiesByParameterRequest cookiesByParameterRequest = new CookiesByParameterRequest("1", "name",
                 "description", CookieAddingStatus.WAITING, cookieRating);
         List<Cookie> cookies = new ArrayList<>();
         cookieWithId.setUsersRatings(usersRatings);
@@ -115,8 +115,8 @@ public class TestCookieService {
 
     @Test
     public void testUpdateCookie () {
-        Cookie cookie = new Cookie(1, "cookie", "tasty cookie", new byte[2],
-                CookieAddingStatus.WAITING, cookieRating, cookieOwner);
+        Cookie cookie = new Cookie(1, "cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING,
+                cookieRating, cookieOwner);
 
         when(cookieDao.update(cookieWithId)).thenReturn(cookieWithId);
 
@@ -183,6 +183,17 @@ public class TestCookieService {
         Assert.assertEquals(rating, resultRating, 0.0f);
     }
 
+    @Test
+    public void testDelete() {
+        Integer id = 1;
 
+        when(cookieDao.delete(id)).thenReturn(id);
+
+        Integer result = cookieDao.delete(id);
+
+        Assert.assertEquals(id, result);
+
+        verify(cookieDao).delete(id);
+    }
 }
 

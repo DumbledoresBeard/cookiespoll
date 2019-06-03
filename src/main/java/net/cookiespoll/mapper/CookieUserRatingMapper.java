@@ -13,10 +13,11 @@ public interface CookieUserRatingMapper {
 
     @Insert("INSERT INTO cookie_user_rating (user_id, cookie_id, rating) VALUES "
             + "( #{userId}, #{cookieId}, #{rating})")
-    void insert(@Param("userId") int userId, @Param("cookieId") int cookieId, @Param("rating") int rating);
+    void insert(@Param("userId") String userId, @Param("cookieId") int cookieId, @Param("rating") int rating);
+
 
     @Select("SELECT rating from cookie_user_rating where user_id =#{userId} AND cookie_id=#{cookieId}")
-    Integer getRatingByUserAndCookie(@Param("userId") int userId, @Param("cookieId") int cookieId);
+    Integer getRatingByUserAndCookie(@Param("userId") String userId, @Param("cookieId") int cookieId);
 
     @Select("SELECT COUNT(user_id) WHERE cookie_id = #{cookieId}")
     Integer getUserQuantity (@Param("cookieId") Integer cookieId);
@@ -33,7 +34,7 @@ public interface CookieUserRatingMapper {
                     one = @One(select = "net.cookiespoll.mapper.CookieMapper.getById")),
             @Result(property = "rating", column = "rating", javaType = Integer.class),
     })
-    List<CookieUserRating> getListByUserId(Integer userId);
+    List<CookieUserRating> getListByUserId(String userId);
 
     @Select("SELECT user_id, cookie_id, rating from cookie_user_rating " +
             "WHERE cookie_id = #{cookieId}")

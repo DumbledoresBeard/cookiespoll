@@ -5,6 +5,7 @@ import net.cookiespoll.mapper.UserMapper;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.model.CookieUserRating;
+import net.cookiespoll.model.user.Admin;
 import net.cookiespoll.model.user.Role;
 import net.cookiespoll.model.user.User;
 import org.junit.Assert;
@@ -16,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,8 +30,8 @@ public class TestUserDaoImpl {
     @InjectMocks
     UserDaoImpl userDaoImpl;
 
-    private int id = 1;
-    private User userAdmin = new User(1, "login", "name", Role.ADMIN);
+    private String id = "1";
+    private User userAdmin = new User("1", "login", "name", Role.ADMIN);
     private Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.APPROVED,
             (float) 4, userAdmin);
     private List<CookieUserRating> ratedCookies = Arrays.asList(new CookieUserRating(userAdmin, cookie, 1));
@@ -41,7 +41,6 @@ public class TestUserDaoImpl {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
     }
-
 
     @Test
     public void testUserDaoGetUserById() {
@@ -79,6 +78,19 @@ public class TestUserDaoImpl {
         Assert.assertEquals(userAdmin.getAddedCookies(), resultUser.getAddedCookies());
 
         verify(userMapper).update(userAdmin);
+    }
+
+    @Test
+    public void testGetAdmins() {
+        List<Admin> admins = Arrays.asList(new Admin(1, "some@mail.com"));
+        when(userMapper.getAdmins()).thenReturn(admins);
+
+        List<Admin> resultAdmins = userMapper.getAdmins();
+
+        Assert.assertEquals(admins.get(0).getId(), resultAdmins.get(0).getId());
+        Assert.assertEquals(admins.get(0).getLogin(), admins.get(0).getLogin());
+
+        verify(userMapper).getAdmins();
     }
 
 }
