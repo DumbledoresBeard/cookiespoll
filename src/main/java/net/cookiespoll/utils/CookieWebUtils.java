@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Base64;
 import java.util.Optional;
 
-public class CookieUtils {
+public class CookieWebUtils {
 
     public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
@@ -20,7 +20,6 @@ public class CookieUtils {
                 }
             }
         }
-
         return Optional.empty();
     }
 
@@ -34,6 +33,7 @@ public class CookieUtils {
 
     public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name) {
         Cookie[] cookies = request.getCookies();
+
         if (cookies != null && cookies.length > 0) {
             for (Cookie cookie: cookies) {
                 if (cookie.getName().equals(name)) {
@@ -55,5 +55,4 @@ public class CookieUtils {
         return cls.cast(SerializationUtils.deserialize(
                 Base64.getUrlDecoder().decode(cookie.getValue())));
     }
-
 }

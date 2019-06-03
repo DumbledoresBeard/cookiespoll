@@ -8,14 +8,10 @@ import net.cookiespoll.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -26,7 +22,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Autowired
-    public SecurityConfig(UserService userService, OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler, TokenProvider tokenProvider, HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository) {
+    public SecurityConfig(UserService userService, OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler,
+                          TokenProvider tokenProvider,
+                          HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository) {
         this.userService = userService;
         this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
         this.tokenProvider = tokenProvider;
@@ -68,15 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .oidcUserService(userService)
                 .and()
                .successHandler(oAuth2AuthenticationSuccessHandler);
-               /* .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll().logoutUrl("/cookiepoll/logout")
-                .invalidateHttpSession(true)
-                .clearAuthentication(true).logoutSuccessUrl("/cookiepoll/logout")
-                .deleteCookies("JSESSIONID")
-                .permitAll().and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());*/
 
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
-
-
-
 }

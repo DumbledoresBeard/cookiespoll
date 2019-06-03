@@ -526,7 +526,6 @@ public class TestCookieController {
         Assert.assertEquals(updateCookieResponse.getCookieAddingStatus(),
                                     resultResponse.getCookieAddingStatus());
         Assert.assertEquals(updateCookieResponse.getRating(), resultResponse.getRating());
-        Assert.assertEquals(updateCookieRequest.getCookieOwner(), resultResponse.getCookieOwner());
     }
 
     @WithMockCustomUser

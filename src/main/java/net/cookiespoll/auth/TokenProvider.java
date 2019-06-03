@@ -13,13 +13,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class TokenProvider {
-
 
     public String createToken(Authentication authentication) {
         DefaultOidcUser defaultOidcUser = (DefaultOidcUser) authentication.getPrincipal();
@@ -27,17 +25,20 @@ public class TokenProvider {
     }
 
     public Optional<Map<String, String>> getUserFromToken(String token) {
-            BufferedReader in = null;
-            try {
-                in = new BufferedReader(new InputStreamReader(
+            /*BufferedReader in = null;*/
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(
+                    ((HttpURLConnection) (new URL("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" + token.trim()))
+                            .openConnection()).getInputStream(), Charset.forName("UTF-8")))) {
+              /*  in = new BufferedReader(new InputStreamReader(
                         ((HttpURLConnection) (new URL("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" + token.trim()))
-                                .openConnection()).getInputStream(), Charset.forName("UTF-8")));
+                                .openConnection()).getInputStream(), Charset.forName("UTF-8")));*/
 
                 StringBuffer b = new StringBuffer();
                 String inputLine;
                 while ((inputLine = in.readLine()) != null){
                     b.append(inputLine + "\n");
                 }
+
                 ObjectMapper objectMapper = new ObjectMapper();
                 return Optional.of(objectMapper.readValue(b.toString(), objectMapper.getTypeFactory().constructMapType(Map.class, String.class, String.class)));
     } catch (MalformedURLException e) {
@@ -47,14 +48,6 @@ public class TokenProvider {
     } catch(Exception e){
         System.out.println("Failed to transform json to string");
         e.printStackTrace();
-    } finally{
-        if(in!=null){
-            try {
-                in.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
         return null;
 }

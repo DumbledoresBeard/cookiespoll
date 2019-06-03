@@ -3,15 +3,13 @@ package net.cookiespoll.controller;
 import net.cookiespoll.model.user.User;
 import net.cookiespoll.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
-import java.util.Map;
+
+import static net.cookiespoll.utils.UserUtils.getUserFromSession;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
 @Controller
@@ -24,19 +22,10 @@ public class UserController {
         this.userService = userService;
     }
 
-    private String getUserIdFromSession() {
-        User user = (User) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
-       /* Map<String, Object> atrr = defaultOidcUser.getClaims();*/
-        return user.getId();
-    }
-
     @RequestMapping(value = "/cookiepoll/login", method = RequestMethod.GET)
     @ResponseBody
     public User getLoginPage () {
-        String userId = getUserIdFromSession();
-
-        return userService.getById(userId);
+        return getUserFromSession();
     }
 
     @RequestMapping(value = "/cookiepoll/logout",

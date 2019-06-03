@@ -13,8 +13,7 @@ public class CookieDtoConverter {
 
     public Cookie convertDto(UpdateCookieRequest updateCookieRequest) {
         return new Cookie(updateCookieRequest.getId(), updateCookieRequest.getName(), updateCookieRequest.getDescription(),
-                updateCookieRequest.getFileData(), updateCookieRequest.getApprovalStatus(), updateCookieRequest.getRating(),
-                updateCookieRequest.getCookieOwner());
+                updateCookieRequest.getFileData(), updateCookieRequest.getApprovalStatus(), updateCookieRequest.getRating());
     }
 
     public UpdateCookieResponse convertToUpdateResponse(Cookie cookie) {

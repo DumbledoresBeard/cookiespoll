@@ -17,7 +17,6 @@ public class UpdateCookieRequest {
     private byte[] fileData;
     private CookieAddingStatus approvalStatus;
     private Float rating;
-    private User cookieOwner;
 
     public UpdateCookieRequest () {}
 
@@ -29,7 +28,6 @@ public class UpdateCookieRequest {
         this.fileData = fileData;
         this.approvalStatus = approvalStatus;
         this.rating = rating;
-        this.cookieOwner = cookieOwner;
     }
 
     public int getId() {
@@ -78,12 +76,6 @@ public class UpdateCookieRequest {
 
     public void setRating(Float rating) {
         this.rating = rating;
-    }
-
-    public User getCookieOwner() { return cookieOwner; }
-
-    public void setCookieOwner(User cookieOwner) {
-        this.cookieOwner = cookieOwner;
     }
 }
 

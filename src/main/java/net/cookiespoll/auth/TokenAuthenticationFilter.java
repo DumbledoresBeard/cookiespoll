@@ -40,19 +40,20 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
         if (StringUtils.hasText(token) && googleData.isPresent()) {
             User user = userService.getById(googleData.get().get("sub"));
-            List<GrantedAuthority> authorities = Collections.
-                    singletonList(new SimpleGrantedAuthority(user.getRole().toString()));
+
+            List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRole().toString()));
+
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-
-                filterChain.doFilter(httpServletRequest, httpServletResponse);
+        filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
+
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7, bearerToken.length());
         }
