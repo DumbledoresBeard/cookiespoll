@@ -21,7 +21,7 @@ public class UpdateCookieRequest {
     public UpdateCookieRequest () {}
 
     public UpdateCookieRequest(int id, String name, String description, byte[] fileData,
-                               CookieAddingStatus approvalStatus, Float rating, User cookieOwner) {
+                               CookieAddingStatus approvalStatus, Float rating) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -78,5 +78,3 @@ public class UpdateCookieRequest {
         this.rating = rating;
     }
 }
-
-

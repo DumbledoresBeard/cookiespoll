@@ -109,7 +109,7 @@ public interface CookieMapper {
 
     @Update("UPDATE cookies " +
             "SET name = #{cookie.name}, description = #{cookie.description}, file_data = #{cookie.fileData}," +
-            "cookie_adding_status = #{cookie.cookieAddingStatus}, rating = #{cookie.rating}, user_id = #{cookie.cookieOwner.id}" +
+            "cookie_adding_status = #{cookie.cookieAddingStatus}, rating = #{cookie.rating}" +
             " WHERE id = #{cookie.cookieId} ")
     void update(@Param("cookie") Cookie cookie);
 
