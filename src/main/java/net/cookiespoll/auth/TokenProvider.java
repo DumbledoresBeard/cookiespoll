@@ -1,6 +1,5 @@
 package net.cookiespoll.auth;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -41,15 +40,10 @@ public class TokenProvider {
 
                 ObjectMapper objectMapper = new ObjectMapper();
                 return Optional.of(objectMapper.readValue(b.toString(), objectMapper.getTypeFactory().constructMapType(Map.class, String.class, String.class)));
-    } catch (MalformedURLException e) {
-        e.printStackTrace();
-    } catch (IOException e) {
-        e.printStackTrace();
-    } catch(Exception e){
-        System.out.println("Failed to transform json to string");
-        e.printStackTrace();
+    } catch (Exception e) {
+        e.getMessage();
     }
-        return null;
+        return Optional.empty();
 }
 
 }

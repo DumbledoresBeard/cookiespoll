@@ -11,6 +11,11 @@ public class CookieDtoConverter {
     public CookieDtoConverter() {
     }
 
+    public Cookie convert(UpdateCookieRequest updateCookieRequest) {
+        return new Cookie(updateCookieRequest.getId(), updateCookieRequest.getName(), updateCookieRequest.getDescription(), updateCookieRequest.getFileData(),
+                updateCookieRequest.getApprovalStatus(), updateCookieRequest.getRating());
+    }
+
     public UpdateCookieResponse convertToUpdateResponse(Cookie cookie) {
         return new UpdateCookieResponse(cookie.getCookieId(), cookie.getName(), cookie.getDescription(), cookie.getFileData(),
                 cookie.getCookieAddingStatus(), cookie.getRating(), cookie.getCookieOwner());

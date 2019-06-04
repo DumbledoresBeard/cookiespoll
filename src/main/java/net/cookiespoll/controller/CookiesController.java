@@ -137,9 +137,7 @@ public class CookiesController {
 
         LOGGER.info("Starting processing request {} ", updateCookieRequest);
 
-        Cookie cookie = cookieService.getById(updateCookieRequest.getId());
-
-        return cookieDtoConverter.convertToUpdateResponse(cookieService.update(cookie));
+        return cookieDtoConverter.convertToUpdateResponse(cookieService.update(cookieDtoConverter.convert(updateCookieRequest)));
     }
 
 
