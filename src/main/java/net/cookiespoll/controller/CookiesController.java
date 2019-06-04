@@ -110,7 +110,7 @@ public class CookiesController {
             @ApiResponse(code = 200, message = "Cookies were received"),
             @ApiResponse(code = 500, message = "Internal server error"),
     })
-    @RequestMapping(value = "/cookies}", method = RequestMethod.GET)
+    @RequestMapping(value = "/cookies", method = RequestMethod.GET)
     @ResponseBody
     public List<Cookie> getCookiesAddedByCurrentUser () {
         LOGGER.info("Starting processing request for getting cookie added by current user");
