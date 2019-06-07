@@ -50,7 +50,7 @@ public interface CookieMapper {
             @Result(property = "cookieOwner", column = "user_id", javaType = String.class,
                     one = @One(select = "net.cookiespoll.mapper.UserMapper.getById")),
             @Result(property = "usersRatings", column = "id", javaType = List.class,
-                    many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByCookieId", fetchType = FetchType.LAZY)),
+                    many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByCookieId")),
     })
     List<Cookie> getByParam(@Param("name") String name, @Param("description") String description,
                             @Param("cookieAddingStatus") CookieAddingStatus cookieAddingStatus,
@@ -86,7 +86,7 @@ public interface CookieMapper {
             @Result(property = "cookieOwner", column = "user_id", javaType = String.class,
                     one = @One(select = "net.cookiespoll.mapper.UserMapper.getById")),
             @Result(property = "usersRatings", column = "id", javaType = List.class,
-                    many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByCookieId", fetchType = FetchType.LAZY)),
+                    many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByCookieId")),
     })
     Cookie getById (Integer id);
 
@@ -104,7 +104,7 @@ public interface CookieMapper {
             @Result(property = "cookieOwner", column = "user_id", javaType = String.class,
                     one = @One(select = "net.cookiespoll.mapper.UserMapper.getById")),
             @Result(property = "usersRatings", column = "id", javaType = List.class,
-                    many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByCookieId", fetchType = FetchType.LAZY)),
+                    many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByCookieId")),
     })
     Cookie getByUserId (String id);
 
