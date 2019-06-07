@@ -5,6 +5,7 @@ import net.cookiespoll.model.user.Admin;
 import net.cookiespoll.model.user.Role;
 import net.cookiespoll.model.user.User;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.mapping.FetchType;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,9 +26,9 @@ public interface UserMapper {
             @Result(property = "name", column = "name", javaType = String.class),
             @Result(property = "role", column = "role", javaType = Role.class),
             @Result(property = "ratedCookies", column = "id", javaType = List.class,
-                    many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByUserId")),
+                    many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByUserId", fetchType = FetchType.LAZY)),
             @Result(property = "addedCookies", column = "id", javaType = List.class,
-                    many = @Many(select = "net.cookiespoll.mapper.CookieMapper.getByUserId")),
+                    many = @Many(select = "net.cookiespoll.mapper.CookieMapper.getByUserId", fetchType = FetchType.LAZY)),
     })
     User getById(String id);
 

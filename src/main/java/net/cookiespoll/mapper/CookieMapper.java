@@ -3,6 +3,7 @@ package net.cookiespoll.mapper;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.mapping.FetchType;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -49,7 +50,7 @@ public interface CookieMapper {
             @Result(property = "cookieOwner", column = "user_id", javaType = String.class,
                     one = @One(select = "net.cookiespoll.mapper.UserMapper.getById")),
             @Result(property = "usersRatings", column = "id", javaType = List.class,
-                    many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByCookieId")),
+                    many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByCookieId", fetchType = FetchType.LAZY)),
     })
     List<Cookie> getByParam(@Param("name") String name, @Param("description") String description,
                             @Param("cookieAddingStatus") CookieAddingStatus cookieAddingStatus,
@@ -85,7 +86,7 @@ public interface CookieMapper {
             @Result(property = "cookieOwner", column = "user_id", javaType = String.class,
                     one = @One(select = "net.cookiespoll.mapper.UserMapper.getById")),
             @Result(property = "usersRatings", column = "id", javaType = List.class,
-                    many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByCookieId")),
+                    many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByCookieId", fetchType = FetchType.LAZY)),
     })
     Cookie getById (Integer id);
 
@@ -103,7 +104,7 @@ public interface CookieMapper {
             @Result(property = "cookieOwner", column = "user_id", javaType = String.class,
                     one = @One(select = "net.cookiespoll.mapper.UserMapper.getById")),
             @Result(property = "usersRatings", column = "id", javaType = List.class,
-                    many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByCookieId")),
+                    many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByCookieId", fetchType = FetchType.LAZY)),
     })
     Cookie getByUserId (String id);
 
