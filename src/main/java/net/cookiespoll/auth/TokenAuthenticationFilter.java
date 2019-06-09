@@ -26,6 +26,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private TokenProvider tokenProvider;
     private UserService userService;
 
+    public static final String HEADER = "Authorization";
+    public static final String STARTS_WITH = "Bearer ";
+    public static final String TOKEN_KEY = "sub";
+
     @Autowired
     public TokenAuthenticationFilter(TokenProvider tokenProvider, UserService userService) {
         this.tokenProvider = tokenProvider;
@@ -39,7 +43,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         Optional<Map<String, String>> googleData = tokenProvider.getUserFromToken(token);
 
         if (StringUtils.hasText(token) && googleData.isPresent()) {
-            User user = userService.getById(googleData.get().get("sub"));
+            User user = userService.getById(googleData.get().get(TOKEN_KEY));
 
             List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRole().toString()));
 
@@ -52,9 +56,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
+        String bearerToken = request.getHeader(HEADER);
 
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(STARTS_WITH)) {
             return bearerToken.substring(7, bearerToken.length());
         }
         return null;

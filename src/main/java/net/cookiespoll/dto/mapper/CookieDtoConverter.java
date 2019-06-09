@@ -14,7 +14,7 @@ public class CookieDtoConverter {
     public CookieDtoConverter() {
     }
 
-    public Cookie convert(UpdateCookieRequest updateCookieRequest) {
+    public Cookie convertToCookie(UpdateCookieRequest updateCookieRequest) {
         return new Cookie(updateCookieRequest.getId(), updateCookieRequest.getName(), updateCookieRequest.getDescription(), updateCookieRequest.getFileData(),
                 updateCookieRequest.getApprovalStatus(), updateCookieRequest.getRating());
     }

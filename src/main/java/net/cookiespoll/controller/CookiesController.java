@@ -137,7 +137,7 @@ public class CookiesController {
 
         LOGGER.info("Starting processing request {} ", updateCookieRequest);
 
-        return cookieDtoConverter.convertToUpdateResponse(cookieService.update(cookieDtoConverter.convert(updateCookieRequest)));
+        return cookieDtoConverter.convertToUpdateResponse(cookieService.update(cookieDtoConverter.convertToCookie(updateCookieRequest)));
     }
 
     @ApiOperation(value = "Set rating from user to cookie and count overall cookie rating",
