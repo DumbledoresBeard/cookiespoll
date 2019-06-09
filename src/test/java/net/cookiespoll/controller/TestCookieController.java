@@ -117,12 +117,12 @@ public class TestCookieController {
                 .getContentAsString();
         verify(cookieService).insert((any(AddCookieRequest.class)), any(MockMultipartFile.class), any(User.class));
 
-        AddCookieResponse addCookieResponse = new ObjectMapper().readValue(response, AddCookieResponse.class);
+        CookieResponse cookieResponse = new ObjectMapper().readValue(response, CookieResponse.class);
 
-        Assert.assertEquals(cookie.getName(), addCookieResponse.getName());
-        Assert.assertEquals(cookie.getDescription(), addCookieResponse.getDescription());
-        Assert.assertArrayEquals(cookie.getFileData(), addCookieResponse.getFileData());
-        Assert.assertEquals(cookie.getCookieAddingStatus(), addCookieResponse.getCookieAddingStatus());
+        Assert.assertEquals(cookie.getName(), cookieResponse.getName());
+        Assert.assertEquals(cookie.getDescription(), cookieResponse.getDescription());
+        Assert.assertArrayEquals(cookie.getFileData(), cookieResponse.getFileData());
+        Assert.assertEquals(cookie.getCookieAddingStatus(), cookieResponse.getCookieAddingStatus());
     }
 
     @WithMockCustomUser

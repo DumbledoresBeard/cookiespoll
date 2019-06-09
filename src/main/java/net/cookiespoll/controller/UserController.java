@@ -22,17 +22,16 @@ public class UserController {
         this.userService = userService;
     }
 
-    @RequestMapping(value = "/cookiepoll/login", method = RequestMethod.GET)
+    @RequestMapping(value = "/cookiepoll/user", method = RequestMethod.GET)
     @ResponseBody
-    public User getLoginPage () {
+    public User getCurrentUser() {
         return getUserFromSession();
     }
 
-    @RequestMapping(value = "/cookiepoll/logout",
-            method = RequestMethod.POST)
+    @RequestMapping(value = "/cookiepoll/user/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public String logout () {
-        return "You are logged out";
+    public User getUser(@PathVariable String id) {
+        return userService.getById(id);
     }
 
     @RequestMapping(value = "/cookiepoll/logout",

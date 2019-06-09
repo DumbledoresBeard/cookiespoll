@@ -5,6 +5,9 @@ import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.user.User;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class CookieDtoConverter {
 
@@ -21,12 +24,7 @@ public class CookieDtoConverter {
                 cookie.getCookieAddingStatus(), cookie.getRating(), cookie.getCookieOwner());
     }
 
-    public AddCookieResponse convertToAddCookieResponse(Cookie cookie) {
-        return new AddCookieResponse(cookie.getCookieId(), cookie.getName(), cookie.getDescription(),
-                cookie.getFileData(), cookie.getCookieAddingStatus());
-    }
-
-    public RateCookieResponse convertToRateCookieResponse (Cookie cookie, Integer rating) {
+    public RateCookieResponse convertToRateCookieResponse(Cookie cookie, Integer rating) {
         CookieOwner cookieOwner = new CookieOwner(cookie.getCookieOwner().getId(),
                 cookie.getCookieOwner().getLogin(),cookie.getCookieOwner().getName(), cookie.getCookieOwner().getRole());
         return new RateCookieResponse(cookie.getCookieId(), cookie.getName(), cookie.getDescription(),
@@ -34,5 +32,18 @@ public class CookieDtoConverter {
                 rating);
     }
 
+    public CookieResponse convertToCookieResponse(Cookie cookie) {
+        CookieOwner cookieOwner = new CookieOwner(cookie.getCookieOwner().getId(),
+                cookie.getCookieOwner().getLogin(),cookie.getCookieOwner().getName(), cookie.getCookieOwner().getRole());
+        return new CookieResponse(cookie.getCookieId(), cookie.getName(), cookie.getDescription(),
+                cookie.getFileData(), cookie.getCookieAddingStatus(), cookie.getRating(), cookieOwner);
+    }
 
+    public List<CookieResponse> convertToListOfCookieResponses(List<Cookie> cookies) {
+        List<CookieResponse> cookieResponses = new ArrayList<>();
+        for (Cookie cookie: cookies) {
+            cookieResponses.add(this.convertToCookieResponse(cookie));
+        }
+        return cookieResponses;
+    }
 }

@@ -57,7 +57,7 @@ public class CookiesController {
         this.ratingValidator = ratingValidator;
     }
 
-    @ApiOperation(value = "Add new cookie to store in database", response = AddCookieResponse.class)
+    @ApiOperation(value = "Add new cookie to store in database", response = CookieResponse.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Cookie was successfully added"),
             @ApiResponse(code = 400, message = "Request contains invalid field(s)"),
@@ -65,14 +65,14 @@ public class CookiesController {
     })
     @RequestMapping(value = "/cookies", method = RequestMethod.POST)
     @ResponseBody
-    public AddCookieResponse addCookie(@RequestPart("file") MultipartFile multipartFile,
+    public CookieResponse addCookie(@RequestPart("file") MultipartFile multipartFile,
                             @Valid @RequestPart("data") AddCookieRequest addCookieRequest)
                             throws IOException, FileValidationException {
         LOGGER.info("Start processing AddCookieRequest {}, {} ", addCookieRequest, multipartFile);
 
         fileValidator.validate(multipartFile);
 
-        return cookieDtoConverter.convertToAddCookieResponse(cookieService.insert(addCookieRequest, multipartFile, getUserFromSession()));
+        return cookieDtoConverter.convertToCookieResponse(cookieService.insert(addCookieRequest, multipartFile, getUserFromSession()));
     }
 
     @ApiOperation(value = "Get list of cookies by parameter", response = ArrayList.class)
@@ -83,12 +83,12 @@ public class CookiesController {
     })
     @RequestMapping(value = "/cookies/lists", method = RequestMethod.GET)
     @ResponseBody
-    public List<Cookie> getCookiesByParameter (@Valid CookiesByParameterRequest cookiesByParameterRequest) {
+    public List<CookieResponse> getCookiesByParameter (@Valid CookiesByParameterRequest cookiesByParameterRequest) {
         LOGGER.info("Starting processing request for getting cookies by parameters {} ", cookiesByParameterRequest);
 
-       return cookieService.getByParam(cookiesByParameterRequest.getName(), cookiesByParameterRequest.getDescription(),
+       return cookieDtoConverter.convertToListOfCookieResponses(cookieService.getByParam(cookiesByParameterRequest.getName(), cookiesByParameterRequest.getDescription(),
                cookiesByParameterRequest.getCookieAddingStatus(), cookiesByParameterRequest.getRating(),
-               cookiesByParameterRequest.getUserId());
+               cookiesByParameterRequest.getUserId()));
     }
 
     @ApiOperation(value = "Get cookie by id", response = Cookie.class)
@@ -112,10 +112,10 @@ public class CookiesController {
     })
     @RequestMapping(value = "/cookies", method = RequestMethod.GET)
     @ResponseBody
-    public List<Cookie> getCookiesAddedByCurrentUser () {
+    public List<CookieResponse> getCookiesAddedByCurrentUser () {
         LOGGER.info("Starting processing request for getting cookie added by current user");
 
-        return cookieService.getByParam(null, null, null, null, getUserFromSession().getId());
+        return cookieDtoConverter.convertToListOfCookieResponses(cookieService.getByParam(null, null, null, null, getUserFromSession().getId()));
     }
 
     @ApiOperation(value = "Update cookie in database", response = UpdateCookieResponse.class)
@@ -139,7 +139,6 @@ public class CookiesController {
 
         return cookieDtoConverter.convertToUpdateResponse(cookieService.update(cookieDtoConverter.convert(updateCookieRequest)));
     }
-
 
     @ApiOperation(value = "Set rating from user to cookie and count overall cookie rating",
             response = RateCookieResponse.class)
@@ -175,7 +174,7 @@ public class CookiesController {
     })
     @RequestMapping(value = "/cookies/poll", method = RequestMethod.GET)
     @ResponseBody
-    public List<Cookie> getUnratedCookies () {
+    public List<CookieResponse> getUnratedCookies () {
         CookieAddingStatus cookieAddingStatus = CookieAddingStatus.APPROVED;
 
         List<Cookie> allApprovedCookies = cookieService.getByParam(null, null, cookieAddingStatus, null,
@@ -187,7 +186,7 @@ public class CookiesController {
                                     .collect(Collectors.toList());
         allApprovedCookies.removeAll(ratedCookies);
 
-        return allApprovedCookies;
+        return cookieDtoConverter.convertToListOfCookieResponses(allApprovedCookies);
     }
 
     @ApiOperation(value = "Delete cookie", response = DeleteCookieResponse.class)

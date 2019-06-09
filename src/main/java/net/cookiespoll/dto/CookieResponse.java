@@ -2,22 +2,26 @@ package net.cookiespoll.dto;
 
 import net.cookiespoll.model.CookieAddingStatus;
 
-public class AddCookieResponse {
+public class CookieResponse {
     private int id;
     private String name;
     private String description;
     private byte[] fileData;
     private CookieAddingStatus cookieAddingStatus;
+    private Float rating;
+    private CookieOwner cookieOwner;
 
-    public AddCookieResponse() {}
+    public CookieResponse() {
+    }
 
-    public AddCookieResponse(int id, String name, String description, byte[] fileData,
-                             CookieAddingStatus cookieAddingStatus) {
+    public CookieResponse(int id, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus, Float rating, CookieOwner cookieOwner) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.fileData = fileData;
         this.cookieAddingStatus = cookieAddingStatus;
+        this.rating = rating;
+        this.cookieOwner = cookieOwner;
     }
 
     public int getId() {
@@ -44,9 +48,13 @@ public class AddCookieResponse {
         this.description = description;
     }
 
-    public byte[] getFileData() { return fileData; }
+    public byte[] getFileData() {
+        return fileData;
+    }
 
-    public void setFileData(byte[] fileData) { this.fileData = fileData; }
+    public void setFileData(byte[] fileData) {
+        this.fileData = fileData;
+    }
 
     public CookieAddingStatus getCookieAddingStatus() {
         return cookieAddingStatus;
@@ -54,5 +62,21 @@ public class AddCookieResponse {
 
     public void setCookieAddingStatus(CookieAddingStatus cookieAddingStatus) {
         this.cookieAddingStatus = cookieAddingStatus;
+    }
+
+    public Float getRating() {
+        return rating;
+    }
+
+    public void setRating(Float rating) {
+        this.rating = rating;
+    }
+
+    public CookieOwner getCookieOwner() {
+        return cookieOwner;
+    }
+
+    public void setCookieOwner(CookieOwner cookieOwner) {
+        this.cookieOwner = cookieOwner;
     }
 }
