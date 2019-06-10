@@ -1,13 +1,18 @@
 package net.cookiespoll.auth;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Map;
@@ -17,8 +22,19 @@ import java.util.Set;
 import static org.mockito.Mockito.*;
 
 public class TestTokenProvider {
-    private TokenProvider tokenProvider = new TokenProvider();
+    private TokenProvider tokenProvider;
     private Authentication authentication = mock(Authentication.class);
+    private RestTemplate restTemplate = mock(RestTemplate.class);
+    ResponseEntity response = mock(ResponseEntity.class);
+    public static final String GOOGLE_API = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=";
+
+    @Before
+    public void init() {
+        tokenProvider = new TokenProvider();
+
+        MockitoAnnotations.initMocks(this);
+    }
+
 
     @Test
     public void testCreateToken () {
@@ -42,7 +58,20 @@ public class TestTokenProvider {
     }
 
     @Test
-    public void testGetUserFromToken () {
+    public void testGetUserFromToken () throws IOException {
+        String token = "12345";
+        Map<String, String> userData = (Map.of("sub", "12345"));
+
+        when(restTemplate.getForObject(GOOGLE_API + token.trim(), Map.class)).thenReturn(userData);
+
+        Optional<Map<String, String>> resultUserData = tokenProvider.getUserFromToken(token);
+
+        Assert.assertEquals(resultUserData.get(), userData);
+    }
+
+
+    @Test
+    public void testGetUserFromTokenInvalidToken () throws IOException {
         String token = "12345";
 
         Optional<Map<String, String>> stringMap = tokenProvider.getUserFromToken(token);

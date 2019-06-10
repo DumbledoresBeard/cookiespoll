@@ -1,5 +1,7 @@
 package net.cookiespoll.controller;
 
+import net.cookiespoll.model.user.Role;
+import net.cookiespoll.model.user.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,23 +24,13 @@ public class WithMockCustomUserSecurityContextFactory implements WithSecurityCon
         public SecurityContext createSecurityContext(WithMockCustomUser customUser) {
             SecurityContext context = SecurityContextHolder.createEmptyContext();
 
-            Map<String, Object> claims = Map.of("sub", "12345", "name", "name",
-                    "email", "a@lineate.com");
-            OidcUserInfo oidcUserInfo = new OidcUserInfo(claims);
-
             Set<GrantedAuthority> authorities = new HashSet<>();
             GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("user");
             authorities.add(grantedAuthority);
 
-            Instant issuedAt = Instant.now();
-            Instant expiresAt = Instant.now();
-            OidcIdToken oidcIdToken = new OidcIdToken("token", issuedAt, expiresAt, Map.of("sub", "12345", "name", "name",
-                    "email", "a@lineate.com"));
+            User user = new User("12345", "a@lineate.com", "name", Role.USER);
 
-            DefaultOidcUser defaultOidcUser = new DefaultOidcUser(authorities, oidcIdToken, oidcUserInfo);
-
-            Authentication auth =
-                    new UsernamePasswordAuthenticationToken(defaultOidcUser, "password", defaultOidcUser.getAuthorities());
+            Authentication auth = new UsernamePasswordAuthenticationToken(user, "password", authorities);
             context.setAuthentication(auth);
             return context;
         }
