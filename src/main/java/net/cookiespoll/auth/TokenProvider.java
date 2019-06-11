@@ -16,7 +16,6 @@ import java.util.Optional;
 
 @Service
 public class TokenProvider {
-    public static final Logger LOGGER = LoggerFactory.getLogger(TokenProvider.class);
     public static final String GOOGLE_API = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=";
 
     private RestTemplate restTemplate;

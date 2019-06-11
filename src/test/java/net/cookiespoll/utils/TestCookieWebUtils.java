@@ -1,7 +1,9 @@
 package net.cookiespoll.utils;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.MockitoAnnotations;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +18,11 @@ public class TestCookieWebUtils {
     private HttpServletResponse response = mock(HttpServletResponse.class);
     private HttpServletRequest request = mock(HttpServletRequest.class);
     private Cookie cookie = new Cookie("cookie", "value");
+
+    @Before
+    public void init() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     public void testAddCookie () {
