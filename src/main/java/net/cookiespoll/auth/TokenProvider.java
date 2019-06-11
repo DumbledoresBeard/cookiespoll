@@ -25,6 +25,10 @@ public class TokenProvider {
         this.restTemplate = restTemplate;
     }
 
+//    public TokenProvider() {
+//        restTemplate = new RestTemplate();
+//    }
+
     public String createToken(Authentication authentication) {
         DefaultOidcUser defaultOidcUser = (DefaultOidcUser) authentication.getPrincipal();
 

@@ -34,7 +34,7 @@
         <mybatis.spring.version>1.3.0</mybatis.spring.version>
         <mybatis.version>3.4.6</mybatis.version>
         <junit.version>4.12</junit.version>
-        <mockito.version>2.23.4</mockito.version>
+        <mockito.version>2.18.0</mockito.version>
         <swagger.version>2.9.2</swagger.version>
         <slf4j.version>1.7.25</slf4j.version>
         <logback.classic.version>1.2.3</logback.classic.version>
@@ -71,6 +71,15 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <!--illegal-access=permit need to allow all reflection access for third party libraries-->
+                    <argLine>--illegal-access=permit</argLine>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -179,6 +188,18 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito2</artifactId>
+            <version>2.0.0-beta.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>2.0.0-beta.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
