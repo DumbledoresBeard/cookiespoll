@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
+import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,7 +31,7 @@ public class TestTokenProvider {
 
     @Before
     public void init() {
-        tokenProvider = new TokenProvider();
+        tokenProvider = new TokenProvider(restTemplate);
 
         MockitoAnnotations.initMocks(this);
     }
@@ -73,9 +74,12 @@ public class TestTokenProvider {
     @Test
     public void testGetUserFromTokenInvalidToken () throws IOException {
         String token = "12345";
+        Map<String, String> userData = null;
 
-        Optional<Map<String, String>> stringMap = tokenProvider.getUserFromToken(token);
+        when(restTemplate.getForObject(GOOGLE_API + token.trim(), Map.class)).thenReturn(userData);
 
-        Assert.assertEquals(stringMap, Optional.empty());
+        Optional<Map<String, String>> resultUserData = tokenProvider.getUserFromToken(token);
+
+        Assert.assertEquals(resultUserData, Optional.empty());
     }
 }

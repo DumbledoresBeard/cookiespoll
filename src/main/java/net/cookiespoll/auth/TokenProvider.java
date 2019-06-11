@@ -3,6 +3,7 @@ package net.cookiespoll.auth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -20,8 +21,9 @@ public class TokenProvider {
 
     private RestTemplate restTemplate;
 
-    public TokenProvider() {
-        this.restTemplate = new RestTemplate();
+    @Autowired
+    public TokenProvider(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     public String createToken(Authentication authentication) {
@@ -35,7 +37,7 @@ public class TokenProvider {
 //        try {
 //            ResponseEntity<String> response = restTemplate.getForEntity(GOOGLE_API + token.trim(), String.class);
                 Map <String, String> response = restTemplate.getForObject(GOOGLE_API + token.trim(), Map.class);
-                return Optional.of(response);
+                return Optional.ofNullable(response);
 //            ObjectMapper objectMapper = new ObjectMapper();
 //            return Optional.of(objectMapper.readValue(response.getBody(), objectMapper.getTypeFactory().constructMapType(Map.class, String.class, String.class)));
 
