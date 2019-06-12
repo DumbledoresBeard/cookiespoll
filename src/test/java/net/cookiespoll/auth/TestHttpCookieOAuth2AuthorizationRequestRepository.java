@@ -28,7 +28,7 @@ public class TestHttpCookieOAuth2AuthorizationRequestRepository {
     private HttpServletResponse response = mock(HttpServletResponse.class);
     private HttpServletRequest request = mock(HttpServletRequest.class);
     private CookieWebUtils cookieWebUtils = mock(CookieWebUtils.class);
-    private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository = new HttpCookieOAuth2AuthorizationRequestRepository();
+    private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
     private Cookie cookieOAuth2 = new Cookie("oauth2_auth_request", "value");
     private OAuth2AuthorizationRequest requestOAuth2 = OAuth2AuthorizationRequest.authorizationCode().authorizationUri("234").clientId("12").build();
 
@@ -38,16 +38,16 @@ public class TestHttpCookieOAuth2AuthorizationRequestRepository {
 
     @Before
     public void init() {
+        httpCookieOAuth2AuthorizationRequestRepository = new HttpCookieOAuth2AuthorizationRequestRepository(cookieWebUtils);
+
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void testLoadAuthorizationRequest () {
-        PowerMockito.mockStatic(CookieWebUtils.class);
-
-        when(CookieWebUtils.getCookie(request, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME))
+        when(cookieWebUtils.getCookie(request, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME))
                 .thenReturn(Optional.of(cookieOAuth2));
-        when(CookieWebUtils.deserialize(cookieOAuth2, OAuth2AuthorizationRequest.class)).thenReturn(requestOAuth2);
+        when(cookieWebUtils.deserialize(cookieOAuth2, OAuth2AuthorizationRequest.class)).thenReturn(requestOAuth2);
 
         OAuth2AuthorizationRequest resultOAuth2 = httpCookieOAuth2AuthorizationRequestRepository.loadAuthorizationRequest(request);
 

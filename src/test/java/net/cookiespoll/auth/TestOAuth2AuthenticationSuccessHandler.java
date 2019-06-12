@@ -30,13 +30,14 @@ public class TestOAuth2AuthenticationSuccessHandler {
             mock(HttpCookieOAuth2AuthorizationRequestRepository.class);
     private Cookie cookieOAuth2 = new Cookie("oauth2_auth_request", "value");
     private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private CookieWebUtils cookieWebUtils = mock(CookieWebUtils.class);
 
     public static final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
 
     @Before
     public void init() {
         oAuth2AuthenticationSuccessHandler = new OAuth2AuthenticationSuccessHandler(tokenProvider,
-                httpCookieOAuth2AuthorizationRequestRepository);
+                httpCookieOAuth2AuthorizationRequestRepository, cookieWebUtils);
 
         MockitoAnnotations.initMocks(this);
     }
