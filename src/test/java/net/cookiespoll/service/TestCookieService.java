@@ -65,7 +65,7 @@ public class TestCookieService {
         Assert.assertArrayEquals(mockMultipartFile.getBytes(), resultCookie.getFileData());
         Assert.assertEquals(cookie.getCookieAddingStatus(), resultCookie.getCookieAddingStatus());
         Assert.assertEquals(0, resultCookie.getRating(), 0.0f);
-        Assert.assertEquals(1, resultCookie.getCookieOwner().getId());
+        Assert.assertEquals("1", resultCookie.getCookieOwner().getId());
 
         verify(cookieDao).insert(cookie);
     }

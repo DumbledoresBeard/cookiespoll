@@ -1,5 +1,8 @@
 package net.cookiespoll.controller;
 
+import net.cookiespoll.model.Cookie;
+import net.cookiespoll.model.CookieAddingStatus;
+import net.cookiespoll.model.CookieUserRating;
 import net.cookiespoll.model.user.Role;
 import net.cookiespoll.model.user.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,9 +17,7 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class WithMockCustomUserSecurityContextFactory implements WithSecurityContextFactory<WithMockCustomUser> {
 
@@ -28,7 +29,15 @@ public class WithMockCustomUserSecurityContextFactory implements WithSecurityCon
             GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("user");
             authorities.add(grantedAuthority);
 
-            User user = new User("12345", "a@lineate.com", "name", Role.USER);
+            User user = new User("1", "login", "name", Role.USER);
+            Cookie cookieWith1Id = new Cookie(1, "cookie", "tasty cookie",
+                    new byte[2], CookieAddingStatus.APPROVED, (float) 0, user);
+            List<CookieUserRating> ratedByUser = new ArrayList<>();
+            ratedByUser.add(new CookieUserRating(user, cookieWith1Id, 3));
+            user.setRatedCookies(ratedByUser);
+            List<Cookie> addedCookies = new ArrayList<>();
+            addedCookies.add(cookieWith1Id);
+            user.setAddedCookies(addedCookies);
 
             Authentication auth = new UsernamePasswordAuthenticationToken(user, "password", authorities);
             context.setAuthentication(auth);

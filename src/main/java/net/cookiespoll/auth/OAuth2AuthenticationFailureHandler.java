@@ -21,7 +21,8 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
     private CookieWebUtils cookieWebUtils;
 
     @Autowired
-    public OAuth2AuthenticationFailureHandler(HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository, CookieWebUtils cookieWebUtils) {
+    public OAuth2AuthenticationFailureHandler(HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository,
+                                              CookieWebUtils cookieWebUtils) {
         this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
         this.cookieWebUtils = cookieWebUtils;
     }

@@ -83,12 +83,13 @@ public class TestHttpCookieOAuth2AuthorizationRequestRepository {
     @Test
     public void testRemoveAuthorizationRequest () {
         when(cookieWebUtils.getCookie(request, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME))
-                .thenReturn(Optional.ofNullable(null));
-        when(cookieWebUtils.deserialize(cookieOAuth2, OAuth2AuthorizationRequest.class)).thenReturn(null);
+                .thenReturn(Optional.empty());
 
         OAuth2AuthorizationRequest resultOAuth2 = httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequest(request);
 
-        Assert.assertEquals(resultOAuth2, requestOAuth2);
+        Assert.assertNull(null, resultOAuth2);
+
+        verify(cookieWebUtils).getCookie(request, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
     }
 
     @Test

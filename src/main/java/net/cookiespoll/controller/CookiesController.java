@@ -115,7 +115,8 @@ public class CookiesController {
     public List<CookieResponse> getCookiesAddedByCurrentUser () {
         LOGGER.info("Starting processing request for getting cookie added by current user");
 
-        return cookieDtoConverter.convertToListOfCookieResponses(cookieService.getByParam(null, null, null, null, getUserFromSession().getId()));
+//        return cookieDtoConverter.convertToListOfCookieResponses(cookieService.getByParam(null, null, null, null, getUserFromSession().getId()));
+        return cookieDtoConverter.convertToListOfCookieResponses(getUserFromSession().getAddedCookies());
     }
 
     @ApiOperation(value = "Update cookie in database", response = UpdateCookieResponse.class)
