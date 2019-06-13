@@ -6,9 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 
 import javax.servlet.http.Cookie;
@@ -18,19 +15,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.mockito.Mockito.*;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(CookieWebUtils.class)
 public class TestHttpCookieOAuth2AuthorizationRequestRepository {
     private HttpServletResponse response = mock(HttpServletResponse.class);
     private HttpServletRequest request = mock(HttpServletRequest.class);
     private CookieWebUtils cookieWebUtils = mock(CookieWebUtils.class);
     private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
     private Cookie cookieOAuth2 = new Cookie("oauth2_auth_request", "value");
-    private OAuth2AuthorizationRequest requestOAuth2 = OAuth2AuthorizationRequest.authorizationCode().authorizationUri("234").clientId("12").build();
+    private OAuth2AuthorizationRequest requestOAuth2 = OAuth2AuthorizationRequest.authorizationCode()
+            .authorizationUri("234").clientId("12").build();
 
     public static final String OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME = "oauth2_auth_request";
     public static final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
@@ -56,19 +50,55 @@ public class TestHttpCookieOAuth2AuthorizationRequestRepository {
 
     @Test
     public void testSaveAuthorizationRequestOAuth2AuthorizationRequestNotNull () throws Exception {
-//        PowerMockito.mockStatic(CookieWebUtils.class);
-//
-//        when(CookieWebUtils.serialize(requestOAuth2)).thenReturn("serialized request");
-//        doNothing().when(CookieWebUtils.class, "addCookie", response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME,
-//                CookieWebUtils.serialize(requestOAuth2), cookieExpireSeconds);
+        when(cookieWebUtils.serialize(requestOAuth2)).thenReturn("serialized request");
+        doNothing().when(cookieWebUtils).addCookie(response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME,
+                "serialized request", cookieExpireSeconds);
         when(request.getParameter(REDIRECT_URI_PARAM_COOKIE_NAME)).thenReturn("redirect_uri_after_login");
-//        doNothing().when(CookieWebUtils.class, "addCookie", response, REDIRECT_URI_PARAM_COOKIE_NAME, "redirect_uri_after_login",
-//                cookieExpireSeconds);
+        doNothing().when(cookieWebUtils).addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, "redirect_uri_after_login",
+                cookieExpireSeconds);
 
         httpCookieOAuth2AuthorizationRequestRepository.saveAuthorizationRequest(requestOAuth2, request, response);
 
-//        verify(response).addCookie(any(Cookie.class));
-//        verify(request).getParameter(REDIRECT_URI_PARAM_COOKIE_NAME);
-//        PowerMockito.verifyStatic(CookieWebUtils);
+        verify(cookieWebUtils).serialize(requestOAuth2);
+        verify(cookieWebUtils).addCookie(response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME,
+                cookieWebUtils.serialize(requestOAuth2), cookieExpireSeconds);
+        verify(request).getParameter(REDIRECT_URI_PARAM_COOKIE_NAME);
+        verify(cookieWebUtils).addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, "redirect_uri_after_login",
+                cookieExpireSeconds);
+    }
+
+    @Test
+    public void testSaveAuthorizationRequestOAuth2AuthorizationRequestNull () throws Exception {
+        OAuth2AuthorizationRequest authorizationRequest = null;
+
+        doNothing().when(cookieWebUtils).deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
+        doNothing().when(cookieWebUtils).deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
+
+        httpCookieOAuth2AuthorizationRequestRepository.saveAuthorizationRequest(authorizationRequest, request, response);
+
+        verify(cookieWebUtils).deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
+        verify(cookieWebUtils).deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
+    }
+
+    @Test
+    public void testRemoveAuthorizationRequest () {
+        when(cookieWebUtils.getCookie(request, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME))
+                .thenReturn(Optional.ofNullable(null));
+        when(cookieWebUtils.deserialize(cookieOAuth2, OAuth2AuthorizationRequest.class)).thenReturn(null);
+
+        OAuth2AuthorizationRequest resultOAuth2 = httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequest(request);
+
+        Assert.assertEquals(resultOAuth2, requestOAuth2);
+    }
+
+    @Test
+    public void testRemoveAuthorizationRequestCookies () {
+        doNothing().when(cookieWebUtils).deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
+        doNothing().when(cookieWebUtils).deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
+
+        httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
+
+        verify(cookieWebUtils).deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
+        verify(cookieWebUtils).deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
     }
 }

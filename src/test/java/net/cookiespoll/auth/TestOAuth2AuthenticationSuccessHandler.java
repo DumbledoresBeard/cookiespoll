@@ -6,9 +6,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.Cookie;
@@ -19,7 +16,6 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.when;
 
 public class TestOAuth2AuthenticationSuccessHandler {
     private HttpServletResponse response = mock(HttpServletResponse.class);
@@ -45,18 +41,32 @@ public class TestOAuth2AuthenticationSuccessHandler {
     @Test
     public void testOnAuthenticationSuccess () throws IOException {
         Cookie cookie = new Cookie("redirect_uri", "value");
-        Cookie[] cookies = {cookie, new Cookie("cookie2", "value2")};
 
-        when(request.getCookies()).thenReturn(cookies);
+        when(cookieWebUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)).thenReturn(Optional.of(cookie));
         when(tokenProvider.createToken(authentication)).thenReturn("token");
         doNothing().when(httpCookieOAuth2AuthorizationRequestRepository).removeAuthorizationRequestCookies(request, response);
         when(response.isCommitted()).thenReturn(false);
 
         oAuth2AuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authentication);
 
-        verify(request).getCookies();
+        verify(cookieWebUtils).getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME);
         verify(tokenProvider).createToken(authentication);
+        verify(response).isCommitted();
         verify(httpCookieOAuth2AuthorizationRequestRepository).removeAuthorizationRequestCookies(request, response);
+    }
+
+    @Test
+    public void testOnAuthenticationSuccessCommitted () throws IOException {
+        Cookie cookie = new Cookie("redirect_uri", "value");
+
+        when(cookieWebUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)).thenReturn(Optional.of(cookie));
+        when(tokenProvider.createToken(authentication)).thenReturn("token");
+        when(response.isCommitted()).thenReturn(true);
+
+        oAuth2AuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authentication);
+
+        verify(cookieWebUtils).getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME);
+        verify(tokenProvider).createToken(authentication);
         verify(response).isCommitted();
     }
 }
