@@ -4,8 +4,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
-import org.mockito.stubbing.OngoingStubbing;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,7 +24,6 @@ public class TestTokenProvider {
     private TokenProvider tokenProvider;
     private Authentication authentication = mock(Authentication.class);
     private RestTemplate restTemplate = mock(RestTemplate.class);
-    ResponseEntity response = mock(ResponseEntity.class);
     public static final String GOOGLE_API = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=";
 
     @Before

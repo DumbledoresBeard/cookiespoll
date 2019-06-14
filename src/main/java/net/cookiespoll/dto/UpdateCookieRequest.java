@@ -1,7 +1,6 @@
 package net.cookiespoll.dto;
 
 import net.cookiespoll.model.CookieAddingStatus;
-import net.cookiespoll.model.user.User;
 
 import javax.validation.constraints.Size;
 

@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Service
 public class TokenProvider {
-    public static final String GOOGLE_API = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=";
+    public static final String GOOGLE_API_TOKEN_URL = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=";
 
     private RestTemplate restTemplate;
 
@@ -28,7 +28,7 @@ public class TokenProvider {
     }
 
     public Optional <Map<String, String>> getUserFromToken(String token) throws IOException {
-        Map<String, String> response = restTemplate.getForObject(GOOGLE_API + token.trim(), Map.class);
+        Map<String, String> response = restTemplate.getForObject(GOOGLE_API_TOKEN_URL + token.trim(), Map.class);
 
         return Optional.ofNullable(response);
     }

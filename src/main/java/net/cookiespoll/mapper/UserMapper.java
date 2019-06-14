@@ -1,11 +1,9 @@
 package net.cookiespoll.mapper;
 
-
 import net.cookiespoll.model.user.Admin;
 import net.cookiespoll.model.user.Role;
 import net.cookiespoll.model.user.User;
 import org.apache.ibatis.annotations.*;
-import org.apache.ibatis.mapping.FetchType;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

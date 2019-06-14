@@ -2,7 +2,6 @@ package net.cookiespoll.dto.mapper;
 
 import net.cookiespoll.dto.*;
 import net.cookiespoll.model.Cookie;
-import net.cookiespoll.model.user.User;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

@@ -1,9 +1,7 @@
 package net.cookiespoll.mapper;
 
 import net.cookiespoll.model.Cookie;
-import net.cookiespoll.model.CookieAddingStatus;
 import net.cookiespoll.model.CookieUserRating;
-import net.cookiespoll.model.user.Role;
 import net.cookiespoll.model.user.User;
 import org.apache.ibatis.annotations.*;
 

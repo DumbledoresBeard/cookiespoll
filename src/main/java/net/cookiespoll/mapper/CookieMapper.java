@@ -3,7 +3,6 @@ package net.cookiespoll.mapper;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 import org.apache.ibatis.annotations.*;
-import org.apache.ibatis.mapping.FetchType;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

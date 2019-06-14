@@ -26,8 +26,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private TokenProvider tokenProvider;
     private UserService userService;
 
-    public static final String HEADER = "Authorization";
-    public static final String STARTS_WITH = "Bearer ";
+    public static final String AUTHORIZATION = "Authorization";
+    public static final String TOKEN_START_WITH = "Bearer ";
     public static final String TOKEN_KEY = "sub";
 
     @Autowired
@@ -56,9 +56,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader(HEADER);
+        String bearerToken = request.getHeader(AUTHORIZATION);
 
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(STARTS_WITH)) {
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(TOKEN_START_WITH)) {
             return bearerToken.substring(7, bearerToken.length());
         }
         return null;
