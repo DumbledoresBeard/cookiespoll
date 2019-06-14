@@ -106,7 +106,7 @@ public class TestUserService {
     public void testProcessOidcUserValidEmailDomen() throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
         User user = new User("12345", "a@lineate.com", "name", Role.USER);
         Instant issuedAt = Instant.now();
-        Instant expiresAt = Instant.now();
+        Instant expiresAt = Instant.now().plusSeconds(10000);
         OidcIdToken oidcIdToken = new OidcIdToken("token", issuedAt, expiresAt, Map.of("sub", "12345", "name", "name",
                 "email", "a@lineate.com"));
         OAuth2AccessToken accessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "token", issuedAt, expiresAt);
@@ -139,7 +139,7 @@ public class TestUserService {
     public void testProcessOidcUserInvalidEmailDomen() throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
         User user = new User("12345", "a@mail.com", "name", Role.USER);
         Instant issuedAt = Instant.now();
-        Instant expiresAt = Instant.now();
+        Instant expiresAt = Instant.now().plusSeconds(10000);
         OidcIdToken oidcIdToken = new OidcIdToken("token", issuedAt, expiresAt, Map.of("sub", "12345", "name", "name",
                 "email", "a@mail.com"));
         OAuth2AccessToken accessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "token", issuedAt, expiresAt);
