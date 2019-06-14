@@ -1,6 +1,5 @@
 package net.cookiespoll.mapper;
 
-
 import net.cookiespoll.model.user.Admin;
 import net.cookiespoll.model.user.Role;
 import net.cookiespoll.model.user.User;

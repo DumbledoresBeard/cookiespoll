@@ -11,7 +11,6 @@ public class CookieOwner {
     private String name;
     private Role role;
 
-
     public CookieOwner() {
     }
 

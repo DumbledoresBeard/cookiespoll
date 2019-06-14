@@ -59,12 +59,10 @@ public class UserService extends OidcUserService {
                     .collect(Collectors.toList());
             if (adminsLogins.contains((String)attr.get("email"))) {
                 user.setRole(Role.ADMIN);
-            }
-            else {
+            } else {
                 user.setRole(Role.USER);
             }
-
-           userDao.insert(user);
+            userDao.insert(user);
         }
 
         return oidcUser;

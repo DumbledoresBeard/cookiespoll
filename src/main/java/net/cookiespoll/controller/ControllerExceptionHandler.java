@@ -25,7 +25,24 @@ public class ControllerExceptionHandler {
 
     private final static String FILE_FIELD = "file";
     private final static String USER_ROLE = "user role";
-    private final static String NO_FIELD = "";
+    private final static String NO_FIELD = "NO FIELD";
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public ErrorResponse handleException(HttpServletRequest req, Exception ex) {
+        LOGGER.error("Request: {} raised exception {} ", req.getRequestURL(), ex);
+
+        List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
+        ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
+        error.setFieldName(NO_FIELD);
+        error.setMessage(ex.getMessage());
+        errorDetails.add(error);
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setErrors(errorDetails);
+
+        return errorResponse;
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -121,7 +138,7 @@ public class ControllerExceptionHandler {
 
         return errorResponse;
     }
-    }
+}
 
 
 

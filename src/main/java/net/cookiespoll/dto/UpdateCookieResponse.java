@@ -78,6 +78,4 @@ public class UpdateCookieResponse {
     public void setCookieOwner(User cookieOwner) {
         this.cookieOwner = cookieOwner;
     }
-
-
 }
