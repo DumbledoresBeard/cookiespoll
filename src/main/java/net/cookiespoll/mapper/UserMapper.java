@@ -30,19 +30,17 @@ public interface UserMapper {
     })
     User getById(String id);
 
-
     @Update({"<script>",
             "UPDATE users SET login = #{user.login}, name = #{user.name}, role = #{user.role}" +
-            " WHERE id = #{user.id}; ",
+                    " WHERE id = #{user.id}; " +
 
+                    "<foreach collection='user.ratedCookies' item='cookieUserRating' separator=';'>",
             "INSERT INTO cookie_user_rating (user_id, cookie_id, rating) " +
-            "VALUES " +
-
-            "<foreach item='cookieUserRating' collection='user.ratedCookies' separator=','>",
-                "(#{cookieUserRating.user.id}, #{cookieUserRating.cookie.cookieId}, #{cookieUserRating.rating}) ",
-                "ON CONFLICT (user_id, cookie_id) " +
-                "DO UPDATE SET (user_id, cookie_id, rating) = (#{cookieUserRating.user.id}, " +
-                "#{cookieUserRating.cookie.cookieId}, #{cookieUserRating.rating})",
+                    "VALUES " +
+                    "(#{cookieUserRating.user.id}, #{cookieUserRating.cookie.cookieId}, #{cookieUserRating.rating}) ",
+            "ON CONFLICT (user_id, cookie_id) " +
+                    "DO UPDATE SET user_id = #{cookieUserRating.user.id}, " +
+                    "cookie_id = #{cookieUserRating.cookie.cookieId}, rating = #{cookieUserRating.rating}",
             "</foreach>",
 
             "</script>"})
@@ -55,5 +53,4 @@ public interface UserMapper {
             @Result(property = "login", column = "login", javaType = String.class),
     })
     List<Admin> getAdmins();
-
 }
