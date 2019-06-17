@@ -65,8 +65,4 @@ public class CookieService {
     public Integer delete(Integer id) {
         return cookieDao.delete(id);
     }
-
-    public Optional<Cookie> getByName(String name) {
-        return cookieDao.getByName(name);
-    }
 }

@@ -42,13 +42,6 @@ public class CookieDaoImpl implements CookieDao {
     }
 
     @Override
-    public Optional<Cookie> getByName(String name) {
-        LOGGER.info("Find cookie by name in database {} ", name);
-
-        return Optional.ofNullable(cookieMapper.getByName(name));
-    }
-
-    @Override
     public List<Cookie> getByParam(String name, String description, CookieAddingStatus cookieAddingStatus, Float rating,
                                    String userId) {
         LOGGER.info("Extract list of cookies by given parameters {} {} {} {} {} ", name, description, cookieAddingStatus, rating,

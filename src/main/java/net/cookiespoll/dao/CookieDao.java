@@ -13,8 +13,6 @@ public interface CookieDao {
 
     Cookie getById(Integer id);
 
-    Optional<Cookie> getByName(String name);
-
     List<Cookie> getByParam(String name, String description, CookieAddingStatus cookieAddingStatus, Float rating,
                             String userId);
 
