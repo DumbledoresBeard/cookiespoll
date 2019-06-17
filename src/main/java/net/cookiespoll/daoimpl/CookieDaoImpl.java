@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class CookieDaoImpl implements CookieDao {
@@ -38,6 +39,13 @@ public class CookieDaoImpl implements CookieDao {
         LOGGER.info("Find cookie by id in database {} ", id);
 
         return cookieMapper.getById(id);
+    }
+
+    @Override
+    public Optional<Cookie> getByName(String name) {
+        LOGGER.info("Find cookie by name in database {} ", name);
+
+        return Optional.ofNullable(cookieMapper.getByName(name));
     }
 
     @Override

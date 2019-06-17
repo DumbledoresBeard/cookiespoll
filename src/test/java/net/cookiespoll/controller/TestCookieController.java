@@ -11,6 +11,7 @@ import net.cookiespoll.model.user.Role;
 import net.cookiespoll.model.user.User;
 import net.cookiespoll.service.CookieService;
 import net.cookiespoll.service.UserService;
+import net.cookiespoll.validation.CookieNameUniquenessValidator;
 import net.cookiespoll.validation.FileValidator;
 import net.cookiespoll.validation.RatingValidator;
 import net.cookiespoll.validation.UserRoleValidator;
@@ -36,6 +37,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -53,6 +55,7 @@ public class TestCookieController {
     private UserRoleValidator userRoleValidator = mock(UserRoleValidator.class);
     private CookieDtoConverter dtoConverter = new CookieDtoConverter();
     private RatingValidator ratingValidator = new RatingValidator();
+    private CookieNameUniquenessValidator cookieNameUniquenessValidator = new CookieNameUniquenessValidator(cookieService);
     private UserService userService = mock(UserService.class);
     private CookiesController cookiesController;
     private byte [] byteArray = "Photo".getBytes();
@@ -79,7 +82,8 @@ public class TestCookieController {
 
     @Before
     public void init() {
-        cookiesController = new CookiesController(cookieService, fileValidator, dtoConverter, userRoleValidator, userService, ratingValidator);
+        cookiesController = new CookiesController(cookieService, fileValidator, dtoConverter, userRoleValidator, userService, ratingValidator,
+                cookieNameUniquenessValidator);
 
         mockMvc = MockMvcBuilders.standaloneSetup(cookiesController).setControllerAdvice
                   (new ControllerExceptionHandler()).build();
@@ -107,6 +111,7 @@ public class TestCookieController {
         when(cookieService.insert((any(AddCookieRequest.class)), any(MockMultipartFile.class), any(User.class)))
                 .thenReturn(cookie);
         when(userService.getById(anyString())).thenReturn(cookieOwner);
+        when(cookieService.getByName(any(String.class))).thenReturn(Optional.empty());
 
         String response = mockMvc.perform(MockMvcRequestBuilders.multipart("/cookies")
                 .file(mockMultipartFile)

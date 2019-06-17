@@ -8,6 +8,7 @@ import net.cookiespoll.dto.*;
 import net.cookiespoll.dto.mapper.CookieDtoConverter;
 import net.cookiespoll.exception.CookieRateException;
 import net.cookiespoll.exception.FileValidationException;
+import net.cookiespoll.exception.NotUniqueCookieNameException;
 import net.cookiespoll.exception.UserRoleValidationException;
 import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
@@ -15,6 +16,7 @@ import net.cookiespoll.model.CookieUserRating;
 import net.cookiespoll.model.user.User;
 import net.cookiespoll.service.CookieService;
 import net.cookiespoll.service.UserService;
+import net.cookiespoll.validation.CookieNameUniquenessValidator;
 import net.cookiespoll.validation.FileValidator;
 import net.cookiespoll.validation.UserRoleValidator;
 import org.slf4j.Logger;
@@ -45,16 +47,19 @@ public class CookiesController {
     private CookieDtoConverter cookieDtoConverter;
     private UserService userService;
     private RatingValidator ratingValidator;
+    private CookieNameUniquenessValidator cookieNameUniquenessValidator;
 
     @Autowired
     public CookiesController(CookieService cookieService, FileValidator fileValidator, CookieDtoConverter cookieDtoConverter,
-                                UserRoleValidator userRoleValidator, UserService userService, RatingValidator ratingValidator) {
+                                UserRoleValidator userRoleValidator, UserService userService, RatingValidator ratingValidator,
+                             CookieNameUniquenessValidator cookieNameUniquenessValidator) {
         this.cookieService = cookieService;
         this.fileValidator = fileValidator;
         this.userRoleValidator = userRoleValidator;
         this.cookieDtoConverter = cookieDtoConverter;
         this.userService = userService;
         this.ratingValidator = ratingValidator;
+        this.cookieNameUniquenessValidator = cookieNameUniquenessValidator;
     }
 
     @ApiOperation(value = "Add new cookie to store in database", response = CookieResponse.class)
@@ -67,9 +72,10 @@ public class CookiesController {
     @ResponseBody
     public CookieResponse addCookie(@RequestPart("file") MultipartFile multipartFile,
                             @Valid @RequestPart("data") AddCookieRequest addCookieRequest)
-                            throws IOException, FileValidationException {
+            throws IOException, FileValidationException, NotUniqueCookieNameException {
         LOGGER.info("Start processing AddCookieRequest {}, {} ", addCookieRequest, multipartFile);
 
+        cookieNameUniquenessValidator.validate(addCookieRequest.getName());
         fileValidator.validate(multipartFile);
 
         return cookieDtoConverter.convertToCookieResponse(cookieService.insert(addCookieRequest, multipartFile, getUserFromSession()));

@@ -116,5 +116,23 @@ public interface CookieMapper {
     @Delete("DELETE FROM cookies " +
             "WHERE id = #{id}")
     Integer delete(@Param("id") Integer id);
+
+    @Select("SELECT id, name, description, file_data, cookie_adding_status, rating, user_id " +
+            "FROM cookies " +
+            "WHERE name = #{name}")
+    @Results({
+            @Result(property = "cookieId", column = "id", javaType = Integer.class),
+            @Result(property = "name", column = "name", javaType = String.class),
+            @Result(property = "description", column = "description", javaType = String.class),
+            @Result(property = "fileData", column = "file_data", javaType = byte[].class),
+            @Result(property = "cookieAddingStatus", column = "cookie_adding_status",
+                    javaType = CookieAddingStatus.class),
+            @Result(property = "rating", column = "rating", javaType = Float.class),
+            @Result(property = "cookieOwner", column = "user_id", javaType = String.class,
+                    one = @One(select = "net.cookiespoll.mapper.UserMapper.getById")),
+            @Result(property = "usersRatings", column = "id", javaType = List.class,
+                    many = @Many(select = "net.cookiespoll.mapper.CookieUserRatingMapper.getListByCookieId")),
+    })
+    Cookie getByName (String name);
 }
 
