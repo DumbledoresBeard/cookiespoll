@@ -19,7 +19,7 @@ public class CookieNameUniquenessValidator {
     }
 
     public void validate(String name) throws NotUniqueCookieNameException {
-        if(cookieService.getByParam(name, null, null, null, null) != null) {
+        if(!cookieService.getByParam(name, null, null, null, null).isEmpty()) {
             throw new NotUniqueCookieNameException("Cookie name is not unique");
         }
     }

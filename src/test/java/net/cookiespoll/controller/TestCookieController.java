@@ -112,7 +112,7 @@ public class TestCookieController {
                 .thenReturn(cookie);
         when(userService.getById(anyString())).thenReturn(cookieOwner);
         when(cookieService.getByParam(anyString(), eq(null), eq(null), eq(null),
-                eq(null))).thenReturn(null);
+                eq(null))).thenReturn(List.of());
 
         String response = mockMvc.perform(MockMvcRequestBuilders.multipart("/cookies")
                 .file(mockMultipartFile)
