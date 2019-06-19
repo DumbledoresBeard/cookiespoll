@@ -14,7 +14,7 @@ public class EmailDomenValidator {
             throw new EmailDomenException("Email domen is null");
         }
         if ((!emailDomen.equals(LINEATE)) && (!emailDomen.equals(THUMBTACK))) {
-            throw new EmailDomenException("Email with this domen cannot be logged in");
+            throw new EmailDomenException("Email with this domen cannot be logged in, please, login with lineate.com or thumbtack.com");
         }
     }
 
