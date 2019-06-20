@@ -4,6 +4,7 @@ import net.cookiespoll.model.Cookie;
 import net.cookiespoll.model.CookieAddingStatus;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface CookieDao {

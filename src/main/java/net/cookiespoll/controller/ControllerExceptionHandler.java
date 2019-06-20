@@ -1,8 +1,6 @@
 package net.cookiespoll.controller;
 
-import net.cookiespoll.exception.CookieRateException;
-import net.cookiespoll.exception.FileValidationException;
-import net.cookiespoll.exception.UserRoleValidationException;
+import net.cookiespoll.exception.*;
 import net.cookiespoll.model.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +24,8 @@ public class ControllerExceptionHandler {
     private final static String FILE_FIELD = "file";
     private final static String USER_ROLE = "user role";
     private final static String NO_FIELD = "NO FIELD";
+    private final static String COOKIE_NAME_FIELD = "name";
+    private final static String EMAIL_DOMEN = "email domen";
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -125,12 +125,46 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(UserRoleValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorResponse handleUserRoleExceptiom(HttpServletRequest req, UserRoleValidationException ex) {
+    public ErrorResponse handleUserRoleException(HttpServletRequest req, UserRoleValidationException ex) {
         LOGGER.error("Request: " + req.getRequestURL() + " raised exception " + ex);
 
         List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
         ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
         error.setFieldName(USER_ROLE);
+        error.setMessage(ex.getMessage());
+        errorDetails.add(error);
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setErrors(errorDetails);
+
+        return errorResponse;
+    }
+
+    @ExceptionHandler(NotUniqueCookieNameException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponse handleNotUniqueCookieNameException(HttpServletRequest req, NotUniqueCookieNameException ex) {
+        LOGGER.error("Request: {} raised exception {} ", req.getRequestURL(), ex);
+
+        List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
+        ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
+        error.setFieldName(COOKIE_NAME_FIELD);
+        error.setMessage(ex.getMessage());
+        errorDetails.add(error);
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setErrors(errorDetails);
+
+        return errorResponse;
+    }
+
+    @ExceptionHandler(EmailDomenException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponse handleEmailDomenException(HttpServletRequest req, EmailDomenException ex) {
+        LOGGER.error("Request: {} raised exception {} ", req.getRequestURL(), ex);
+
+        List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
+        ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
+        error.setFieldName(EMAIL_DOMEN);
         error.setMessage(ex.getMessage());
         errorDetails.add(error);
         ErrorResponse errorResponse = new ErrorResponse();
