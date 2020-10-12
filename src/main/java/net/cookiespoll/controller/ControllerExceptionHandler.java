@@ -33,15 +33,7 @@ public class ControllerExceptionHandler {
     public ErrorResponse handleException(HttpServletRequest req, Exception ex) {
         LOGGER.error("Request: {} raised exception {} ", req.getRequestURL(), ex);
 
-        List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
-        ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
-        error.setFieldName(NO_FIELD);
-        error.setMessage(ex.getMessage());
-        errorDetails.add(error);
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setErrors(errorDetails);
-
-        return errorResponse;
+        return createOneFieldErrorResponse(NO_FIELD, ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -51,19 +43,7 @@ public class ControllerExceptionHandler {
         LOGGER.error("Request: {} raised exception {} ", req.getRequestURL(), ex);
 
         List<FieldError> errors = ex.getBindingResult().getFieldErrors();
-
-        List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
-        for (FieldError fieldError : errors) {
-            ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
-            error.setFieldName(fieldError.getField());
-            error.setMessage(fieldError.getDefaultMessage());
-            errorDetails.add(error);
-        }
-
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setErrors(errorDetails);
-
-        return errorResponse;
+        return createErrorResponseFromList(errors);
     }
 
     @ExceptionHandler(FileValidationException.class)
@@ -71,16 +51,7 @@ public class ControllerExceptionHandler {
     @ResponseBody
     public ErrorResponse handleFileAddingException (HttpServletRequest req, FileValidationException ex) {
         LOGGER.error("Request: {} raised exception {} ", req.getRequestURL(), ex);
-
-        List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
-        ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
-        error.setFieldName(FILE_FIELD);
-        error.setMessage(ex.getMessage());
-        errorDetails.add(error);
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setErrors(errorDetails);
-
-        return errorResponse;
+        return createOneFieldErrorResponse(FILE_FIELD, ex.getMessage());
     }
 
     @ExceptionHandler(BindException.class)
@@ -90,19 +61,7 @@ public class ControllerExceptionHandler {
         LOGGER.error("Request: {} raised exception {} ", req.getRequestURL(), ex);
 
         List<FieldError> errors = ex.getBindingResult().getFieldErrors();
-
-        List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
-        for (FieldError fieldError : errors) {
-            ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
-            error.setFieldName(fieldError.getField());
-            error.setMessage(fieldError.getDefaultMessage());
-            errorDetails.add(error);
-        }
-
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setErrors(errorDetails);
-
-        return errorResponse;
+        return createErrorResponseFromList(errors);
     }
 
     @ExceptionHandler(CookieRateException.class)
@@ -111,15 +70,7 @@ public class ControllerExceptionHandler {
     public ErrorResponse handleCookieRateException (HttpServletRequest req, CookieRateException ex) {
         LOGGER.error("Request: " + req.getRequestURL() + " raised exception " + ex);
 
-        List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
-        ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
-        error.setFieldName(NO_FIELD);
-        error.setMessage(ex.getMessage());
-        errorDetails.add(error);
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setErrors(errorDetails);
-
-        return errorResponse;
+        return createOneFieldErrorResponse(NO_FIELD, ex.getMessage());
     }
 
     @ExceptionHandler(UserRoleValidationException.class)
@@ -128,15 +79,7 @@ public class ControllerExceptionHandler {
     public ErrorResponse handleUserRoleException(HttpServletRequest req, UserRoleValidationException ex) {
         LOGGER.error("Request: " + req.getRequestURL() + " raised exception " + ex);
 
-        List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
-        ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
-        error.setFieldName(USER_ROLE);
-        error.setMessage(ex.getMessage());
-        errorDetails.add(error);
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setErrors(errorDetails);
-
-        return errorResponse;
+        return createOneFieldErrorResponse(USER_ROLE, ex.getMessage());
     }
 
     @ExceptionHandler(NotUniqueCookieNameException.class)
@@ -144,16 +87,7 @@ public class ControllerExceptionHandler {
     @ResponseBody
     public ErrorResponse handleNotUniqueCookieNameException(HttpServletRequest req, NotUniqueCookieNameException ex) {
         LOGGER.error("Request: {} raised exception {} ", req.getRequestURL(), ex);
-
-        List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
-        ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
-        error.setFieldName(COOKIE_NAME_FIELD);
-        error.setMessage(ex.getMessage());
-        errorDetails.add(error);
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setErrors(errorDetails);
-
-        return errorResponse;
+        return createOneFieldErrorResponse(COOKIE_NAME_FIELD, ex.getMessage());
     }
 
     @ExceptionHandler(EmailDomenException.class)
@@ -162,11 +96,33 @@ public class ControllerExceptionHandler {
     public ErrorResponse handleEmailDomenException(HttpServletRequest req, EmailDomenException ex) {
         LOGGER.error("Request: {} raised exception {} ", req.getRequestURL(), ex);
 
+        return createOneFieldErrorResponse(EMAIL_DOMEN, ex.getMessage());
+    }
+
+    private ErrorResponse createErrorResponseFromList(List<FieldError> errors) {
         List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
+        errors.forEach(error -> createErrorDetails(error.getField(), error.getDefaultMessage()));
+        return createErrorResponse(errorDetails);
+    }
+
+    private ErrorResponse createOneFieldErrorResponse(String fieldName, String errorMessage) {
+        List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
+        errorDetails.add(createErrorDetails(fieldName, errorMessage));
+
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setErrors(errorDetails);
+
+        return errorResponse;
+    }
+
+    private ErrorResponse.ErrorDetails createErrorDetails(String fieldName, String errorMessage) {
         ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
-        error.setFieldName(EMAIL_DOMEN);
-        error.setMessage(ex.getMessage());
-        errorDetails.add(error);
+        error.setFieldName(fieldName);
+        error.setMessage(errorMessage);
+        return error;
+    }
+
+    private ErrorResponse createErrorResponse(List<ErrorResponse.ErrorDetails> errorDetails) {
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setErrors(errorDetails);
 

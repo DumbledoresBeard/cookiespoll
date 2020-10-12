@@ -25,11 +25,12 @@ public class TestHttpCookieOAuth2AuthorizationRequestRepository {
 
     public static final String OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME = "oauth2_auth_request";
     public static final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
-    private static final int cookieExpireSeconds = 180;
+    private static final int COOKIE_EXPIRE_SECONDS = 180;
 
     @Before
     public void init() {
-        httpCookieOAuth2AuthorizationRequestRepository = new HttpCookieOAuth2AuthorizationRequestRepository(cookieWebUtils);
+        httpCookieOAuth2AuthorizationRequestRepository =
+                new HttpCookieOAuth2AuthorizationRequestRepository(cookieWebUtils);
 
         MockitoAnnotations.initMocks(this);
     }
@@ -40,7 +41,8 @@ public class TestHttpCookieOAuth2AuthorizationRequestRepository {
                 .thenReturn(Optional.of(cookieOAuth2));
         when(cookieWebUtils.deserialize(cookieOAuth2, OAuth2AuthorizationRequest.class)).thenReturn(requestOAuth2);
 
-        OAuth2AuthorizationRequest resultOAuth2 = httpCookieOAuth2AuthorizationRequestRepository.loadAuthorizationRequest(request);
+        OAuth2AuthorizationRequest resultOAuth2 =
+                httpCookieOAuth2AuthorizationRequestRepository.loadAuthorizationRequest(request);
 
         Assert.assertEquals(resultOAuth2, requestOAuth2);
     }
@@ -49,19 +51,19 @@ public class TestHttpCookieOAuth2AuthorizationRequestRepository {
     public void testSaveAuthorizationRequestOAuth2AuthorizationRequestNotNull () throws Exception {
         when(cookieWebUtils.serialize(requestOAuth2)).thenReturn("serialized request");
         doNothing().when(cookieWebUtils).addCookie(response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME,
-                "serialized request", cookieExpireSeconds);
+                "serialized request", COOKIE_EXPIRE_SECONDS);
         when(request.getParameter(REDIRECT_URI_PARAM_COOKIE_NAME)).thenReturn("redirect_uri_after_login");
         doNothing().when(cookieWebUtils).addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, "redirect_uri_after_login",
-                cookieExpireSeconds);
+                COOKIE_EXPIRE_SECONDS);
 
         httpCookieOAuth2AuthorizationRequestRepository.saveAuthorizationRequest(requestOAuth2, request, response);
 
         verify(cookieWebUtils).serialize(requestOAuth2);
         verify(cookieWebUtils).addCookie(response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME,
-                cookieWebUtils.serialize(requestOAuth2), cookieExpireSeconds);
+                cookieWebUtils.serialize(requestOAuth2), COOKIE_EXPIRE_SECONDS);
         verify(request).getParameter(REDIRECT_URI_PARAM_COOKIE_NAME);
         verify(cookieWebUtils).addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, "redirect_uri_after_login",
-                cookieExpireSeconds);
+                COOKIE_EXPIRE_SECONDS);
     }
 
     @Test
@@ -82,7 +84,8 @@ public class TestHttpCookieOAuth2AuthorizationRequestRepository {
         when(cookieWebUtils.getCookie(request, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME))
                 .thenReturn(Optional.empty());
 
-        OAuth2AuthorizationRequest resultOAuth2 = httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequest(request);
+        OAuth2AuthorizationRequest resultOAuth2 =
+                httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequest(request);
 
         Assert.assertNull(null, resultOAuth2);
 

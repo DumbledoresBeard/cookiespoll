@@ -12,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -23,15 +24,15 @@ public class TestUserMapper {
     UserMapper userMapper;
 
     private User userAdmin = new User ("1", "login", "name", Role.ADMIN);
-    private String id = "1";
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void testGetUserById() {
+        String id = "1";
         when(userMapper.getById(id)).thenReturn(userAdmin);
 
         userMapper.getById(id);
@@ -50,7 +51,7 @@ public class TestUserMapper {
 
     @Test
     public void testGetAdmins() {
-        List<Admin> admins = Arrays.asList(new Admin(1, "some@mail.com"));
+        List<Admin> admins = Collections.singletonList(new Admin(1, "some@mail.com"));
         when(userMapper.getAdmins()).thenReturn(admins);
 
         List<Admin> resultAdmins = userMapper.getAdmins();

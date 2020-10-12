@@ -24,10 +24,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.mockito.Mockito.*;
 
@@ -44,8 +41,9 @@ public class TestUserService {
     private User userAdmin = new User("1", "login", "name", Role.ADMIN);
     private Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.APPROVED,
             (float) 4, userAdmin);
-    private List<CookieUserRating> ratedCookies = Arrays.asList(new CookieUserRating(userAdmin, cookie, 1));
-    private List<Cookie> addedCookies = Arrays.asList(cookie);
+    private List<CookieUserRating> ratedCookies =
+            Collections.singletonList(new CookieUserRating(userAdmin, cookie, 1));
+    private List<Cookie> addedCookies = Collections.singletonList(cookie);
 
     @Before
     public void setUp() throws Exception {
@@ -103,13 +101,15 @@ public class TestUserService {
     }
 
     @Test
-    public void testProcessOidcUserValidEmailDomen() throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
+    public void testProcessOidcUserValidEmailDomen() throws IllegalAccessException,
+            InvocationTargetException, InstantiationException, NoSuchMethodException {
         User user = new User("12345", "a@lineate.com", "name", Role.USER);
         Instant issuedAt = Instant.now();
         Instant expiresAt = Instant.now().plusSeconds(10000);
-        OidcIdToken oidcIdToken = new OidcIdToken("token", issuedAt, expiresAt, Map.of("sub", "12345", "name", "name",
-                "email", "a@lineate.com"));
-        OAuth2AccessToken accessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "token", issuedAt, expiresAt);
+        OidcIdToken oidcIdToken = new OidcIdToken("token", issuedAt, expiresAt, Map.of("sub", "12345",
+                "name", "name", "email", "a@lineate.com"));
+        OAuth2AccessToken accessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER,
+                "token", issuedAt, expiresAt);
         ClientRegistration clientRegistration = null;
 
         Constructor<ClientRegistration> constructor = ClientRegistration.class.getDeclaredConstructor();
@@ -136,19 +136,21 @@ public class TestUserService {
     }
 
     @Test
-    public void testProcessOidcUserInvalidEmailDomen() throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
+    public void testProcessOidcUserInvalidEmailDomen()
+            throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
         User user = new User("12345", "a@mail.com", "name", Role.USER);
         Instant issuedAt = Instant.now();
         Instant expiresAt = Instant.now().plusSeconds(10000);
-        OidcIdToken oidcIdToken = new OidcIdToken("token", issuedAt, expiresAt, Map.of("sub", "12345", "name", "name",
-                "email", "a@mail.com"));
-        OAuth2AccessToken accessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "token", issuedAt, expiresAt);
+        OidcIdToken oidcIdToken = new OidcIdToken("token", issuedAt, expiresAt, Map.of("sub", "12345",
+                "name", "name", "email", "a@mail.com"));
+        OAuth2AccessToken accessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "token",
+                issuedAt, expiresAt);
         ClientRegistration clientRegistration = null;
 
         Constructor<ClientRegistration> constructor = ClientRegistration.class.getDeclaredConstructor();
         if (Modifier.isPrivate(constructor.getModifiers())) {
             constructor.setAccessible(true);
-            clientRegistration = (ClientRegistration)constructor.newInstance();
+            clientRegistration = constructor.newInstance();
         }
 
         OidcUserRequest oidcUserRequest = new OidcUserRequest(clientRegistration, accessToken, oidcIdToken);

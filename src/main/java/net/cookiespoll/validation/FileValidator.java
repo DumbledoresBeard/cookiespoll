@@ -13,12 +13,8 @@ public class FileValidator {
 
 
     public void validate(MultipartFile multipartFile) throws FileValidationException {
-        if (multipartFile == null) {
-            throw new FileValidationException("File is null, please, upload a file");
-        }
-
-        if (multipartFile.isEmpty()) {
-            throw new FileValidationException("File is empty, please, upload jpg, jpeg or png file");
+        if (multipartFile == null || multipartFile.isEmpty()) {
+            throw new FileValidationException("File is empty, please, upload a file");
         }
 
         if (!(JPG_IMAGE.equals(multipartFile.getContentType()) || JPEG_IMAGE.equals(multipartFile.getContentType())

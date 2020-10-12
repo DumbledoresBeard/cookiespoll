@@ -14,7 +14,7 @@ import java.util.Optional;
 public class TokenProvider {
     public static final String GOOGLE_API_TOKEN_URL = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=";
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     @Autowired
     public TokenProvider(RestTemplate restTemplate) {
@@ -27,8 +27,9 @@ public class TokenProvider {
         return defaultOidcUser.getIdToken().getTokenValue();
     }
 
-    public Optional <Map<String, String>> getUserFromToken(String token) throws IOException {
-        Map<String, String> response = restTemplate.getForObject(GOOGLE_API_TOKEN_URL + token.trim(), Map.class);
+    public Optional <Map<String, String>> getUserFromToken(String token) {
+        Map<String, String> response = restTemplate.getForObject(
+                GOOGLE_API_TOKEN_URL + token.trim(), Map.class);
 
         return Optional.ofNullable(response);
     }

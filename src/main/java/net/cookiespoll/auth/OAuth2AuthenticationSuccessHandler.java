@@ -17,13 +17,15 @@ import static net.cookiespoll.auth.HttpCookieOAuth2AuthorizationRequestRepositor
 
 @Component
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+    private final static String TOKEN = "token";
 
-    private TokenProvider tokenProvider;
-    private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
-    private CookieWebUtils cookieWebUtils;
+    private final TokenProvider tokenProvider;
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
+    private final CookieWebUtils cookieWebUtils;
 
     @Autowired
-    public OAuth2AuthenticationSuccessHandler(TokenProvider tokenProvider, HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository,
+    public OAuth2AuthenticationSuccessHandler(TokenProvider tokenProvider,
+                                              HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository,
                                               CookieWebUtils cookieWebUtils) {
         this.tokenProvider = tokenProvider;
         this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
@@ -31,9 +33,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-            throws IOException {
-        String targetUrl = determineTargetUrl(request, response, authentication);
+    public void onAuthenticationSuccess(HttpServletRequest request,
+                                        HttpServletResponse response, Authentication authentication) throws IOException {
+        String targetUrl = determineTargetUrl(request, authentication);
 
         if (response.isCommitted()) {
             logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
@@ -44,14 +46,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
-    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+    protected String determineTargetUrl(HttpServletRequest request, Authentication authentication) {
         Optional<String> redirectUri = cookieWebUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
         return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("token", tokenProvider.createToken(authentication))
+                .queryParam(TOKEN, tokenProvider.createToken(authentication))
                 .build()
                 .toUriString();
     }

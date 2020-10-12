@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService extends OidcUserService {
-    private UserDao userDao;
-    private EmailDomenValidator emailDomenValidator;
+    private final UserDao userDao;
+    private final EmailDomenValidator emailDomenValidator;
 
     @Autowired
     public UserService(UserDao userDao, EmailDomenValidator emailDomenValidator) {
@@ -34,13 +34,13 @@ public class UserService extends OidcUserService {
         OidcUser oidcUser = super.loadUser(userRequest);
 
         try {
-            return processOidcUser(userRequest, oidcUser);
+            return processOidcUser(oidcUser);
         } catch (Exception ex) {
             throw new InternalAuthenticationServiceException(ex.getMessage(), ex.getCause());
         }
     }
 
-    private OidcUser processOidcUser(OidcUserRequest userRequest, OidcUser oidcUser) throws EmailDomenException {
+    private OidcUser processOidcUser(OidcUser oidcUser) throws EmailDomenException {
         Map<String, Object> attr = oidcUser.getAttributes();
 
         String[] email = ((String)attr.get("email")).split("@");
@@ -57,7 +57,7 @@ public class UserService extends OidcUserService {
                     .stream()
                     .map(Admin::getLogin)
                     .collect(Collectors.toList());
-            if (adminsLogins.contains((String)attr.get("email"))) {
+            if (adminsLogins.contains(attr.get("email"))) {
                 user.setRole(Role.ADMIN);
             } else {
                 user.setRole(Role.USER);

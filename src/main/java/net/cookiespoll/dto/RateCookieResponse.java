@@ -16,8 +16,8 @@ public class RateCookieResponse {
     }
 
     public RateCookieResponse(Integer id, String name, String description, byte[] fileData,
-                              CookieAddingStatus approvalStatus, Float overallRating, CookieOwner cookieOwner,
-                              Integer ratingGivenByUser) {
+                              CookieAddingStatus approvalStatus, Float overallRating,
+                              CookieOwner cookieOwner, Integer ratingGivenByUser) {
         this.id = id;
         this.name = name;
         this.description = description;

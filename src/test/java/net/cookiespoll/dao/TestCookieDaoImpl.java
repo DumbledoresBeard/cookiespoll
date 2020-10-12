@@ -20,6 +20,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -37,7 +38,8 @@ public class TestCookieDaoImpl {
     private Float cookieRating = new Float(0);
     private Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING,
             cookieRating, cookieOwner);
-    private List<CookieUserRating> usersRatings = Arrays.asList(new CookieUserRating(cookieOwner, cookie, 1));
+    private List<CookieUserRating> usersRatings =
+            Collections.singletonList(new CookieUserRating(cookieOwner, cookie, 1));
 
     @Before
     public void setUp() throws Exception {
@@ -64,9 +66,7 @@ public class TestCookieDaoImpl {
     @Test
     public void testCookieDaoUpdate () {
         doNothing().when(cookieMapper).update(cookie);
-
-        Cookie updatedCookie = cookieDaoImpl.update(cookie);
-
+        cookieDaoImpl.update(cookie);
         verify(cookieMapper).update(cookie);
     }
 
@@ -81,8 +81,8 @@ public class TestCookieDaoImpl {
         cookies.add(tastyCookie);
 
         when(cookieMapper.getByParam(cookiesByParameterRequest.getName(), cookiesByParameterRequest.getDescription(),
-                                    cookiesByParameterRequest.getCookieAddingStatus(), cookiesByParameterRequest.getRating(),
-                                    cookiesByParameterRequest.getUserId())).thenReturn(cookies);
+                cookiesByParameterRequest.getCookieAddingStatus(), cookiesByParameterRequest.getRating(),
+                cookiesByParameterRequest.getUserId())).thenReturn(cookies);
 
         List<Cookie> resultList = cookieDaoImpl.getByParam(cookiesByParameterRequest.getName(),
                 cookiesByParameterRequest.getDescription(), cookiesByParameterRequest.getCookieAddingStatus(),
@@ -125,10 +125,10 @@ public class TestCookieDaoImpl {
     @Test
     public void testGetUnratedCookiesByUserId () {
         List<Cookie> cookies = new ArrayList<>();
-        Cookie cookieWith1Id = new Cookie(1, "cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING,
-                cookieRating, cookieOwner);
-        Cookie cookieWith2Id = new Cookie(2,"name", "description", new byte[2], CookieAddingStatus.WAITING,
-                cookieRating, cookieOwner);
+        Cookie cookieWith1Id = new Cookie(1, "cookie", "tasty cookie",
+                new byte[2], CookieAddingStatus.WAITING, cookieRating, cookieOwner);
+        Cookie cookieWith2Id = new Cookie(2,"name", "description",
+                new byte[2], CookieAddingStatus.WAITING, cookieRating, cookieOwner);
         cookies.add(cookieWith1Id);
         cookies.add(cookieWith2Id);
         String userId = "1";
@@ -167,7 +167,6 @@ public class TestCookieDaoImpl {
         Integer result = cookieDaoImpl.delete(id);
 
         Assert.assertEquals(id, result);
-
         verify(cookieMapper).delete(1);
     }
 }

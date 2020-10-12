@@ -21,6 +21,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.verify;
@@ -41,11 +42,11 @@ public class TestCookieService {
     private Cookie cookieWithId = new Cookie(1, "cookie", "tasty cookie", new byte[2],
             CookieAddingStatus.WAITING, cookieRating, cookieOwner);
     private AddCookieRequest addCookieRequest = new AddCookieRequest("cookie", "tasty cookie");
-    private String userId = "1";
     Cookie cookieWith2Id = new Cookie(2,"cookie", "tasty cookie", new byte[2],
             CookieAddingStatus.WAITING, cookieRating, new User("2", "login", "name", Role.USER));
     private User userAdmin = new User("3", "login", "name", Role.ADMIN);
-    private  List<CookieUserRating> usersRatings = Arrays.asList(new CookieUserRating(userAdmin, cookie, 3));
+    private  List<CookieUserRating> usersRatings =
+            Collections.singletonList(new CookieUserRating(userAdmin, cookie, 3));
 
     @Before
     public void setUp() throws Exception {
@@ -115,8 +116,8 @@ public class TestCookieService {
 
     @Test
     public void testUpdateCookie () {
-        Cookie cookie = new Cookie(1, "cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING,
-                cookieRating, cookieOwner);
+        Cookie cookie = new Cookie(1, "cookie", "tasty cookie", new byte[2],
+                CookieAddingStatus.WAITING, cookieRating, cookieOwner);
 
         when(cookieDao.update(cookieWithId)).thenReturn(cookieWithId);
 
@@ -148,6 +149,7 @@ public class TestCookieService {
     public void testGetUnratedCookiesByUserId () {
         List<Cookie> cookies = Arrays.asList(cookieWithId, cookieWith2Id);
 
+        String userId = "1";
         when(cookieDao.getUnratedByUserId(userId)).thenReturn(cookies);
 
         List<Cookie> resultCookieList = cookieService.getUnratedByUserId(userId);

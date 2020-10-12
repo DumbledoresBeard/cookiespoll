@@ -17,7 +17,7 @@ import java.util.Optional;
 public class CookieDaoImpl implements CookieDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(CookieDaoImpl.class);
 
-    private CookieMapper cookieMapper;
+    private final CookieMapper cookieMapper;
 
     @Autowired
     public CookieDaoImpl(CookieMapper cookieMapper) {
@@ -30,7 +30,6 @@ public class CookieDaoImpl implements CookieDao {
         LOGGER.info("Adding cookie to database {} ", cookie);
 
         cookie.setCookieId(cookieMapper.insert(cookie));
-
         return cookie;
     }
 
@@ -42,10 +41,10 @@ public class CookieDaoImpl implements CookieDao {
     }
 
     @Override
-    public List<Cookie> getByParam(String name, String description, CookieAddingStatus cookieAddingStatus, Float rating,
-                                   String userId) {
-        LOGGER.info("Extract list of cookies by given parameters {} {} {} {} {} ", name, description, cookieAddingStatus, rating,
-                userId);
+    public List<Cookie> getByParam(String name, String description, CookieAddingStatus cookieAddingStatus,
+                                   Float rating, String userId) {
+        LOGGER.info("Extract list of cookies by given parameters {} {} {} {} {} ", name,
+                description, cookieAddingStatus, rating, userId);
 
         return cookieMapper.getByParam(name, description, cookieAddingStatus, rating, userId);
     }
@@ -60,7 +59,6 @@ public class CookieDaoImpl implements CookieDao {
         LOGGER.info("Update cookie {} ", cookie);
 
         cookieMapper.update(cookie);
-
         return cookie;
     }
 

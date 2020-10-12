@@ -38,7 +38,8 @@ public class TestTokenProvider {
     public void testCreateToken () {
         Instant issuedAt = Instant.now();
         Instant expiresAt = Instant.now().plusSeconds(10000);
-        OidcIdToken oidcIdToken = new OidcIdToken("token", issuedAt, expiresAt, Map.of("sub", "12345", "name", "name",
+        OidcIdToken oidcIdToken = new OidcIdToken("token", issuedAt, expiresAt,
+                Map.of("sub", "12345", "name", "name",
                 "email", "a@mail.com"));
         Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority("user"));
@@ -56,7 +57,7 @@ public class TestTokenProvider {
     }
 
     @Test
-    public void testGetUserFromToken () throws IOException {
+    public void testGetUserFromToken () {
         String token = "12345";
         Map<String, String> userData = (Map.of("sub", "12345"));
 
@@ -69,7 +70,7 @@ public class TestTokenProvider {
 
 
     @Test
-    public void testGetUserFromTokenInvalidToken () throws IOException {
+    public void testGetUserFromTokenInvalidToken () {
         String token = "12345";
         Map<String, String> userData = null;
 

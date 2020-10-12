@@ -14,7 +14,8 @@ public class CookieResponse {
     public CookieResponse() {
     }
 
-    public CookieResponse(int id, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus, Float rating, CookieOwner cookieOwner) {
+    public CookieResponse(int id, String name, String description, byte[] fileData,
+                          CookieAddingStatus cookieAddingStatus, Float rating, CookieOwner cookieOwner) {
         this.id = id;
         this.name = name;
         this.description = description;

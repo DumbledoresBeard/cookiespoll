@@ -9,14 +9,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserRoleValidator {
-
-    private UserService userService;
-
-    @Autowired
-    public UserRoleValidator(UserService userService) {
-        this.userService = userService;
-    }
-
     public void validateUserRole (User user) throws UserRoleValidationException {
         if (!user.getRole().equals(Role.ADMIN)) {
             throw new UserRoleValidationException("Operation is permitted only for admin user");

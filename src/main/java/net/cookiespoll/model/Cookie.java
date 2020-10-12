@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "cookieId", scope = Cookie.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "cookieId", scope = Cookie.class)
 public class Cookie {
     private int cookieId;
     private String name;
@@ -23,8 +24,9 @@ public class Cookie {
     public Cookie() {}
 
 
-    public Cookie(int cookieId, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus,
-                  Float rating, User cookieOwner, List<CookieUserRating> usersRatings) {
+    public Cookie(int cookieId, String name, String description, byte[] fileData,
+                  CookieAddingStatus cookieAddingStatus, Float rating, User cookieOwner,
+                  List<CookieUserRating> usersRatings) {
         this.cookieId = cookieId;
         this.name = name;
         this.description = description;
@@ -35,13 +37,13 @@ public class Cookie {
         this.usersRatings = usersRatings;
     }
 
-    public Cookie(String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus, Float rating,
-                  User cookieOwner, List<CookieUserRating> usersRatings) {
+    public Cookie(String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus,
+                  Float rating, User cookieOwner, List<CookieUserRating> usersRatings) {
         this(0, name, description, fileData, cookieAddingStatus, rating, cookieOwner, usersRatings);
     }
 
-    public Cookie(int cookieId, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus,
-                  Float rating) {
+    public Cookie(int cookieId, String name, String description, byte[] fileData,
+                  CookieAddingStatus cookieAddingStatus, Float rating) {
         this.cookieId = cookieId;
         this.name = name;
         this.description = description;
@@ -50,8 +52,8 @@ public class Cookie {
         this.rating = rating;
     }
 
-    public Cookie(int cookieId, String name, String description, byte[] fileData, CookieAddingStatus cookieAddingStatus,
-                  Float rating, User cookieOwner) {
+    public Cookie(int cookieId, String name, String description, byte[] fileData,
+                  CookieAddingStatus cookieAddingStatus, Float rating, User cookieOwner) {
         this.cookieId = cookieId;
         this.name = name;
         this.description = description;

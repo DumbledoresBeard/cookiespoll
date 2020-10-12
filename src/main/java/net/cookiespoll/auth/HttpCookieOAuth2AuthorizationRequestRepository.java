@@ -12,11 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 
 @Repository
 public class HttpCookieOAuth2AuthorizationRequestRepository implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
-    private CookieWebUtils cookieWebUtils;
+    private final CookieWebUtils cookieWebUtils;
 
-    public static final String OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME = "oauth2_auth_request";
-    public static final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
-    private static final int cookieExpireSeconds = 180;
+    public final static String OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME = "oauth2_auth_request";
+    public final static String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
+    private final static int COOKIE_EXPIRE_SECONDS = 180;
 
     @Autowired
     public HttpCookieOAuth2AuthorizationRequestRepository(CookieWebUtils cookieWebUtils) {
@@ -31,20 +31,23 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
     }
 
     @Override
-    public void saveAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest, HttpServletRequest request, HttpServletResponse response) {
+    public void saveAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest,
+                                         HttpServletRequest request, HttpServletResponse response) {
         if (authorizationRequest == null) {
             cookieWebUtils.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
             cookieWebUtils.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
             return;
         }
 
-        cookieWebUtils.addCookie(response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME, cookieWebUtils.serialize(authorizationRequest),
-                                cookieExpireSeconds);
+        cookieWebUtils.addCookie(response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME,
+                cookieWebUtils.serialize(authorizationRequest),
+                COOKIE_EXPIRE_SECONDS);
 
         String redirectUriAfterLogin = request.getParameter(REDIRECT_URI_PARAM_COOKIE_NAME);
 
         if (StringUtils.isNotBlank(redirectUriAfterLogin)) {
-            cookieWebUtils.addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, redirectUriAfterLogin, cookieExpireSeconds);
+            cookieWebUtils.addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME,
+                    redirectUriAfterLogin, COOKIE_EXPIRE_SECONDS);
         }
     }
 

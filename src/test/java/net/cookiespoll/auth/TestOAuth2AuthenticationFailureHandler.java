@@ -29,7 +29,8 @@ public class TestOAuth2AuthenticationFailureHandler {
 
     @Before
     public void init() {
-        oAuth2AuthenticationFailureHandler = new OAuth2AuthenticationFailureHandler(httpCookieOAuth2AuthorizationRequestRepository, cookieWebUtils);
+        oAuth2AuthenticationFailureHandler =
+                new OAuth2AuthenticationFailureHandler(httpCookieOAuth2AuthorizationRequestRepository, cookieWebUtils);
 
         MockitoAnnotations.initMocks(this);
     }

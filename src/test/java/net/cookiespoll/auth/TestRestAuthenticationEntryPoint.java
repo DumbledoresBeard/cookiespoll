@@ -26,7 +26,7 @@ public class TestRestAuthenticationEntryPoint {
     }
 
     @Test
-    public void testCommence () throws IOException, ServletException {
+    public void testCommence () throws IOException {
         doNothing().when(response).sendError(401, e.getLocalizedMessage());
 
         restAuthenticationEntryPoint.commence(request, response, e);

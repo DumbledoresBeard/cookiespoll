@@ -14,18 +14,21 @@ public class CookieDtoConverter {
     }
 
     public Cookie convertToCookie(UpdateCookieRequest updateCookieRequest) {
-        return new Cookie(updateCookieRequest.getId(), updateCookieRequest.getName(), updateCookieRequest.getDescription(), updateCookieRequest.getFileData(),
+        return new Cookie(updateCookieRequest.getId(), updateCookieRequest.getName(),
+                updateCookieRequest.getDescription(), updateCookieRequest.getFileData(),
                 updateCookieRequest.getApprovalStatus(), updateCookieRequest.getRating());
     }
 
     public UpdateCookieResponse convertToUpdateResponse(Cookie cookie) {
-        return new UpdateCookieResponse(cookie.getCookieId(), cookie.getName(), cookie.getDescription(), cookie.getFileData(),
-                cookie.getCookieAddingStatus(), cookie.getRating(), cookie.getCookieOwner());
+        return new UpdateCookieResponse(cookie.getCookieId(), cookie.getName(), cookie.getDescription(),
+                cookie.getFileData(), cookie.getCookieAddingStatus(), cookie.getRating(),
+                cookie.getCookieOwner());
     }
 
     public RateCookieResponse convertToRateCookieResponse(Cookie cookie, Integer rating) {
         CookieOwner cookieOwner = new CookieOwner(cookie.getCookieOwner().getId(),
-                cookie.getCookieOwner().getLogin(),cookie.getCookieOwner().getName(), cookie.getCookieOwner().getRole());
+                cookie.getCookieOwner().getLogin(),cookie.getCookieOwner().getName(),
+                cookie.getCookieOwner().getRole());
         return new RateCookieResponse(cookie.getCookieId(), cookie.getName(), cookie.getDescription(),
                 cookie.getFileData(), cookie.getCookieAddingStatus(), cookie.getRating(), cookieOwner,
                 rating);
@@ -33,7 +36,8 @@ public class CookieDtoConverter {
 
     public CookieResponse convertToCookieResponse(Cookie cookie) {
         CookieOwner cookieOwner = new CookieOwner(cookie.getCookieOwner().getId(),
-                cookie.getCookieOwner().getLogin(),cookie.getCookieOwner().getName(), cookie.getCookieOwner().getRole());
+                cookie.getCookieOwner().getLogin(),cookie.getCookieOwner().getName(),
+                cookie.getCookieOwner().getRole());
         return new CookieResponse(cookie.getCookieId(), cookie.getName(), cookie.getDescription(),
                 cookie.getFileData(), cookie.getCookieAddingStatus(), cookie.getRating(), cookieOwner);
     }

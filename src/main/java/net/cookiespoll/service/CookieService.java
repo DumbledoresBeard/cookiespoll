@@ -14,13 +14,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CookieService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CookieService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(CookieService.class);
 
-    private CookieDao cookieDao;
+    private final CookieDao cookieDao;
 
     @Autowired
     public CookieService(CookieDao cookieDao) {
@@ -37,8 +36,8 @@ public class CookieService {
                                 multipartFile.getBytes(), CookieAddingStatus.WAITING, rating, cookieOwner));
     }
 
-    public List<Cookie> getByParam(String name, String description, CookieAddingStatus cookieAddingStatus, Float rating,
-                                   String userId) {
+    public List<Cookie> getByParam(String name, String description, CookieAddingStatus cookieAddingStatus,
+                                   Float rating, String userId) {
         return cookieDao.getByParam(name, description, cookieAddingStatus, rating, userId);
     }
 
@@ -58,7 +57,7 @@ public class CookieService {
         List<CookieUserRating> cookieUserRatingList = this.getById(cookie.getCookieId()).getUsersRatings();
         float usersQuantity = (float) cookieUserRatingList.size();
         float cookieRatingSum = cookieUserRatingList.stream()
-                .mapToInt(cookieUserRating -> cookieUserRating.getRating()).sum();
+                .mapToInt(CookieUserRating::getRating).sum();
         return  (cookieRatingSum / usersQuantity);
     }
 

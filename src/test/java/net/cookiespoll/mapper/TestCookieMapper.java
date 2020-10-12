@@ -42,7 +42,6 @@ public class TestCookieMapper {
         when(cookieMapper.insert(cookie)).thenReturn(1);
 
         assert cookieMapper.insert(cookie) == 1;
-
         verify(cookieMapper).insert(cookie);
 
     }
@@ -62,14 +61,15 @@ public class TestCookieMapper {
         cookie.setCookieId(1);
         cookies.add(cookie);
 
-        when(cookieMapper.getByParam("cookie", "tasty cookie", CookieAddingStatus.WAITING,
-                cookieRating, "1")).thenReturn(cookies);
+        when(cookieMapper.getByParam("cookie", "tasty cookie",
+                CookieAddingStatus.WAITING, cookieRating, "1")).thenReturn(cookies);
 
-        Assert.assertEquals(cookieMapper.getByParam("cookie", "tasty cookie", CookieAddingStatus.WAITING,
-                cookieRating, "1").get(0).getCookieId(), cookie.getCookieId());
+        Assert.assertEquals(cookieMapper.getByParam("cookie", "tasty cookie",
+                CookieAddingStatus.WAITING, cookieRating, "1").get(0).getCookieId(),
+                cookie.getCookieId());
 
-        verify(cookieMapper).getByParam("cookie", "tasty cookie", CookieAddingStatus.WAITING,
-                cookieRating, "1");
+        verify(cookieMapper).getByParam("cookie", "tasty cookie",
+                CookieAddingStatus.WAITING, cookieRating, "1");
     }
 
     @Test
@@ -84,10 +84,10 @@ public class TestCookieMapper {
     @Test
     public void testGetUnratedByUserId () {
         List<Cookie> cookies = new ArrayList<>();
-        Cookie cookieWith1Id = new Cookie(1, "cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING,
-                cookieRating, cookieOwner);
-        Cookie cookieWith2Id = new Cookie(2, "name", "description", new byte[2],
-                CookieAddingStatus.WAITING, cookieRating, cookieOwner);
+        Cookie cookieWith1Id = new Cookie(1, "cookie", "tasty cookie",
+                new byte[2], CookieAddingStatus.WAITING, cookieRating, cookieOwner);
+        Cookie cookieWith2Id = new Cookie(2, "name", "description",
+                new byte[2], CookieAddingStatus.WAITING, cookieRating, cookieOwner);
         cookies.add(cookieWith1Id);
         cookies.add(cookieWith2Id);
         String userId = "1";
@@ -108,7 +108,6 @@ public class TestCookieMapper {
         Integer result = cookieMapper.delete(id);
 
         Assert.assertEquals(id, result);
-
         verify(cookieMapper).delete(1);
     }
 

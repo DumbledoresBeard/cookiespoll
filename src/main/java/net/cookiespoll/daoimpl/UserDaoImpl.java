@@ -6,14 +6,13 @@ import net.cookiespoll.model.user.Admin;
 import net.cookiespoll.model.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Component
 public class UserDaoImpl implements UserDao {
 
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
     @Autowired
     public UserDaoImpl(UserMapper userMapper) {
@@ -23,12 +22,10 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User insert(User user) {
         userMapper.insert(user);
-
         return user;
     }
 
     @Override
-    @Transactional
     public User getById(String id) {
         return userMapper.getById(id);
     }

@@ -11,7 +11,7 @@ import java.util.Optional;
 @Component
 public class CookieNameUniquenessValidator {
 
-    private CookieService cookieService;
+    private final CookieService cookieService;
 
     @Autowired
     public CookieNameUniquenessValidator(CookieService cookieService) {

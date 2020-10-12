@@ -34,10 +34,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -55,9 +52,9 @@ public class TestCookieController {
     private UserRoleValidator userRoleValidator = mock(UserRoleValidator.class);
     private CookieDtoConverter dtoConverter = new CookieDtoConverter();
     private RatingValidator ratingValidator = new RatingValidator();
-    private CookieNameUniquenessValidator cookieNameUniquenessValidator = new CookieNameUniquenessValidator(cookieService);
+    private CookieNameUniquenessValidator cookieNameUniquenessValidator =
+            new CookieNameUniquenessValidator(cookieService);
     private UserService userService = mock(UserService.class);
-    private CookiesController cookiesController;
     private byte [] byteArray = "Photo".getBytes();
     private Float cookieRating = new Float(0);
     private User cookieOwner = new User("1", "login", "name", Role.USER);
@@ -73,17 +70,15 @@ public class TestCookieController {
             "application/json", ("{\"name\":\"cookie\", \"description\": \"tasty cookie\"}").getBytes());
     private Gson gson = new Gson();
     private User user = new User("1", "login", "name", Role.USER);
-    private List<CookieUserRating> usersRatings = Arrays.asList(new CookieUserRating(user, cookieWith1Id, 3));
-    private List<CookieUserRating> userRatings2 = Arrays.asList(new CookieUserRating(user, cookieWith2Id, 4));
-
-    private Authentication authentication = Mockito.mock(Authentication.class);
-    private SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-    private DefaultOidcUser defaultOidcUser = mock(DefaultOidcUser.class);
+    private List<CookieUserRating> usersRatings =
+            Collections.singletonList(new CookieUserRating(user, cookieWith1Id, 3));
+    private List<CookieUserRating> userRatings2 =
+            Collections.singletonList(new CookieUserRating(user, cookieWith2Id, 4));
 
     @Before
     public void init() {
-        cookiesController = new CookiesController(cookieService, fileValidator, dtoConverter, userRoleValidator, userService, ratingValidator,
-                cookieNameUniquenessValidator);
+        CookiesController cookiesController = new CookiesController(cookieService, fileValidator,
+                dtoConverter, userRoleValidator, userService, ratingValidator, cookieNameUniquenessValidator);
 
         mockMvc = MockMvcBuilders.standaloneSetup(cookiesController).setControllerAdvice
                   (new ControllerExceptionHandler()).build();
@@ -94,10 +89,10 @@ public class TestCookieController {
     private List<Cookie> createCookiesList () {
         List<Cookie> cookies = new ArrayList<>();
 
-        Cookie cookieWith1Id = new Cookie(1, "cookie", "tasty cookie", new byte[2], CookieAddingStatus.WAITING,
-                cookieRating, cookieOwner);
-        Cookie cookieWith2Id = new Cookie(2,"name", "description", new byte[2], CookieAddingStatus.WAITING,
-                cookieRating, cookieOwner);
+        Cookie cookieWith1Id = new Cookie(1, "cookie", "tasty cookie",
+                new byte[2], CookieAddingStatus.WAITING, cookieRating, cookieOwner);
+        Cookie cookieWith2Id = new Cookie(2,"name", "description",
+                new byte[2], CookieAddingStatus.WAITING, cookieRating, cookieOwner);
 
         cookies.add(cookieWith1Id);
         cookies.add(cookieWith2Id);
@@ -258,8 +253,6 @@ public class TestCookieController {
                 .file(cookieExceededMaxFileSize)
                 .file(addCookieDtoRequest)
         ).andExpect(status().is(500));
-
-/*            .andExpect((ResultMatcher) jsonPath("$.message", is("Maximum upload size exceeded; nested exception is java.lang.IllegalStateException: org.apache.tomcat.util.http.fileupload.FileUploadBase$SizeLimitExceededException: the request was rejected because its size (8055342) exceeds the configured maximum (5242880)")));*/
     }
 
     @WithMockCustomUser
@@ -540,14 +533,15 @@ public class TestCookieController {
     public void testRateCookie() throws Exception {
         RateCookieRequest rateCookieRequest = new RateCookieRequest(3,3);
         String request = gson.toJson(rateCookieRequest);
-        Cookie cookie = new Cookie(3, "cookie", "tasty cookie", byteArray, CookieAddingStatus.APPROVED, cookieRating, cookieOwner);
+        Cookie cookie = new Cookie(3, "cookie", "tasty cookie", byteArray,
+                CookieAddingStatus.APPROVED, cookieRating, cookieOwner);
         List<CookieUserRating> ratedCookies = new ArrayList<CookieUserRating>();
         ratedCookies.add(new CookieUserRating(cookieOwner, cookieWith1Id, 5));
         cookieOwner.setRatedCookies(ratedCookies);
         String userId = "12345";
         CookieOwner cookieOwnerResponse = new CookieOwner(cookieOwner.getId(),cookieOwner.getLogin(), cookieOwner.getName(), cookieOwner.getRole());
-        RateCookieResponse rateCookieResponse = new RateCookieResponse(3, "cookie", "tasty cookie", byteArray, CookieAddingStatus.APPROVED,
-                (float) 5.5, cookieOwnerResponse, 3);
+        RateCookieResponse rateCookieResponse = new RateCookieResponse(3, "cookie", "tasty cookie",
+                byteArray, CookieAddingStatus.APPROVED, (float) 5.5, cookieOwnerResponse, 3);
 
         when(userService.getById(userId)).thenReturn(cookieOwner);
         when(cookieService.getById(3)).thenReturn(cookie);
@@ -565,29 +559,27 @@ public class TestCookieController {
                 .getContentAsString();
 
         RateCookieResponse resultResponse = new ObjectMapper().readValue(response, RateCookieResponse.class);
-        CookieOwner owner = resultResponse.getCookieOwner();
+        resultResponse.getCookieOwner();
 
-        assert rateCookieResponse.getId() == resultResponse.getId();
+        assert rateCookieResponse.getId().equals(resultResponse.getId());
         Assert.assertEquals(rateCookieResponse.getName(), resultResponse.getName());
         Assert.assertEquals(rateCookieResponse.getDescription(), resultResponse.getDescription());
         Assert.assertArrayEquals(rateCookieResponse.getFileData(), resultResponse.getFileData());
         Assert.assertEquals(rateCookieResponse.getApprovalStatus(), resultResponse.getApprovalStatus());
         Assert.assertEquals(rateCookieResponse.getOverallRating(), resultResponse.getOverallRating());
         Assert.assertEquals(rateCookieResponse.getCookieOwner(), resultResponse.getCookieOwner());
-        assert rateCookieResponse.getRatingGivenByUser() == resultResponse.getRatingGivenByUser();
+        assert rateCookieResponse.getRatingGivenByUser().equals(resultResponse.getRatingGivenByUser());
     }
 
     @WithMockCustomUser
     @Test
     public void testRateAlreadyRatedCookie() throws Exception {
         RateCookieRequest rateCookieRequest = new RateCookieRequest(1, 3);
-        List<CookieUserRating> cookieUserRatings = new ArrayList<>();
         cookieOwner.setRatedCookies(usersRatings);
         List<Cookie> addedCookies = new ArrayList<>();
         addedCookies.add(cookieWith1Id);
         cookieOwner.setAddedCookies(addedCookies);
         String request = new ObjectMapper().writeValueAsString(rateCookieRequest);
-        String userId = "1";
 
         when(cookieService.getById(1)).thenReturn(cookieWith1Id);
 
@@ -624,9 +616,6 @@ public class TestCookieController {
     @WithMockCustomUser
     @Test
     public void testGetCookiesAddedByCurrentUser() throws Exception {
-        List<Cookie> cookies = createCookiesList();
-        String userId = "1";
-
         mockMvc.perform(MockMvcRequestBuilders.get("/cookies")
         ).andExpect(status().isOk())
                 .andExpect(content().string("[{\"id\":1,\"name\":\"cookie\",\"description\":\"tasty cookie\",\"fileData\":\"AAA=\",\"cookieAddingStatus\":\"APPROVED\",\"rating\":0.0,\"cookieOwner\":{\"id\":\"1\",\"login\":\"login\",\"name\":\"name\",\"role\":\"USER\"}}]"));
@@ -650,7 +639,7 @@ public class TestCookieController {
         verify(cookieService).delete(id);
         verify(cookieService).getById(id);
 
-        DeleteCookieResponse result = new ObjectMapper().readValue(response, DeleteCookieResponse.class);
+        new ObjectMapper().readValue(response, DeleteCookieResponse.class);
 
         Assert.assertEquals(id, deleteCookieResponse.getCookieId());
     }

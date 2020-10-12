@@ -15,7 +15,7 @@ import static net.cookiespoll.utils.UserUtils.getUserFromSession;
 @Controller
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
@@ -37,12 +37,11 @@ public class UserController {
     @RequestMapping(value = "/cookiepoll/logout",
             method = RequestMethod.GET)
     @ResponseBody
-    public String logout (HttpServletRequest request) {
+    public void logout (HttpServletRequest request) {
         SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
                 securityContextLogoutHandler.logout(request, null, null);
                 securityContextLogoutHandler.setClearAuthentication(true);
                 securityContextLogoutHandler.setInvalidateHttpSession(true);
-        return "You are logged out";
     }
 
 }

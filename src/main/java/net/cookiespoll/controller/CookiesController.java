@@ -41,17 +41,17 @@ import static net.cookiespoll.utils.UserUtils.getUserFromSession;
 public class CookiesController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CookiesController.class);
 
-    private CookieService cookieService;
-    private FileValidator fileValidator;
-    private UserRoleValidator userRoleValidator;
-    private CookieDtoConverter cookieDtoConverter;
-    private UserService userService;
-    private RatingValidator ratingValidator;
-    private CookieNameUniquenessValidator cookieNameUniquenessValidator;
+    private final CookieService cookieService;
+    private final FileValidator fileValidator;
+    private final UserRoleValidator userRoleValidator;
+    private final CookieDtoConverter cookieDtoConverter;
+    private final UserService userService;
+    private final RatingValidator ratingValidator;
+    private final CookieNameUniquenessValidator cookieNameUniquenessValidator;
 
     @Autowired
     public CookiesController(CookieService cookieService, FileValidator fileValidator, CookieDtoConverter cookieDtoConverter,
-                                UserRoleValidator userRoleValidator, UserService userService, RatingValidator ratingValidator,
+                             UserRoleValidator userRoleValidator, UserService userService, RatingValidator ratingValidator,
                              CookieNameUniquenessValidator cookieNameUniquenessValidator) {
         this.cookieService = cookieService;
         this.fileValidator = fileValidator;
@@ -78,7 +78,8 @@ public class CookiesController {
         cookieNameUniquenessValidator.validate(addCookieRequest.getName());
         fileValidator.validate(multipartFile);
 
-        return cookieDtoConverter.convertToCookieResponse(cookieService.insert(addCookieRequest, multipartFile, getUserFromSession()));
+        return cookieDtoConverter.convertToCookieResponse(
+                cookieService.insert(addCookieRequest, multipartFile, getUserFromSession()));
     }
 
     @ApiOperation(value = "Get list of cookies by parameter", response = ArrayList.class)
@@ -92,9 +93,12 @@ public class CookiesController {
     public List<CookieResponse> getCookiesByParameter (@Valid CookiesByParameterRequest cookiesByParameterRequest) {
         LOGGER.info("Starting processing request for getting cookies by parameters {} ", cookiesByParameterRequest);
 
-       return cookieDtoConverter.convertToListOfCookieResponses(cookieService.getByParam(cookiesByParameterRequest.getName(), cookiesByParameterRequest.getDescription(),
-               cookiesByParameterRequest.getCookieAddingStatus(), cookiesByParameterRequest.getRating(),
-               cookiesByParameterRequest.getUserId()));
+       return cookieDtoConverter.convertToListOfCookieResponses(
+               cookieService.getByParam(cookiesByParameterRequest.getName(),
+                       cookiesByParameterRequest.getDescription(),
+                       cookiesByParameterRequest.getCookieAddingStatus(),
+                       cookiesByParameterRequest.getRating(),
+                       cookiesByParameterRequest.getUserId()));
     }
 
     @ApiOperation(value = "Get cookie by id", response = Cookie.class)
@@ -120,8 +124,6 @@ public class CookiesController {
     @ResponseBody
     public List<CookieResponse> getCookiesAddedByCurrentUser () {
         LOGGER.info("Starting processing request for getting cookie added by current user");
-
-//        return cookieDtoConverter.convertToListOfCookieResponses(cookieService.getByParam(null, null, null, null, getUserFromSession().getId()));
         return cookieDtoConverter.convertToListOfCookieResponses(getUserFromSession().getAddedCookies());
     }
 
@@ -137,14 +139,15 @@ public class CookiesController {
                                                 throws UserRoleValidationException {
 
         if (updateCookieRequest.getApprovalStatus().equals(CookieAddingStatus.APPROVED)
-        || updateCookieRequest.getApprovalStatus().equals(CookieAddingStatus.DECLINED))
+                || updateCookieRequest.getApprovalStatus().equals(CookieAddingStatus.DECLINED))
         {
             userRoleValidator.validateUserRole(getUserFromSession());
         }
 
         LOGGER.info("Starting processing request {} ", updateCookieRequest);
 
-        return cookieDtoConverter.convertToUpdateResponse(cookieService.update(cookieDtoConverter.convertToCookie(updateCookieRequest)));
+        return cookieDtoConverter.convertToUpdateResponse(cookieService.update(
+                cookieDtoConverter.convertToCookie(updateCookieRequest)));
     }
 
     @ApiOperation(value = "Set rating from user to cookie and count overall cookie rating",
@@ -184,13 +187,13 @@ public class CookiesController {
     public List<CookieResponse> getUnratedCookies () {
         CookieAddingStatus cookieAddingStatus = CookieAddingStatus.APPROVED;
 
-        List<Cookie> allApprovedCookies = cookieService.getByParam(null, null, cookieAddingStatus, null,
-                null);
+        List<Cookie> allApprovedCookies = cookieService.getByParam(null, null, cookieAddingStatus,
+                null, null);
 
         List<Cookie> ratedCookies = getUserFromSession().getRatedCookies()
-                                    .stream()
-                                    .map(CookieUserRating::getCookie)
-                                    .collect(Collectors.toList());
+                .stream()
+                .map(CookieUserRating::getCookie)
+                .collect(Collectors.toList());
         allApprovedCookies.removeAll(ratedCookies);
 
         return cookieDtoConverter.convertToListOfCookieResponses(allApprovedCookies);

@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = User.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id", scope = User.class)
 public class User {
     private String id;
     private String login;
@@ -30,7 +31,8 @@ public class User {
         this.addedCookies = addedCookies;
     }
 
-    public User(String login, String name, Role role, List<CookieUserRating> ratedCookies, List<Cookie> addedCookies) {
+    public User(String login, String name, Role role, List<CookieUserRating> ratedCookies,
+                List<Cookie> addedCookies) {
         this("0" , login, name, role, ratedCookies, addedCookies);
     }
 

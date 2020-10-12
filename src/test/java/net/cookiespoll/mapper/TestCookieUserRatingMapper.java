@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.verify;
@@ -32,10 +33,11 @@ public class TestCookieUserRatingMapper {
     private User cookieOwner = new User("1", "login", "name", Role.USER);
     private Cookie cookieWith1Id = new Cookie(1, "cookie", "tasty cookie",
             new byte[2], CookieAddingStatus.APPROVED, (float) 0, cookieOwner);
-    private List<CookieUserRating> usersRatings = Arrays.asList(new CookieUserRating(cookieOwner, cookieWith1Id, 3));
+    private List<CookieUserRating> usersRatings =
+            Collections.singletonList(new CookieUserRating(cookieOwner, cookieWith1Id, 3));
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
 
@@ -43,7 +45,7 @@ public class TestCookieUserRatingMapper {
     public void testGetRatingByUserAndCookie() {
         when(cookieUserRatingMapper.getRatingByUserAndCookie(userId, cookieId)).thenReturn(rating);
 
-        assert  rating == cookieUserRatingMapper.getRatingByUserAndCookie(userId, cookieId);
+        assert rating.equals(cookieUserRatingMapper.getRatingByUserAndCookie(userId, cookieId));
 
         verify(cookieUserRatingMapper).getRatingByUserAndCookie(userId, cookieId);
     }
@@ -75,7 +77,7 @@ public class TestCookieUserRatingMapper {
 
         Assert.assertEquals(usersRatings.get(0).getCookie(), result.get(0).getCookie());
         Assert.assertEquals(usersRatings.get(0).getUser(), result.get(0).getUser());
-        assert usersRatings.get(0).getRating() == result.get(0).getRating();
+        assert usersRatings.get(0).getRating().equals(result.get(0).getRating());
 
         verify(cookieUserRatingMapper).getListByUserId(userId);
 
@@ -89,7 +91,7 @@ public class TestCookieUserRatingMapper {
 
         Assert.assertEquals(usersRatings.get(0).getCookie(), result.get(0).getCookie());
         Assert.assertEquals(usersRatings.get(0).getUser(), result.get(0).getUser());
-        assert usersRatings.get(0).getRating() == result.get(0).getRating();
+        assert usersRatings.get(0).getRating().equals(result.get(0).getRating());
 
         verify(cookieUserRatingMapper).getListByCookieId(cookieId);
 

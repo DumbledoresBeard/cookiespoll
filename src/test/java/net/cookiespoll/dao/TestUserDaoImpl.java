@@ -18,6 +18,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -32,8 +33,8 @@ public class TestUserDaoImpl {
 
     private String id = "1";
     private User userAdmin = new User("1", "login", "name", Role.ADMIN);
-    private Cookie cookie = new Cookie("cookie", "tasty cookie", new byte[2], CookieAddingStatus.APPROVED,
-            (float) 4, userAdmin);
+    private Cookie cookie = new Cookie("cookie", "tasty cookie",
+            new byte[2], CookieAddingStatus.APPROVED, (float) 4, userAdmin);
     private List<CookieUserRating> ratedCookies = Arrays.asList(new CookieUserRating(userAdmin, cookie, 1));
     private List<Cookie> addedCookies = Arrays.asList(cookie);
 
@@ -82,7 +83,7 @@ public class TestUserDaoImpl {
 
     @Test
     public void testGetAdmins() {
-        List<Admin> admins = Arrays.asList(new Admin(1, "some@mail.com"));
+        List<Admin> admins = Collections.singletonList(new Admin(1, "some@mail.com"));
         when(userMapper.getAdmins()).thenReturn(admins);
 
         List<Admin> resultAdmins = userMapper.getAdmins();
